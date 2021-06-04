@@ -144,7 +144,7 @@ module "object-storage" {
 
 # Contributors
 Thanks to the following folks for providing suggestions and improvments to this project.
-* Abdullah (waf module)
-* Abeer (network-load-balancer and public-ip modules)
-* Greg (network-load-balancer and public-ip modules)
-* Matusez (network-load-balancer and public-ip modules)
+* Abdullah Aljubayri [Thwwaq](https://github.com/Thwwaq) (waf module)
+* Abeer Alotaibi [octopus20](https://github.com/octopus20) (network-load-balancer module)
+* Grzegorz M [grzesjam](https://github.com/grzesjam) (public-ip module)
+* Mateusz Kozakiewicz [mateuszkozakiewicz](https://github.com/mateuszkozakiewicz) (public-ip module)
