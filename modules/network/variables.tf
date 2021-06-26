@@ -1,13 +1,13 @@
 variable "compartment_id" { type = string }
 variable "name" {
-  type    = string
-  default = "vaultvcn"
+  type        = string
+  default     = "vaultvcn"
   description = "The name of the VCN which will be used in FQDN"
 }
 
 variable "cidr_block" {
-  type    = string
-  default = "192.168.0.0/16"
+  type        = string
+  default     = "192.168.0.0/16"
   description = "The CIDR block for the VCN"
 }
 
