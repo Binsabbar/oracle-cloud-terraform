@@ -21,7 +21,7 @@ variable "nlbs" {
     }))
   }))
 
- description = <<EOL
+  description = <<EOL
   map of NLB configurations, where key is used as NLB name
     compartment_id: The compartment id to create nlb in
     reserved_ip_id: ocid of the reserved public IP, leave empty if you want the module to create public IP

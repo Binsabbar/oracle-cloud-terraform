@@ -12,7 +12,7 @@ variable "compartment_id" {
 }
 
 variable "cluster_name" {
-  type = string
+  type        = string
   description = "name of the cluster"
 }
 
@@ -22,7 +22,7 @@ variable "enable_kubernetes_dashboard" {
 }
 
 variable "lb_subnet_ids" {
-  type = list(string)
+  type        = list(string)
   description = "The Subnet IDs where svc of type LoadBalancers will have their LBs created"
 }
 

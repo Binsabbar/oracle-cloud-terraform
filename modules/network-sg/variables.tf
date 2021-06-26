@@ -1,10 +1,10 @@
-variable "vcn_id" { 
-  type = string 
+variable "vcn_id" {
+  type        = string
   description = "the ocid of virtual coud network"
 }
 
-variable "compartment_id" { 
-  type = string 
+variable "compartment_id" {
+  type        = string
   description = "the ocid of compartment"
 }
 

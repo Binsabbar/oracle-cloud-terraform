@@ -11,9 +11,9 @@ variable "tcp_configurations" {
   type = map(object({
     virtual_hosts = set(string)
     port          = number
-    backends      = set(object({ 
-      ip = string, 
-      port = number 
+    backends = set(object({
+      ip   = string,
+      port = number
     }))
   }))
   default = {}
