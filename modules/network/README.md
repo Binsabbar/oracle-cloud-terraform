@@ -17,8 +17,8 @@ When the VCN is created, the following objects are created by default:
 * Private Route Table (defaultPrivateRouteTable): if no route table id is passed for a private subnet, this route table is used for the private subnet. The private default route table is configurable using `private_route_table_rules` variable.
 
 When a subnet is created, some default objects are created:
-* Public security list: Allows outbound TCP and UDP to the internet. Moreover, enables incoming ICPM from the internet. Lastly if `allowed_ingress_ports` has ports, it allow incoming connection from the internet to `allowed_ingress_ports`. You still can pass another security list ids and it will be concatenated to this list.
-* Private security list: Allows outbound TCP and UDP to the internet. You still can pass another security list ids and it will be concatenated to this list.
+* Public security list: Enables incoming ICPM from the internet. When `allowed_ingress_ports` has ports, it allow incoming connection from the internet to `allowed_ingress_ports`. The default value is `[]` empty list. You still can pass another security list ids and it will be concatenated to this list. Lastly, you can use optionals key to pass list of tcp and udp egress ports to internet in `allow_tcp_egress_to_ports` and `allow_udp_egress_to_ports` under `optionals.
+* Private security list: By default empty, but you can use optionals key to pass list of tcp and udp egress ports to internet in `allow_tcp_egress_to_ports` and `allow_udp_egress_to_ports` under `optionals. You still can pass another security list ids and it will be concatenated to this list.
 
 ## Note about Route Table and Security List
 * Route Table: the module will use default route table if not route table id is passed during creation of subnet. You can either configure the defaul route tables using `xxxxxx_route_table_rules` variables, or you can set different route table for each subnet you create using `route_table_id` key of the subnet you create.
@@ -26,7 +26,6 @@ When a subnet is created, some default objects are created:
 
 ## Limitations
 * The module does not support VCN Peering.
-* Private subnets will always have outbound connection to the internet for all ports. Use network security group and attach them to the instance you create in private subnet to change this behaviour.
 
 VCN without any subnet:
 ```h
@@ -59,7 +58,10 @@ module "network" {
     "private-b" = {
       cidr_block        = "192.168.3.0/24"
       security_list_ids = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
-      optionals         = {}
+      optionals         = {
+        allow_tcp_egress_to_ports = [80, 443]
+        allow_udp_egress_to_ports = [30900]
+      }
     },
   }
 

@@ -8,7 +8,7 @@ locals {
 
 resource "oci_core_default_security_list" "public_subnet_security_list" {
   manage_default_resource_id = oci_core_vcn.vcn.default_security_list_id
-  display_name               = "defaultSecurityList"
+  display_name               = "default public security list"
 
   dynamic "ingress_security_rules" {
     for_each = var.allowed_ingress_ports
@@ -36,33 +36,61 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
     }
   }
 
-  egress_security_rules {
-    destination = "0.0.0.0/0"
-    description = "Outbound All TCP"
-    protocol    = local.protocols.tcp
+  dynamic "egress_security_rules" {
+    for_each = var.default_security_list_rules.public_subnets.tcp_egress_ports_from_all
+    egress_security_rules {
+      destination = "0.0.0.0/0"
+      description = "Outbound TCP to port ${egress_security_rules.value}"
+      protocol    = local.protocols.tcp
+      tcp_options {
+        max = egress_security_rules.value
+        min = egress_security_rules.value
+      }
+    }
   }
 
-  egress_security_rules {
-    destination = "0.0.0.0/0"
-    description = "Outbound All UDP"
-    protocol    = local.protocols.udp
+  dynamic "egress_security_rules" {
+    for_each = var.default_security_list_rules.public_subnets.udp_egress_ports_from_all
+    egress_security_rules {
+      destination = "0.0.0.0/0"
+      description = "Outbound UDP to port ${egress_security_rules.value}"
+      protocol    = local.protocols.udp
+      tcp_options {
+        max = egress_security_rules.value
+        min = egress_security_rules.value
+      }
+    }
   }
 }
 
 resource "oci_core_security_list" "private_subnet_security_list" {
   compartment_id = var.compartment_id
   vcn_id         = oci_core_vcn.vcn.id
-  display_name   = "private_subnetSecurityList"
+  display_name   = "default private security list"
 
-  egress_security_rules {
-    destination = "0.0.0.0/0"
-    description = "Outbound All TCP"
-    protocol    = local.protocols.tcp
+  dynamic "egress_security_rules" {
+    for_each = var.default_security_list_rules.private_subnets.tcp_egress_ports_from_all
+    egress_security_rules {
+      destination = "0.0.0.0/0"
+      description = "Outbound TCP to port ${egress_security_rules.value}"
+      protocol    = local.protocols.tcp
+      tcp_options {
+        max = egress_security_rules.value
+        min = egress_security_rules.value
+      }
+    }
   }
 
-  egress_security_rules {
-    destination = "0.0.0.0/0"
-    description = "Outbound All UDP"
-    protocol    = local.protocols.udp
+  dynamic "egress_security_rules" {
+    for_each = var.default_security_list_rules.private_subnets.udp_egress_ports_from_all
+    egress_security_rules {
+      destination = "0.0.0.0/0"
+      description = "Outbound UDP to port ${egress_security_rules.value}"
+      protocol    = local.protocols.udp
+      tcp_options {
+        max = egress_security_rules.value
+        min = egress_security_rules.value
+      }
+    }
   }
 }
