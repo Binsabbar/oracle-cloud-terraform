@@ -1,7 +1,7 @@
 variable "compartment_id" { type = string }
 variable "name" {
   type        = string
-  default     = "vaultvcn"
+  default     = "vcn"
   description = "The name of the VCN which will be used in FQDN"
 }
 
@@ -13,8 +13,8 @@ variable "cidr_block" {
 
 variable "allowed_ingress_ports" {
   type        = list(number)
-  default     = [80, 443]
-  description = "list of allowed ports for the public subnet that will allow inbound connection to machines in the public subnet"
+  default     = []
+  description = "list of allowed ports that will allow inbound connection to machines in public subnet for default security list"
 }
 
 variable "private_subnets" {
@@ -31,7 +31,7 @@ variable "private_subnets" {
     cidr_block       : the cidr block for the subnet
     security_list_ids: list of security ids to be attached to the subnet
     optionals        : map of optional values
-      route_table_id: route table id to be used instead of defaul one
+      route_table_id: route table id to be used instead of default one
   EOL
 }
 
@@ -42,6 +42,8 @@ variable "public_subnets" {
     optionals         = map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # route_table_id = string # id of custom route table
+    # allow_tcp_egress_to_ports = list(string) # egress tcp ports to 0.0.0.0/0
+    # allow_udp_egress_to_ports = list(string) # egress udp ports to 0.0.0.0/0
   }))
 
   description = <<EOL
@@ -50,6 +52,8 @@ variable "public_subnets" {
     security_list_ids: list of security ids to be attached to the subnet
     optionals        : map of optional values
       route_table_id: route table id to be used instead of defaul one
+      allow_tcp_egress_to_ports: egress tcp ports to 0.0.0.0/0 to be added to default security list
+      allow_udp_egress_to_ports: egress udp ports to 0.0.0.0/0 to be added to default security list
   EOL
 }
 
@@ -83,4 +87,29 @@ variable "private_route_table_rules" {
     destination_type : The type of destination above
     network_entity_id: The OCID for the route rule's target
   EOL
+}
+
+variable "default_security_list_rules" {
+  type = object({
+    public_subnets = object({
+      tcp_egress_ports_from_all = list(number)
+      udp_egress_ports_from_all = list(number)
+    })
+    private_subnets = object({
+      tcp_egress_ports_from_all = list(number)
+      udp_egress_ports_from_all = list(number)
+    })
+  })
+
+  default = {
+    private_subnets = {
+      tcp_egress_ports_from_all = []
+      udp_egress_ports_from_all = []
+    }
+    public_subnets = {
+      tcp_egress_ports_from_all = []
+      udp_egress_ports_from_all = []
+    }
+  }
+  description = "map of objects for allowed tcp and udp egress ports to the internet (0.0.0.0/0)"
 }
