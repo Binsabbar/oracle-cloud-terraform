@@ -7,7 +7,7 @@ variable "security_lists" {
       protocol    = number
       ports       = object({ min : number, max : number })
       destination = string
-      optionals   = any
+      optionals   = map(any)
       # The followings are the keys for the optionals with defaults in brackets
       # type = string(CIDR)
     }))
@@ -15,7 +15,7 @@ variable "security_lists" {
       protocol  = number
       ports     = object({ min : number, max : number })
       source    = string
-      optionals = any
+      optionals = map(any)
       # The followings are the keys for the optionals with defaults in brackets
       # type = string(CIDR)
     }))
