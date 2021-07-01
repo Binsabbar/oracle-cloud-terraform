@@ -1,5 +1,6 @@
 - [Network](#network)
   - [What is created as part of the module?](#what-is-created-as-part-of-the-module)
+  - [Note About Default Security Lists:](#note-about-default-security-lists)
   - [Note about Route Table and Security List](#note-about-route-table-and-security-list)
   - [Limitations](#limitations)
   
@@ -15,14 +16,17 @@ When the VCN is created, the following objects are created by default:
 * NAT GAteway (defaultNatGateway): It is attached to any created private subnet
 * Route Table (defaultRouteTable): if no route table id is passed for a public subnet, this route table is used for the public subnet. The public default route table is configurable using `public_route_table_rules` variable.
 * Private Route Table (defaultPrivateRouteTable): if no route table id is passed for a private subnet, this route table is used for the private subnet. The private default route table is configurable using `private_route_table_rules` variable.
-
-When a subnet is created, some default objects are created:
-* Public security list: Enables incoming ICPM from the internet. When `allowed_ingress_ports` has ports, it allow incoming connection from the internet to `allowed_ingress_ports`. The default value is `[]` empty list. You still can pass another security list ids and it will be concatenated to this list. Lastly, you can use optionals key to pass list of tcp and udp egress ports to internet in `allow_tcp_egress_to_ports` and `allow_udp_egress_to_ports` under `optionals.
-* Private security list: By default empty, but you can use optionals key to pass list of tcp and udp egress ports to internet in `allow_tcp_egress_to_ports` and `allow_udp_egress_to_ports` under `optionals. You still can pass another security list ids and it will be concatenated to this list.
+* Default Public Security List: This list is attached to EVERY public subnet created.
+* Default Private Security List: This list is attached to EVERY private subnet created.
+  
+## Note About Default Security Lists:
+* **Public security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for egress traffic for tcp and udp to the world. Also you can enable icpm from the world as well.
+* **Private security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for egress traffic for tcp and udp to the world. Also you can enable icpm from the VCN as well.
+* It is possible to create another security list and pass its id to the subnet in `public_subnets` and `private_subnets` variables under key `security_list_ids`. The passed ids will be concatenated with the default list.
 
 ## Note about Route Table and Security List
 * Route Table: the module will use default route table if not route table id is passed during creation of subnet. You can either configure the defaul route tables using `xxxxxx_route_table_rules` variables, or you can set different route table for each subnet you create using `route_table_id` key of the subnet you create.
-* Security List: the module will create defaul subnet list rules, and you can enhance that further by creating your own security list and pass them as IDs to the subnet.
+* Security List: the module will create defaul subnet list rules, and you can enhance that further by creating your own security list and pass them as IDs to the subnet. You can also use `default_security_list_rules` to specify list of egress ports to the internet for the public and private subnets.
 
 ## Limitations
 * The module does not support VCN Peering.
@@ -58,11 +62,8 @@ module "network" {
     "private-b" = {
       cidr_block        = "192.168.3.0/24"
       security_list_ids = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
-      optionals         = {
-        allow_tcp_egress_to_ports = [80, 443]
-        allow_udp_egress_to_ports = [30900]
-      }
-    },
+      optionals         = {}
+    }
   }
 
   public_subnets = {
@@ -72,6 +73,19 @@ module "network" {
       optionals         = {
         route_table_id = "ocixxxxxx.xxxxxx.xxxxx"
       }
+    }
+  }
+
+  default_security_list_rules = {
+    private_subnets = {
+      tcp_egress_ports_from_all = [80, 443]
+      udp_egress_ports_from_all = []
+      enable_icpm_from_all      = true
+    }
+    public_subnets = {
+      tcp_egress_ports_from_all = [80, 443]
+      udp_egress_ports_from_all = []
+      enable_icpm_from_vcn      = true
     }
   }
 }
