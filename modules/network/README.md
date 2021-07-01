@@ -20,8 +20,8 @@ When the VCN is created, the following objects are created by default:
 * Default Private Security List: This list is attached to EVERY private subnet created.
   
 ## Note About Default Security Lists:
-* **Public security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for egress traffic for tcp and udp to the world. Also you can enable icpm from the world as well.
-* **Private security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for egress traffic for tcp and udp to the world. Also you can enable icpm from the VCN as well.
+* **Public security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for egress traffic for tcp and udp to the world. Also you can enable icpm from and to the world as well.
+* **Private security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for egress traffic for tcp and udp to the world. Also you can enable icpm from the VCN as well and to the world.
 * It is possible to create another security list and pass its id to the subnet in `public_subnets` and `private_subnets` variables under key `security_list_ids`. The passed ids will be concatenated with the default list.
 
 ## Note about Route Table and Security List
@@ -78,14 +78,16 @@ module "network" {
 
   default_security_list_rules = {
     private_subnets = {
-      tcp_egress_ports_from_all = [80, 443]
-      udp_egress_ports_from_all = []
+      tcp_egress_ports_to_all = [80, 443]
+      udp_egress_ports_to_all = []
       enable_icpm_from_all      = true
+      enable_icpm_to_all        = true
     }
     public_subnets = {
-      tcp_egress_ports_from_all = [80, 443]
-      udp_egress_ports_from_all = []
+      tcp_egress_ports_to_all = [80, 443]
+      udp_egress_ports_to_all = []
       enable_icpm_from_vcn      = true
+      enable_icpm_to_all        = true
     }
   }
 }

@@ -4,6 +4,8 @@ locals {
     tcp  = 6
     udp  = 17
   }
+
+  icmp_types = [0, 3, 4, 8, 11]
 }
 
 resource "oci_core_default_security_list" "public_subnet_security_list" {
@@ -14,10 +16,8 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
     for_each = var.allowed_ingress_ports
     content {
       protocol    = local.protocols.tcp
-      description = "Inbound for port ${ingress_security_rules.value} from any"
+      description = "Inbound for port ${ingress_security_rules.value} from all"
       source      = "0.0.0.0/0"
-      stateless   = false
-
       tcp_options {
         min = ingress_security_rules.value
         max = ingress_security_rules.value
@@ -26,21 +26,31 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
   }
 
   dynamic "ingress_security_rules" {
-    for_each = var.default_security_list_rules.public_subnets.enable_icpm_from_all ? [1] : []
+    for_each = var.default_security_list_rules.public_subnets.enable_icpm_from_all ? local.icmp_types : []
     content {
       protocol    = local.protocols.icmp
-      description = "Inbound for port ICMP from any"
+      description = "Inbound ICMP type ${ingress_security_rules.value} from all"
       source      = "0.0.0.0/0"
-      stateless   = true
       icmp_options {
-        type = 3
-        code = 4
+        type = ingress_security_rules.value
+      }
+    }
+  }
+  
+  dynamic "egress_security_rules" {
+    for_each = var.default_security_list_rules.public_subnets.enable_icpm_to_all ? local.icmp_types : []
+    content {
+      protocol    = local.protocols.icmp
+      description = "Outbound ICMP type ${egress_security_rules.value} to all"
+      destination = "0.0.0.0/0"
+      icmp_options {
+        type = egress_security_rules.value
       }
     }
   }
 
   dynamic "egress_security_rules" {
-    for_each = var.default_security_list_rules.public_subnets.tcp_egress_ports_from_all
+    for_each = var.default_security_list_rules.public_subnets.tcp_egress_ports_to_all
     content {
       protocol    = local.protocols.tcp
       description = "Outbound TCP to port ${egress_security_rules.value}"
@@ -53,7 +63,7 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
   }
 
   dynamic "egress_security_rules" {
-    for_each = var.default_security_list_rules.public_subnets.udp_egress_ports_from_all
+    for_each = var.default_security_list_rules.public_subnets.udp_egress_ports_to_all
     content {
       protocol    = local.protocols.udp
       description = "Outbound UDP to port ${egress_security_rules.value}"
@@ -72,21 +82,31 @@ resource "oci_core_security_list" "private_subnet_security_list" {
   display_name   = "default private security list"
 
   dynamic "ingress_security_rules" {
-    for_each = var.default_security_list_rules.private_subnets.enable_icpm_from_vcn ? [1] : []
+    for_each = var.default_security_list_rules.private_subnets.enable_icpm_from_vcn ? local.icmp_types : []
     content {
       protocol    = local.protocols.icmp
-      description = "Inbound for port ICMP from VCN ${oci_core_vcn.vcn.display_name}"
+      description = "Inbound ICMP type ${ingress_security_rules.value} from VCN ${oci_core_vcn.vcn.display_name}"
       source      = oci_core_vcn.vcn.cidr_block
-      stateless   = true
       icmp_options {
-        type = 3
-        code = 4
+        type = ingress_security_rules.value
       }
     }
   }
 
   dynamic "egress_security_rules" {
-    for_each = var.default_security_list_rules.private_subnets.tcp_egress_ports_from_all
+    for_each = var.default_security_list_rules.private_subnets.enable_icpm_to_all ? local.icmp_types : []
+    content {
+      protocol    = local.protocols.icmp
+      description = "Inbound ICMP type ${egress_security_rules.value} to all"
+      destination = "0.0.0.0/0"
+      icmp_options {
+        type = egress_security_rules.value
+      }
+    }
+  }
+
+  dynamic "egress_security_rules" {
+    for_each = var.default_security_list_rules.private_subnets.tcp_egress_ports_to_all
     content {
       protocol    = local.protocols.tcp
       description = "Outbound TCP to port ${egress_security_rules.value}"
@@ -99,7 +119,7 @@ resource "oci_core_security_list" "private_subnet_security_list" {
   }
 
   dynamic "egress_security_rules" {
-    for_each = var.default_security_list_rules.private_subnets.udp_egress_ports_from_all
+    for_each = var.default_security_list_rules.private_subnets.udp_egress_ports_to_all
     content {
       protocol    = local.protocols.udp
       description = "Outbound UDP to port ${egress_security_rules.value}"
