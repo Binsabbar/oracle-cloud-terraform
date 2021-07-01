@@ -79,8 +79,8 @@ resource "oci_core_subnet" "public_subnet" {
   vcn_id                     = oci_core_vcn.vcn.id
   dhcp_options_id            = oci_core_default_dhcp_options.dhcp_options.id
   route_table_id             = lookup(each.value.optionals, "route_table_id", oci_core_default_route_table.public_route_table.id)
-  dns_label                  = each.key
-  display_name               = "${each.key}Subnet"
+  dns_label                  = replace(replace(each.key, "-", ""), "_", "")
+  display_name               = "${each.key} subnet"
   security_list_ids          = concat([oci_core_default_security_list.public_subnet_security_list.id], each.value.security_list_ids)
 }
 
@@ -92,7 +92,7 @@ resource "oci_core_subnet" "private_subnet" {
   vcn_id                     = oci_core_vcn.vcn.id
   dhcp_options_id            = oci_core_default_dhcp_options.dhcp_options.id
   route_table_id             = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table.id)
-  dns_label                  = each.key
-  display_name               = "${each.key}Subnet"
+  dns_label                  = replace(replace(each.key, "-", ""), "_", "")
+  display_name               = "${each.key} subnet"
   security_list_ids          = concat([oci_core_security_list.private_subnet_security_list.id], each.value.security_list_ids)
 }
