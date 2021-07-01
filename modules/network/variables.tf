@@ -107,14 +107,14 @@ variable "default_security_list_rules" {
   })
 
   default = {
-    private_subnets = {
+    public_subnets = {
       tcp_egress_ports_from_all = []
       udp_egress_ports_from_all = []
       enable_icpm_from_all      = false
       #TODO V2: tcp_ingress_ports_from_all = []
       #TODO V2: udp_ingress_ports_from_all = []
     }
-    public_subnets = {
+    private_subnets = {
       tcp_egress_ports_from_all = []
       udp_egress_ports_from_all = []
       enable_icpm_from_vcn      = false
