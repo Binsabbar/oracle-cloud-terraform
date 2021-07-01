@@ -11,6 +11,7 @@ variable "cidr_block" {
   description = "The CIDR block for the VCN"
 }
 
+#TODO: (Deprecation) this will move to default_security_list_rules in V2
 variable "allowed_ingress_ports" {
   type        = list(number)
   default     = []
@@ -95,6 +96,8 @@ variable "default_security_list_rules" {
       tcp_egress_ports_from_all = list(number)
       udp_egress_ports_from_all = list(number)
       enable_icpm_from_all      = bool
+      #TODO V2: tcp_ingress_ports_from_all = list(number)
+      #TODO V2: udp_ingress_ports_from_all = list(number)
     })
     private_subnets = object({
       tcp_egress_ports_from_all = list(number)
@@ -108,6 +111,8 @@ variable "default_security_list_rules" {
       tcp_egress_ports_from_all = []
       udp_egress_ports_from_all = []
       enable_icpm_from_all      = false
+      #TODO V2: tcp_ingress_ports_from_all = []
+      #TODO V2: udp_ingress_ports_from_all = []
     }
     public_subnets = {
       tcp_egress_ports_from_all = []
