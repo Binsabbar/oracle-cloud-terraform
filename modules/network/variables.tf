@@ -94,10 +94,12 @@ variable "default_security_list_rules" {
     public_subnets = object({
       tcp_egress_ports_from_all = list(number)
       udp_egress_ports_from_all = list(number)
+      enable_icpm_from_all      = bool
     })
     private_subnets = object({
       tcp_egress_ports_from_all = list(number)
       udp_egress_ports_from_all = list(number)
+      enable_icpm_from_vcn      = bool
     })
   })
 
@@ -105,10 +107,12 @@ variable "default_security_list_rules" {
     private_subnets = {
       tcp_egress_ports_from_all = []
       udp_egress_ports_from_all = []
+      enable_icpm_from_all      = false
     }
     public_subnets = {
       tcp_egress_ports_from_all = []
       udp_egress_ports_from_all = []
+      enable_icpm_from_vcn      = false
     }
   }
   description = "map of objects for allowed tcp and udp egress ports to the internet (0.0.0.0/0)"
