@@ -41,10 +41,10 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
 
   dynamic "egress_security_rules" {
     for_each = var.default_security_list_rules.public_subnets.tcp_egress_ports_from_all
-    egress_security_rules {
-      destination = "0.0.0.0/0"
-      description = "Outbound TCP to port ${egress_security_rules.value}"
+    content {
       protocol    = local.protocols.tcp
+      description = "Outbound TCP to port ${egress_security_rules.value}"
+      destination = "0.0.0.0/0"
       tcp_options {
         max = egress_security_rules.value
         min = egress_security_rules.value
@@ -54,10 +54,10 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
 
   dynamic "egress_security_rules" {
     for_each = var.default_security_list_rules.public_subnets.udp_egress_ports_from_all
-    egress_security_rules {
-      destination = "0.0.0.0/0"
-      description = "Outbound UDP to port ${egress_security_rules.value}"
+    content {
       protocol    = local.protocols.udp
+      description = "Outbound UDP to port ${egress_security_rules.value}"
+      destination = "0.0.0.0/0"
       udp_options {
         max = egress_security_rules.value
         min = egress_security_rules.value
@@ -87,10 +87,10 @@ resource "oci_core_security_list" "private_subnet_security_list" {
 
   dynamic "egress_security_rules" {
     for_each = var.default_security_list_rules.private_subnets.tcp_egress_ports_from_all
-    egress_security_rules {
-      destination = "0.0.0.0/0"
-      description = "Outbound TCP to port ${egress_security_rules.value}"
+    content {
       protocol    = local.protocols.tcp
+      description = "Outbound TCP to port ${egress_security_rules.value}"
+      destination = "0.0.0.0/0"
       tcp_options {
         max = egress_security_rules.value
         min = egress_security_rules.value
@@ -100,10 +100,10 @@ resource "oci_core_security_list" "private_subnet_security_list" {
 
   dynamic "egress_security_rules" {
     for_each = var.default_security_list_rules.private_subnets.udp_egress_ports_from_all
-    egress_security_rules {
-      destination = "0.0.0.0/0"
-      description = "Outbound UDP to port ${egress_security_rules.value}"
+    content {
       protocol    = local.protocols.udp
+      description = "Outbound UDP to port ${egress_security_rules.value}"
+      destination = "0.0.0.0/0"
       udp_options {
         max = egress_security_rules.value
         min = egress_security_rules.value
