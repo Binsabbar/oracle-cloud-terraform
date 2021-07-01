@@ -36,7 +36,7 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
       }
     }
   }
-  
+
   dynamic "egress_security_rules" {
     for_each = var.default_security_list_rules.public_subnets.enable_icpm_to_all ? local.icmp_types : []
     content {
