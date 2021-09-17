@@ -1,60 +1,65 @@
 #TODO v3 support replication in regions
 
 resource "oci_kms_vault" "vault" {
-    #Required
-    compartment_id = var.compartment_id
-    display_name = var.vault_display_name
-    vault_type = var.vault_vault_type
+  for_each = var.vaults
+  
+  compartment_id = each.value.compartment_id
+  display_name = each.value.name
+  vault_type = each.value.type
+}
 
-    restore_from_file {
-      content_length = ""
-      content_md5 = ""
-      restore_vault_from_file_details = ""
-    }
+resource "oci_kms_vault" "vault_file_restored" {
+  for_each = var.file_restored_vaults
 
-    restore_from_object_store {
-      bucket = ""
-      destination = ""
-      namespace = ""
-      object = ""
-      uri = ""
-    }
+  compartment_id = each.value.compartment_id
+  display_name = each.value.name
+  vault_type = each.value.type
+  restore_from_file {
+    content_length = each.value.file.length
+    content_md5 = each.value.file.md5
+    restore_vault_from_file_details = each.value.file.content
+  }
+}
+
+resource "oci_kms_vault" "vault_object_storage_restored" {
+  for_each = var.file_restored_vaults
+
+  compartment_id = each.value.compartment_id
+  display_name = each.value.name
+  vault_type = each.value.type
+  restore_from_object_store {
+    bucket = each.value.oci_object_store.bucket
+    destination = each.value.oci_object_store.destination
+    namespace = each.value.oci_object_store.namespace
+    object = each.value.oci_object_store.object
+    uri = each.value.oci_object_store.uri
+  }
+}
+
+locals {
+  flattened_keys = flatten([
+    for vault_ref, vault in var.vaults: [
+      for key_ref, key in vault.keys : merge(key, { vault_ref = vault_ref, key_ref = key_ref })
+    ]
+  ])
 }
 
 resource "oci_kms_key" "key" {
-    #Required
-    compartment_id = var.compartment_id
-    display_name = var.key_display_name
-    desired_state = ""
-    key_shape {
-        algorithm = var.key_key_shape_algorithm
-        length = var.key_key_shape_length
-        curve_id = oci_kms_curve.test_curve.id
-    }
-    management_endpoint = var.key_management_endpoint
+  for_each = { for item in local.flattened_keys: "${item.vault_ref}:${item.key_ref}" => item }
+  
+  compartment_id = each.value.compartment_id
+  display_name = each.value.name
+  desired_state = each.value.state
+  key_shape {
+      algorithm = each.value.algorithm
+      length = each.value.length
+  }
 
-    protection_mode = "${var.key_protection_mode}"
-
-    restore_from_file {
-      content_length = ""
-      content_md5 = ""
-      restore_vault_from_file_details = ""
-    }
-
-    restore_from_object_store {
-      bucket = ""
-      destination = ""
-      namespace = ""
-      object = ""
-      uri = ""
-    }
-    restore_trigger  = ""
-    time_of_deletion = ""
+  management_endpoint = oci_kms_vault.vault[each.value.vault_ref].key_management_endpoint
+  protection_mode = each.value.mode
 }
 
-resource "oci_kms_key_version" "key_version" {
-    #Required
-    key_id = oci_kms_key.test_key.id
-    management_endpoint = var.key_version_management_endpoint
-}
-w
+# resource "oci_kms_key_version" "key_version" {
+#     key_id = oci_kms_key.test_key.id
+#     management_endpoint = var.key_version_management_endpoint
+# }

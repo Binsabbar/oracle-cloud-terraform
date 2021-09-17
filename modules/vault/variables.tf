@@ -10,6 +10,7 @@ variable "vaults" {
       algorithm = string
       state = string
       mode = string
+      versions = set(number)
     }))
   }))
 
@@ -24,8 +25,8 @@ variable "file_restored_vaults" {
     compartment_id = string
     type = string
     file = object({
-      content_length = string
-      content_md5 = string
+      length = string
+      md5 = string
       content = string
     })
     keys = map(object({
@@ -35,6 +36,7 @@ variable "file_restored_vaults" {
       algorithm = string
       state = string
       mode = string
+      versions = set(number)
     }))
   }))
 
@@ -60,6 +62,7 @@ variable "object_store_restored_vaults" {
       algorithm = string
       state = string
       mode = string
+      versions = set(number)
     }))
   }))
 
