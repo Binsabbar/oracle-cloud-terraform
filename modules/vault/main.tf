@@ -8,7 +8,7 @@ resource "oci_kms_vault" "vault" {
   vault_type = each.value.type
 }
 
-resource "oci_kms_vault" "vault_file_restored" {
+resource "oci_kms_vault" "file_restored_vault" {
   for_each = var.file_restored_vaults
 
   compartment_id = each.value.compartment_id
@@ -21,8 +21,8 @@ resource "oci_kms_vault" "vault_file_restored" {
   }
 }
 
-resource "oci_kms_vault" "vault_object_storage_restored" {
-  for_each = var.file_restored_vaults
+resource "oci_kms_vault" "object_store_restored_vault" {
+  for_each = var.object_store_restored_vaults
 
   compartment_id = each.value.compartment_id
   display_name = each.value.name
@@ -42,6 +42,14 @@ locals {
       for key_ref, key in vault.keys : merge(key, { vault_ref = vault_ref, key_ref = key_ref })
     ]
   ])
+
+  flattened_keys_rotations = flatten([
+    for vault_ref, vault in var.vaults: [
+      for key_ref, key in vault.keys : [
+        for version in key.versions: {version = version, vault_ref = vault_ref, key_ref = key_ref }
+      ]
+    ]
+  ])
 }
 
 resource "oci_kms_key" "key" {
@@ -49,17 +57,19 @@ resource "oci_kms_key" "key" {
   
   compartment_id = each.value.compartment_id
   display_name = each.value.name
-  desired_state = each.value.state
+  desired_state = each.value.enabled ? "ENABLED" : "DISABLED"
   key_shape {
       algorithm = each.value.algorithm
       length = each.value.length
   }
 
-  management_endpoint = oci_kms_vault.vault[each.value.vault_ref].key_management_endpoint
+  management_endpoint = oci_kms_vault.vault[each.value.vault_ref].management_endpoint
   protection_mode = each.value.mode
 }
 
-# resource "oci_kms_key_version" "key_version" {
-#     key_id = oci_kms_key.test_key.id
-#     management_endpoint = var.key_version_management_endpoint
-# }
+resource "oci_kms_key_version" "key_version" {
+  for_each = {for item in local.flattened_keys_rotations: "${item.vault_ref}:${item.key_ref}:${item.version}" => item}
+
+  key_id = oci_kms_key.key["${each.value.vault_ref}:${each.value.key_ref}"].id
+  management_endpoint = oci_kms_vault.vault[each.value.vault_ref].management_endpoint
+}

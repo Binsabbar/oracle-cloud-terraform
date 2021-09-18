@@ -8,7 +8,7 @@ variable "vaults" {
       compartment_id = string
       length = string
       algorithm = string
-      state = string
+      enabled = bool
       mode = string
       versions = set(number)
     }))
