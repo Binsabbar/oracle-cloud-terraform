@@ -34,7 +34,7 @@ output "vault_constants" {
       hardware = "HSM"
       software = "SOFTWARE"
     }
-    
+
     key_shapes = {
       aes = {
         name = "AES"

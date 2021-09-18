@@ -1,16 +1,16 @@
 variable "vaults" {
   type = map(object({
-    name = string
+    name           = string
     compartment_id = string
-    type = string
+    type           = string
     keys = map(object({
-      name = string
+      name           = string
       compartment_id = string
-      length = string
-      algorithm = string
-      enabled = bool
-      mode = string
-      versions = set(number)
+      length         = string
+      algorithm      = string
+      enabled        = bool
+      mode           = string
+      versions       = set(number)
     }))
   }))
 
@@ -21,22 +21,22 @@ variable "vaults" {
 #TODO v3 support key restoration from file/object storage
 variable "file_restored_vaults" {
   type = map(object({
-    name = string
+    name           = string
     compartment_id = string
-    type = string
+    type           = string
     file = object({
-      length = string
-      md5 = string
+      length  = string
+      md5     = string
       content = string
     })
     keys = map(object({
-      name = string
+      name           = string
       compartment_id = string
-      length = string
-      algorithm = string
-      state = string
-      mode = string
-      versions = set(number)
+      length         = string
+      algorithm      = string
+      enabled        = bool
+      mode           = string
+      versions       = set(number)
     }))
   }))
 
@@ -45,24 +45,24 @@ variable "file_restored_vaults" {
 
 variable "object_store_restored_vaults" {
   type = map(object({
-    name = string
+    name           = string
     compartment_id = string
-    type = string
+    type           = string
     oci_object_store = object({
-      bucket = string
+      bucket      = string
       destination = string
-      namespace = string
-      object = string
-      uri = string
+      namespace   = string
+      object      = string
+      uri         = string
     })
     keys = map(object({
-      name = string
+      name           = string
       compartment_id = string
-      length = string
-      algorithm = string
-      state = string
-      mode = string
-      versions = set(number)
+      length         = string
+      algorithm      = string
+      enabled        = bool
+      mode           = string
+      versions       = set(number)
     }))
   }))
 
