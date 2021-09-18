@@ -55,11 +55,13 @@ module "network" {
 
   private_subnets = {
     "private-a" = {
+      name              = "private subnet b"
       cidr_block        = "192.168.2.0/24"
       security_list_ids = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
       optionals         = {}
     },
     "private-b" = {
+      name              = "private subnet b"
       cidr_block        = "192.168.3.0/24"
       security_list_ids = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
       optionals         = {}
@@ -68,6 +70,7 @@ module "network" {
 
   public_subnets = {
     "public" = {
+      name              = "the public subnet"
       cidr_block        = "192.168.3.0/24"
       security_list_ids = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
       optionals         = {
