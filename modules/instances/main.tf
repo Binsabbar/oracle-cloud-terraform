@@ -5,7 +5,7 @@ resource "oci_core_instance" "instances" {
   fault_domain         = each.value.fault_domain_name
   compartment_id       = each.value.compartment_id
   shape                = each.value.config.shape
-  display_name         = each.key
+  display_name         = each.value.name
   preserve_boot_volume = true
   state                = each.value.state
   metadata = {
