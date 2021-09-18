@@ -1,7 +1,7 @@
 
 variable "instances" {
   type = map(object({
-    name = string
+    name                     = string
     availability_domain_name = string
     fault_domain_name        = string
     compartment_id           = string
