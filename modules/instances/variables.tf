@@ -20,6 +20,7 @@ variable "instances" {
   }))
   description = <<EOF
     map of objects that represent instances to create. The key name is the instance name that is used for FQDN
+    name                    : the name of instance
     availability_domain_name: the name of the availability domain to create instance in
     fault_domain_name       : the name of the fault domain in the availability domain to create instance in
     compartment_id          : ocid of the compartment
