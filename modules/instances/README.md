@@ -17,6 +17,7 @@ To create 2 instances:
 locals { 
   instances = {
     "prod-jumpbox" = {
+      name                     = "jumpbox-production"
       availability_domain_name = "ocixxxxxx.xxxxxx.xxxxx"
       fault_domain_name        = "ocixxxxxx.xxxxxx.xxxxx"
       compartment_id           = "ocixxxxxx.xxxxxx.xxxxx"
@@ -37,6 +38,7 @@ locals {
     }
     
     "dev-jumpbox" = {
+      name                     = "jumpbox-development"
       availability_domain_name = "ocixxxxxx.xxxxxx.xxxxx"
       fault_domain_name        = "ocixxxxxx.xxxxxx.xxxxx"
       compartment_id           = "ocixxxxxx.xxxxxx.xxxxx"
