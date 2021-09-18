@@ -80,7 +80,7 @@ resource "oci_core_subnet" "public_subnet" {
   dhcp_options_id            = oci_core_default_dhcp_options.dhcp_options.id
   route_table_id             = lookup(each.value.optionals, "route_table_id", oci_core_default_route_table.public_route_table.id)
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
-  display_name               = "${each.key} subnet"
+  display_name               = "${each.value.name} subnet"
   security_list_ids          = concat([oci_core_default_security_list.public_subnet_security_list.id], each.value.security_list_ids)
 }
 

@@ -20,6 +20,7 @@ variable "allowed_ingress_ports" {
 
 variable "private_subnets" {
   type = map(object({
+    name              = string
     cidr_block        = string
     security_list_ids = list(string)
     optionals         = any # map(any)
@@ -28,7 +29,8 @@ variable "private_subnets" {
   }))
 
   description = <<EOL
-  map of subnet object configurations. Key is used as subnet name in the FQDN
+  map of subnet object configurations. Key is used as subnet name in the FQDN (as dns_label)
+    name             : the display name of the subnet (node dns_label can't be updated)
     cidr_block       : the cidr block for the subnet
     security_list_ids: list of security ids to be attached to the subnet
     optionals        : map of optional values
@@ -38,6 +40,7 @@ variable "private_subnets" {
 
 variable "public_subnets" {
   type = map(object({
+    name              = string
     cidr_block        = string
     security_list_ids = list(string)
     optionals         = map(any)
@@ -48,7 +51,8 @@ variable "public_subnets" {
   }))
 
   description = <<EOL
-  map of subnet object configurations. Key is used as subnet name in the FQDN
+  map of subnet object configurations. Key is used as subnet name in the FQDN (as dns_label)
+    name             : the display name of the subnet (node dns_label can't be updated)
     cidr_block       : the cidr block for the subnet
     security_list_ids: list of security ids to be attached to the subnet
     optionals        : map of optional values
