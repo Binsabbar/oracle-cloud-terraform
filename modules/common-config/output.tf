@@ -22,3 +22,44 @@ output "instance_config" {
     }
   }
 }
+
+output "vault_constants" {
+  value = {
+    vault_types = {
+      default = "DEFAULT"
+      private = "VIRTUAL_PRIVATE"
+    }
+
+    protect_mode = {
+      hardware = "HSM"
+      software = "SOFTWARE"
+    }
+    
+    key_shapes = {
+      aes = {
+        name = "AES"
+        length = {
+          "16" = 16
+          "24" = 24
+          "32" = 32
+        }
+      }
+      rsa = {
+        name = "RSA"
+        length = {
+          "256" = 256
+          "384" = 384
+          "512" = 512
+        }
+      }
+      ecdsa = {
+        name = "ECDSA"
+        length = {
+          "32" = 32
+          "48" = 48
+          "66" = 66
+        }
+      }
+    }
+  }
+}
