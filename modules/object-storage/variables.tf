@@ -1,9 +1,19 @@
 variable "buckets" {
   type = map(object({
-    name           = string
     compartment_id = string
     storage_tier   = string
     is_public      = bool
+    lifecycle_rules      = map(object({
+      name = string
+      action = string
+      enabled = string
+      exclusion_patterns = tuple
+      inclusion_patterns = tuple
+      inclusion_prefixes  = tuple
+      target = string
+      time = string
+      time_unit = string
+    }))
     optionals      = any # map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # object_events_enabled = bool - false
