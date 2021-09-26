@@ -1,6 +1,7 @@
 variable "buckets" {
   type = map(object({
     compartment_id = string
+    name           = string
     storage_tier   = string
     is_public      = bool
     lifecycle_rules      = map(object({
