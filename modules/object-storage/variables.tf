@@ -15,7 +15,7 @@ variable "buckets" {
       time               = string
       time_unit          = string
     }))
-    optionals = any # map(any)
+    optionals = map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # object_events_enabled = bool - false
     # versioning_enabled    = bool - false
