@@ -14,7 +14,7 @@ resource "oci_objectstorage_bucket" "bucket" {
 
 resource "oci_objectstorage_object_lifecycle_policy" "lifecycle_policy" {
   for_each  = var.buckets
-  bucket    = oci_objectstorage_bucket.bucket.name //to make dependency with bucket resoruce 
+  bucket    = oci_objectstorage_bucket.bucket.key[name] //to make dependency with bucket resoruce 
   namespace = data.oci_objectstorage_namespace.namespace.namespace
 
   dynamic "rules" {
