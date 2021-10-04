@@ -4,18 +4,18 @@ variable "buckets" {
     name           = string
     storage_tier   = string
     is_public      = bool
-    lifecycle_rules      = map(object({
-      name = string
-      action = string
-      enabled = string
-      exclusion_patterns = tuple
-      inclusion_patterns = tuple
-      inclusion_prefixes  = tuple
-      target = string
-      time = string
-      time_unit = string
+    lifecycle_rules = map(object({
+      name               = string
+      action             = string
+      enabled            = string
+      exclusion_patterns = list(string)
+      inclusion_patterns = list(string)
+      inclusion_prefixes = list(string)
+      target             = string
+      time               = string
+      time_unit          = string
     }))
-    optionals      = any # map(any)
+    optionals = any # map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # object_events_enabled = bool - false
     # versioning_enabled    = bool - false

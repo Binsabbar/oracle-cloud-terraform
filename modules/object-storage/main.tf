@@ -14,23 +14,23 @@ resource "oci_objectstorage_bucket" "bucket" {
 
 resource "oci_objectstorage_object_lifecycle_policy" "lifecycle_policy" {
   for_each  = var.buckets
-  bucket    = each.value.bucket_name
+  bucket    = each.value.name
   namespace = data.oci_objectstorage_namespace.namespace.namespace
 
   dynamic "rules" {
-    for_each = each.lifecycle_rules
+    for_each = each.value.lifecycle_rules
     content {
-      action     = rules.action
-      is_enabled = rules.enabled
-      name       = rules.name
+      action     = rules.value.action
+      is_enabled = rules.value.enabled
+      name       = rules.value.name
       object_name_filter {
-        exclusion_patterns = rules.exclusion_patterns
-        inclusion_patterns = rules.inclusion_patterns
-        inclusion_prefixes = rules.inclusion_prefixes
+        exclusion_patterns = rules.value.exclusion_patterns
+        inclusion_patterns = rules.value.inclusion_patterns
+        inclusion_prefixes = rules.value.inclusion_prefixes
       }
-      target      = rules.object
-      time_amount = rules.time
-      time_unit   = rules.time_unit
+      target      = rules.value.target
+      time_amount = rules.value.time
+      time_unit   = rules.value.time_unit
     }
   }
 }
