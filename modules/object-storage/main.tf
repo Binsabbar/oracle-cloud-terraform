@@ -1,21 +1,9 @@
 data "oci_objectstorage_namespace" "namespace" {}
 
-locals {
-  flattened_lifecyle_rules = [ for bucket_key, bucket_v in var.buckets: 
-    [ for rule_k, rule_v in bucket_v.lifecycle_rules: {
-      bucket_key    = bucket_key
-      bucket_name   = bucket_v.name
-      rule_key      = rule_k
-      rule          = rule_v
-      }
-    ]
-  ]
-}
-
 resource "oci_objectstorage_bucket" "bucket" {
   for_each = var.buckets
 
-  namespace = data.oci_objectstorage_namespace.namespace.namespace
+  namespace             = data.oci_objectstorage_namespace.namespace.namespace
   compartment_id        = each.value.compartment_id
   name                  = each.value.name
   access_type           = each.value.is_public == true ? "ObjectReadWithoutList" : "NoPublicAccess"
@@ -25,12 +13,12 @@ resource "oci_objectstorage_bucket" "bucket" {
 }
 
 resource "oci_objectstorage_object_lifecycle_policy" "lifecycle_policy" {
-  for_each = { for i in local.flattened_lifecyle_rules: "${i.bucket_key}:${i.rule_key}" => i }
-  bucket    = i.value.bucket_name
+  for_each  = var.buckets
+  bucket    = each.value.bucket_name
   namespace = data.oci_objectstorage_namespace.namespace.namespace
-  
+
   dynamic "rules" {
-    for_each = [i.rule]
+    for_each = each.lifecycle_rules
     content {
       action     = rules.action
       is_enabled = rules.enabled
