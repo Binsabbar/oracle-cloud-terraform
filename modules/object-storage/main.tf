@@ -2,12 +2,13 @@ data "oci_objectstorage_namespace" "namespace" {}
 
 locals {
   flattened_lifecyle_rules = [ for bucket_key, bucket_v in var.buckets: 
-    for rule_k, rule_v in bucket_v.lifecycle_rules: {
+    [ for rule_k, rule_v in bucket_v.lifecycle_rules: {
       bucket_key    = bucket_key
       bucket_name   = bucket_v.name
       rule_key      = rule_k
       rule          = rule_v
-    }
+      }
+    ]
   ]
 }
 
