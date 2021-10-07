@@ -18,7 +18,7 @@ resource "oci_objectstorage_object_lifecycle_policy" "lifecycle_policy" {
   namespace = data.oci_objectstorage_namespace.namespace.namespace
 
   dynamic "rules" {
-    for_each = each.value.lifecycle_rules
+    for_each = { for k, v in each.value.lifecycle_rules : k => v if v.target != "multipart-uploads" }
     content {
       action     = rules.value.action
       is_enabled = rules.value.enabled
@@ -28,6 +28,18 @@ resource "oci_objectstorage_object_lifecycle_policy" "lifecycle_policy" {
         inclusion_patterns = rules.value.inclusion_patterns
         inclusion_prefixes = rules.value.inclusion_prefixes
       }
+      target      = rules.value.target
+      time_amount = rules.value.time
+      time_unit   = rules.value.time_unit
+    }
+  }
+
+  dynamic "rules" {
+    for_each = { for k, v in each.value.lifecycle_rules : k => v if v.target == "multipart-uploads" }
+    content {
+      action      = rules.value.action
+      is_enabled  = rules.value.enabled
+      name        = rules.value.name
       target      = rules.value.target
       time_amount = rules.value.time
       time_unit   = rules.value.time_unit
