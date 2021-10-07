@@ -23,14 +23,10 @@ resource "oci_objectstorage_object_lifecycle_policy" "lifecycle_policy" {
       action     = rules.value.action
       is_enabled = rules.value.enabled
       name       = rules.value.name
-
-      dynamic "object_name_filter" {
-        for_each = rules.value.target == "multipart-uploads" ? [true] : []
-        content {
-          exclusion_patterns = rules.value.exclusion_patterns
-          inclusion_patterns = rules.value.inclusion_patterns
-          inclusion_prefixes = rules.value.inclusion_prefixes
-        }
+      object_name_filter {
+        exclusion_patterns = rules.value.exclusion_patterns
+        inclusion_patterns = rules.value.inclusion_patterns
+        inclusion_prefixes = rules.value.inclusion_prefixes
       }
       target      = rules.value.target
       time_amount = rules.value.time
