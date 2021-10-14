@@ -11,13 +11,6 @@ variable "cidr_block" {
   description = "The CIDR block for the VCN"
 }
 
-#TODO: (Deprecation) this will move to default_security_list_rules in V2
-variable "allowed_ingress_ports" {
-  type        = list(number)
-  default     = []
-  description = "list of allowed ports that will allow inbound connection to machines in public subnet for default security list"
-}
-
 variable "private_subnets" {
   type = map(object({
     name              = string
@@ -97,36 +90,40 @@ variable "private_route_table_rules" {
 variable "default_security_list_rules" {
   type = object({
     public_subnets = object({
-      tcp_egress_ports_to_all = list(number)
-      udp_egress_ports_to_all = list(number)
-      enable_icpm_from_all    = bool
-      enable_icpm_to_all      = bool
-      #TODO V2: tcp_ingress_ports_from_all = list(number)
-      #TODO V2: udp_ingress_ports_from_all = list(number)
+      tcp_egress_ports_to_all    = list(number)
+      tcp_ingress_ports_from_all = list(number)
+      udp_egress_ports_to_all    = list(number)
+      udp_ingress_ports_from_all = list(number)
+      enable_icpm_from_all       = bool
+      enable_icpm_to_all         = bool
     })
     private_subnets = object({
-      tcp_egress_ports_to_all = list(number)
-      udp_egress_ports_to_all = list(number)
-      enable_icpm_from_vcn    = bool
-      enable_icpm_to_all      = bool
+      tcp_egress_ports_to_all    = list(number)
+      tcp_ingress_ports_from_vcn = list(number)
+      udp_egress_ports_to_all    = list(number)
+      udp_ingress_ports_from_vcn = list(number)
+      enable_icpm_from_vcn       = bool
+      enable_icpm_to_all         = bool
     })
   })
 
   default = {
     public_subnets = {
-      tcp_egress_ports_to_all = []
-      udp_egress_ports_to_all = []
-      enable_icpm_from_all    = false
-      enable_icpm_to_all      = false
-      #TODO V2: tcp_ingress_ports_from_all = []
-      #TODO V2: udp_ingress_ports_from_all = []
+      tcp_egress_ports_to_all    = []
+      tcp_ingress_ports_from_all = []
+      udp_egress_ports_to_all    = []
+      udp_ingress_ports_from_all = []
+      enable_icpm_from_all       = false
+      enable_icpm_to_all         = false
     }
     private_subnets = {
-      tcp_egress_ports_to_all = []
-      udp_egress_ports_to_all = []
-      enable_icpm_from_vcn    = false
-      enable_icpm_to_all      = false
+      tcp_egress_ports_to_all    = []
+      tcp_ingress_ports_from_vcn = []
+      udp_egress_ports_to_all    = []
+      udp_ingress_ports_from_vcn = []
+      enable_icpm_from_vcn       = false
+      enable_icpm_to_all         = false
     }
   }
-  description = "map of objects for allowed tcp and udp egress ports to the internet (0.0.0.0/0)"
+  description = "map of objects for allowed tcp and udp ingress/egress ports to the internet (0.0.0.0/0)"
 }
