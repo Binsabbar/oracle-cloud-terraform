@@ -12,8 +12,22 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
   manage_default_resource_id = oci_core_vcn.vcn.default_security_list_id
   display_name               = "default public security list"
 
+  # INGRESS
   dynamic "ingress_security_rules" {
-    for_each = var.allowed_ingress_ports
+    for_each = var.default_security_list_rules.public_subnets.tcp_ingress_ports_from_all
+    content {
+      protocol    = local.protocols.tcp
+      description = "Inbound for port ${ingress_security_rules.value} from all"
+      source      = "0.0.0.0/0"
+      tcp_options {
+        min = ingress_security_rules.value
+        max = ingress_security_rules.value
+      }
+    }
+  }
+
+  dynamic "ingress_security_rules" {
+    for_each = var.default_security_list_rules.public_subnets.udp_ingress_ports_from_all
     content {
       protocol    = local.protocols.tcp
       description = "Inbound for port ${ingress_security_rules.value} from all"
@@ -37,6 +51,7 @@ resource "oci_core_default_security_list" "public_subnet_security_list" {
     }
   }
 
+  # EGRESS
   dynamic "egress_security_rules" {
     for_each = var.default_security_list_rules.public_subnets.enable_icpm_to_all ? local.icmp_types : []
     content {
@@ -81,6 +96,33 @@ resource "oci_core_security_list" "private_subnet_security_list" {
   vcn_id         = oci_core_vcn.vcn.id
   display_name   = "default private security list"
 
+  # INGRESS
+  dynamic "ingress_security_rules" {
+    for_each = var.default_security_list_rules.private_subnets.tcp_ingress_ports_from_vcn
+    content {
+      protocol    = local.protocols.tcp
+      description = "Inbound for port ${ingress_security_rules.value} from all"
+      source      = oci_core_vcn.vcn.cidr_block
+      tcp_options {
+        min = ingress_security_rules.value
+        max = ingress_security_rules.value
+      }
+    }
+  }
+
+  dynamic "ingress_security_rules" {
+    for_each = var.default_security_list_rules.private_subnets.udp_ingress_ports_from_vcn
+    content {
+      protocol    = local.protocols.tcp
+      description = "Inbound for port ${ingress_security_rules.value} from all"
+      source      = oci_core_vcn.vcn.cidr_block
+      tcp_options {
+        min = ingress_security_rules.value
+        max = ingress_security_rules.value
+      }
+    }
+  }
+
   dynamic "ingress_security_rules" {
     for_each = var.default_security_list_rules.private_subnets.enable_icpm_from_vcn ? local.icmp_types : []
     content {
@@ -93,6 +135,7 @@ resource "oci_core_security_list" "private_subnet_security_list" {
     }
   }
 
+  # EGRESS
   dynamic "egress_security_rules" {
     for_each = var.default_security_list_rules.private_subnets.enable_icpm_to_all ? local.icmp_types : []
     content {
