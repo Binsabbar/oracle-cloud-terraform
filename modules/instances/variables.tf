@@ -1,4 +1,11 @@
 
+locals {
+  default_primary_config = {
+    primary_ip   = ""
+    secondry_ips = {}
+  }
+}
+
 variable "instances" {
   type = map(object({
     name                     = string
@@ -20,11 +27,22 @@ variable "instances" {
         primary_ip = string # Leave empty if no need for it
         secondry_ips = map(object({
           # Use oci_core_private_ip to attach private ip to existing primary vnic
-          name = string
+          name       = string
           ip_address = string # must be in the same subnet
         }))
       })
     })
+    secondary_vnics = map(object({
+      primary_ip             = string
+      subnet_id              = string
+      nsg_ids                = list(string)
+      skip_source_dest_check = bool
+      hostname_label         = string
+      secondry_ips = map(object({
+        name       = string
+        ip_address = string
+      }))
+    }))
     optionals = map(any)
     # preserve_boot_volume =  bool (true)
   }))
