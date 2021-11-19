@@ -7,8 +7,11 @@ The module iterates over a list of instances as input, and create them. Check `v
 
 Each object in the input list represent an instance that can have its own configuration, such as which compartment, subnet it belongs to, or which security group is attached to.
 
+Using this module you can attach multiple VNICs to your instance. Moreover, you can assign secondary IP (e.g as floating IP) to each of VNIC.
+
+To attach public IP to any private IP you create in this module, refer to `public_ip` module.
+
 ## Limitations
-* The current setup allows an instance to be part of one subnet. Attaching an instance to multiple network interface is not yet supported in this module.
 * Advance Configuration of the instance is not yet possible using this module. The only configuration acceptable are the ones defined in `variables.tf`.
 
 ## Examples
@@ -55,6 +58,33 @@ locals {
         network_sgs_ids = [
           "ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx",
         ]
+        primary_vnic = {
+          primary_ip = "192.168.100.12"
+          secondary_ips = {
+            "floating_ip_1" = {
+              name       = "floating IP"
+              ip_address = "192.168.100.200"
+            }
+          }
+        }
+      }
+      secondary_vnics = {
+        "network_a_vnic" = {
+          name       = "VNIC in Network A"
+          primary_ip = "192.168.130.12"
+          subnet_id  = "ocid1.subnet.oc1.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          nsg_ids    = []
+          optionals = {
+            skip_source_dest_check = true
+            hostname_label         = "vnic_2"
+          }
+          secondary_ips = {
+            "floating_ip" = {
+              name       = "Floating IP in Network A"
+              ip_address = "192.168.130.200"
+            }
+          }
+        }
       }
     }
 }
