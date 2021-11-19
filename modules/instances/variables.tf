@@ -1,8 +1,8 @@
 
 locals {
   default_primary_config = {
-    primary_ip   = ""
-    secondry_ips = {}
+    primary_ip    = ""
+    secondary_ips = {}
   }
 }
 
@@ -25,7 +25,7 @@ variable "instances" {
       })
       primary_vnic = object({
         primary_ip = string # Leave empty if no need for it
-        secondry_ips = map(object({
+        secondary_ips = map(object({
           # Use oci_core_private_ip to attach private ip to existing primary vnic
           name       = string
           ip_address = string # must be in the same subnet
@@ -33,12 +33,14 @@ variable "instances" {
       })
     })
     secondary_vnics = map(object({
-      primary_ip             = string
-      subnet_id              = string
-      nsg_ids                = list(string)
-      skip_source_dest_check = bool
-      hostname_label         = string
-      secondry_ips = map(object({
+      name       = string
+      primary_ip = string # Leave empty for dynamic allocation
+      subnet_id  = string
+      nsg_ids    = list(string)
+      optionals  = map(any)
+      # skip_source_dest_check = bool (false)
+      # hostname_label         = string (null)
+      secondary_ips = map(object({
         name       = string
         ip_address = string
       }))
@@ -64,9 +66,20 @@ variable "instances" {
         prohibit_public_ip_on_vnic : whether to create public IP or not if located in public subnet, set to false if not
       primary_vnic : object for primary VNIC configuration
         primary_ip   : custom initial IP. If left empty, oci will create IP dynamically.
-        secondry_ips : map of objects for secondry IP configuration
+        secondary_ips : map of objects for secondary IP configuration
           name         : the name of IP
           ip_address   : custom IP that must be in the same subnet above of VNIC. If left empty, oci will create IP dynamically
+    secondary_vnics: map of object for secondary VNIC configuration
+      name       = the name of VNIC
+      primary_ip =  custom initial IP. If left empty, oci will create IP dynamically.
+      subnet_id  = subnet id for creating the VNIC in
+      nsg_ids    = list network security groups ids to be applied to the VNIC
+      optionals  = set of key/value map that can be used for customise default values.
+        skip_source_dest_check = bool (false)
+        hostname_label         = string (null)
+      secondary_ips = map of objects for secondary IP configuration
+        name       = string
+        ip_address = string
     optionals : set of key/value map that can be used for customise default values.
       preserve_boot_volume  : whether to keep boot volume after delete or not
   EOF
