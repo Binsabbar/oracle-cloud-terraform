@@ -92,8 +92,8 @@ resource "oci_core_vnic_attachment" "secondary_vnic_attachment" {
     private_ip                = each.value.vnic.primary_ip == "" ? null : each.value.vnic.primary_ip
     nsg_ids                   = each.value.vnic.nsg_ids
     subnet_id                 = each.value.vnic.subnet_id
-    hostname_label            = lookup(each.value.vnic.optionals, "hostname_label", null)
-    skip_source_dest_check    = lookup(each.value.vnic.optionals, "skip_source_dest_check", false)
+    hostname_label            = each.value.vnic.hostname_label
+    skip_source_dest_check    = each.value.vnic.skip_source_dest_check
   }
 
   instance_id = oci_core_instance.instances[each.value.instance_key].id
