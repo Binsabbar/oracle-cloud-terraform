@@ -33,13 +33,12 @@ variable "instances" {
       })
     })
     secondary_vnics = map(object({
-      name       = string
-      primary_ip = string # Leave empty for dynamic allocation
-      subnet_id  = string
-      nsg_ids    = list(string)
-      optionals  = map(any)
-      # skip_source_dest_check = bool (false)
-      # hostname_label         = string (null)
+      name                   = string
+      primary_ip             = string # Leave empty for dynamic allocation
+      subnet_id              = string
+      nsg_ids                = list(string)
+      skip_source_dest_check = bool
+      hostname_label         = string
       secondary_ips = map(object({
         name       = string
         ip_address = string
@@ -65,7 +64,7 @@ variable "instances" {
         id                         : ocid of the subnet
         prohibit_public_ip_on_vnic : whether to create public IP or not if located in public subnet, set to false if not
       primary_vnic : object for primary VNIC configuration
-        primary_ip   : custom initial IP. If left empty, oci will create IP dynamically.
+        primary_ip    : custom initial IP. If left empty, oci will create IP dynamically.
         secondary_ips : map of objects for secondary IP configuration
           name         : the name of IP
           ip_address   : custom IP that must be in the same subnet above of VNIC. If left empty, oci will create IP dynamically
@@ -74,9 +73,8 @@ variable "instances" {
       primary_ip =  custom initial IP. If left empty, oci will create IP dynamically.
       subnet_id  = subnet id for creating the VNIC in
       nsg_ids    = list network security groups ids to be applied to the VNIC
-      optionals  = set of key/value map that can be used for customise default values.
-        skip_source_dest_check = bool (false)
-        hostname_label         = string (null)
+      skip_source_dest_check = bool (false)
+      hostname_label         = string (null)
       secondary_ips = map of objects for secondary IP configuration
         name       = string
         ip_address = string

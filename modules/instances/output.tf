@@ -26,7 +26,7 @@ output "instances" {
               ip_address = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].ip_address
               vnic_id    = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].vnic_id
               subnet_id  = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].subnet_id
-            } if ip.vnic_key == vnic.vnic_key
+            } if ip.instance_key == k
           }
         } if vnic.instance_key == k
       }
