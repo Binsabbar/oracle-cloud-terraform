@@ -37,7 +37,12 @@ locals {
         network_sgs_ids = [
           "ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx",
         ]
+        primary_vnic = {
+          primary_ip = ""
+          secondary_ips = {}
+        }
       }
+      secondary_vnics = {}
     }
     
     "dev-jumpbox" = {
@@ -74,10 +79,8 @@ locals {
           primary_ip = "192.168.130.12"
           subnet_id  = "ocid1.subnet.oc1.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
           nsg_ids    = []
-          optionals = {
-            skip_source_dest_check = true
-            hostname_label         = "vnic_2"
-          }
+          skip_source_dest_check = true
+          hostname_label         = "vnic_2"
           secondary_ips = {
             "floating_ip" = {
               name       = "Floating IP in Network A"
