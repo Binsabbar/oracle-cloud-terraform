@@ -7,6 +7,7 @@ variable "fss" {
       options = map(object({
         source    = string
         access    = string
+        #TODO : Fix this check instances module for example of fix
         optionals = any # this must be a map(any) however, due to a bug, it has to be marked as any
         # The followings are the keys for the optionals with defaults in brackets
         # require_privileged_source_port = bool ("true")
