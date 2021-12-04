@@ -1,5 +1,8 @@
 # V2:
 ## _**Breaking Changes**_
+* `public_ip` module input name is changed from 'ips` to `untracked_ips`.
+  * This is to distinguish public IPs that will be managed by Terraform. 
+  * output of module changed. Previously named `ips` renamed to `untracked_ips`
 * `object-storage` module input is updated to include configuration for `lifecycle` managements.
   * Add the following key to every bucket created `lifecycle-rules = {}`. To configure rules, refer to module's readme.
 * `network` module input is updated as following:
@@ -40,6 +43,8 @@
 * (`object-storage`) Allow to add `lifecycle-rules` to buckets.
 * (`instance`) Ability to add multiple secondary IPs to primary VNIC
 * (`instance`) Ability to add multiple secondary VNICs and multiple private IPs
+* (`public-ip`) Ability to attach public ip to a given private IP
+
 ## **Enhancement**
 * (instances) Allow rename of instance withour recration (breaking change)
   * You need to add `name` attribute to the instance objects you already created.
