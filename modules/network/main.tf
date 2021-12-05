@@ -25,6 +25,8 @@ resource "oci_core_nat_gateway" "nat_gateway" {
   compartment_id = var.compartment_id
   vcn_id         = oci_core_vcn.vcn.id
   display_name   = "defaultNatGateway"
+  public_ip_id   = var.nat_configuration.public_ip_id
+  block_traffic  = var.nat_configuration.block_traffic
 }
 
 
@@ -53,12 +55,15 @@ resource "oci_core_route_table" "private_route_table" {
   compartment_id = var.compartment_id
   vcn_id         = oci_core_vcn.vcn.id
   display_name   = "defaultPrivateRouteTable"
-  route_rules {
-    destination       = "0.0.0.0/0"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_nat_gateway.nat_gateway.id
-  }
 
+  dynamic "route_rules" {
+    for_each = var.nat_gateway_block_traffic == true ? [] : toset([1])
+    content {
+      destination       = "0.0.0.0/0"
+      destination_type  = "CIDR_BLOCK"
+      network_entity_id = oci_core_nat_gateway.nat_gateway.id
+    }
+  }
   dynamic "route_rules" {
     for_each = var.private_route_table_rules
     content {

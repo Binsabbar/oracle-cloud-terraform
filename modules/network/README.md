@@ -13,7 +13,7 @@ The module will create a single virtual cloud network, with no subnet by default
 When the VCN is created, the following objects are created by default:
 * DHCP: Used by default for both public and private subnets
 * Internet Gateway (defaultInternetGateway): it is attached to any created public subnet
-* NAT GAteway (defaultNatGateway): It is attached to any created private subnet
+* NAT GAteway (defaultNatGateway): It is attached to any created private subnet (configurable via variable `nat_configuration`)
 * Route Table (defaultRouteTable): if no route table id is passed for a public subnet, this route table is used for the public subnet. The public default route table is configurable using `public_route_table_rules` variable.
 * Private Route Table (defaultPrivateRouteTable): if no route table id is passed for a private subnet, this route table is used for the private subnet. The private default route table is configurable using `private_route_table_rules` variable.
 * Default Public Security List: This list is attached to EVERY public subnet created.
@@ -27,6 +27,9 @@ When the VCN is created, the following objects are created by default:
 ## Note about Route Table and Security List
 * Route Table: the module will use default route table if not route table id is passed during creation of subnet. You can either configure the defaul route tables using `xxxxxx_route_table_rules` variables, or you can set different route table for each subnet you create using `route_table_id` key of the subnet you create.
 * Security List: the module will create defaul subnet list rules, and you can enhance that further by creating your own security list and pass them as IDs to the subnet. You can also use `default_security_list_rules` to specify list of egress ports to the internet for the public and private subnets.
+
+## Note about NAT gateway
+NAT gateway is configurable via `nat_configuration` variable. Traffic can be blocked. When `nat_configuration.block_traffic` is set to true, the route table rule `0.0.0.0/0` via NAT is removed from table.
 
 ## Limitations
 * The module does not support VCN Peering.
@@ -94,6 +97,11 @@ module "network" {
       enable_icpm_from_vcn       = true
       enable_icpm_to_all         = true
     }
+  }
+
+  nat_configuration = {
+    public_ip_id = "oci.xxxxxxxx"
+    block_traffic = true
   }
 }
 ```
