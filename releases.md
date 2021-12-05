@@ -61,6 +61,7 @@
 * (`instance`) Ability to add multiple secondary IPs to primary VNIC
 * (`instance`) Ability to add multiple secondary VNICs and multiple private IPs
 * (`public-ip`) Ability to attach public ip to a given private IP
+* (`network`) Ability to configure `NAT Gateway` (block traffic, assign reserved public IP)
 
 ## **Enhancement**
 * (instances) Allow rename of instance withour recration (breaking change)

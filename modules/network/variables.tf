@@ -127,3 +127,20 @@ variable "default_security_list_rules" {
   }
   description = "map of objects for allowed tcp and udp ingress/egress ports to the internet (0.0.0.0/0)"
 }
+
+variable "nat_configuration" {
+  type = object({
+    public_ip_id  = string
+    block_traffic = bool
+  })
+  default = {
+    block_traffic = false
+    public_ip_id  = ""
+  }
+
+  description = <<EOF
+    map of object to configure NAT
+      public_ip_id: ID of reserved public IP. Leave empty if you want oci to create random public IP
+      block_traffic: disable traffic on the NAT
+  EOF
+}
