@@ -28,8 +28,10 @@ When the VCN is created, the following objects are created by default:
 * Route Table: the module will use default route table if not route table id is passed during creation of subnet. You can either configure the defaul route tables using `xxxxxx_route_table_rules` variables, or you can set different route table for each subnet you create using `route_table_id` key of the subnet you create.
 * Security List: the module will create defaul subnet list rules, and you can enhance that further by creating your own security list and pass them as IDs to the subnet. You can also use `default_security_list_rules` to specify list of egress ports to the internet for the public and private subnets.
 
-## Note about NAT gateway
-NAT gateway is configurable via `nat_configuration` variable. Traffic can be blocked. When `nat_configuration.block_traffic` is set to true, the route table rule `0.0.0.0/0` via NAT is removed from table.
+## Note about Gateways
+* NAT gateway is configurable via `nat_configuration` variable. Traffic can be blocked. When `nat_configuration.block_traffic` is set to true, the route table rule `0.0.0.0/0` via NAT is removed from table.
+
+* Internet gateway can be disabled via `enable_internet_gateway` variable.
 
 ## Limitations
 * The module does not support VCN Peering.
@@ -103,5 +105,7 @@ module "network" {
     public_ip_id = "oci.xxxxxxxx"
     block_traffic = true
   }
+
+  enable_internet_gateway = false
 }
 ```
