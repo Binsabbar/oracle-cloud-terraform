@@ -39,8 +39,6 @@ variable "public_subnets" {
     optionals         = map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # route_table_id = string # id of custom route table
-    # allow_tcp_egress_to_ports = list(string) # egress tcp ports to 0.0.0.0/0
-    # allow_udp_egress_to_ports = list(string) # egress udp ports to 0.0.0.0/0
   }))
 
   description = <<EOL
@@ -50,8 +48,6 @@ variable "public_subnets" {
     security_list_ids: list of security ids to be attached to the subnet
     optionals        : map of optional values
       route_table_id: route table id to be used instead of defaul one
-      allow_tcp_egress_to_ports: egress tcp ports to 0.0.0.0/0 to be added to default security list
-      allow_udp_egress_to_ports: egress udp ports to 0.0.0.0/0 to be added to default security list
   EOL
 }
 
