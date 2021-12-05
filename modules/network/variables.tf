@@ -140,3 +140,8 @@ variable "nat_configuration" {
       block_traffic: disable traffic on the NAT
   EOF
 }
+
+variable "enable_internet_gateway" {
+  type    = bool
+  default = true
+}
