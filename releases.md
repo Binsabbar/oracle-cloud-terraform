@@ -8,6 +8,23 @@
 * `network` module input is updated as following:
   * `allowed_ingress_ports` is removed and replaced by the new key `tcp_ingress_ports_from_all` in `default_security_list_rules.public_subnets`.
     * `allowed_ingress_ports` was applied only to **public subnet security list** as TCP ingress. Whatever value you had there add it to `default_security_list_rules.public_subnets.tcp_ingress_ports_from_all`
+* `instances` modules output is updated:
+  * `public_ip` and `private_ip`, and `private_ip` is renamed to `ip_address`:
+  ```
+  "primary_vnic" = {
+      "primary_ip" = {
+        "id" = "ocid1.privateip.oc1.xxxxxxxxxxxxxxxx"
+        "ip_address" = "xxx.xxx.xxx.xxx"
+        "public_ip" = "xxx.xxx.xxx.xxx"
+        "subnet_id" = "ocid1.subnet.oc1.xxxxxxxxxxxxxxx"
+        "vnic_id" = "ocid1.vnic.oc1.xxxxxxxxxxxxxxx"
+      }
+      "secondary_ips" = {
+        ...
+        ...
+      }
+  }
+  ```
 * `instances` modules input is updated as following:
   * `config` object has new attribute `primary_vnic`.
     * Add the following when upgrading to fix it.
