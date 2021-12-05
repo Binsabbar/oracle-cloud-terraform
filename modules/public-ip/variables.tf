@@ -16,7 +16,7 @@ variable "tracked_ips" {
     private_ip_id = string
     name          = string
   }))
-  default = {}
+  default     = {}
   description = <<EOF
     Map of private IP id to assign to the created public IP. Terraform manages private IP assignments and TRACKS changes (check README.md)
   EOF
