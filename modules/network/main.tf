@@ -35,7 +35,7 @@ resource "oci_core_default_route_table" "public_route_table" {
   manage_default_resource_id = oci_core_vcn.vcn.default_route_table_id
   display_name               = "defaultRouteTable"
   dynamic "route_rules" {
-    for_each = var.enable_internet_gateway != true ? []:toset([1])
+    for_each = var.enable_internet_gateway != true ? [] : toset([1])
     content {
       destination       = "0.0.0.0/0"
       destination_type  = "CIDR_BLOCK"
