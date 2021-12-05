@@ -57,7 +57,7 @@ resource "oci_core_route_table" "private_route_table" {
   display_name   = "defaultPrivateRouteTable"
 
   dynamic "route_rules" {
-    for_each = var.nat_gateway_block_traffic == true ? [] : toset([1])
+    for_each = var.nat_configuration.block_traffic == true ? [] : toset([1])
     content {
       destination       = "0.0.0.0/0"
       destination_type  = "CIDR_BLOCK"
