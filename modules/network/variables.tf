@@ -11,6 +11,59 @@ variable "cidr_block" {
   description = "The CIDR block for the VCN"
 }
 
+# Gateways
+variable "nat_gateway" {
+  type = object({
+    enable        = bool
+    public_ip_id  = string
+    block_traffic = bool
+  })
+  default = {
+    enable        = true
+    block_traffic = false
+    public_ip_id  = ""
+  }
+
+  description = <<EOF
+    map of object to configure NAT
+      enable       : set to true to create a NAT Gateway and automatically add route rule in private route table
+      public_ip_id : ID of reserved public IP. Leave empty if you want oci to create random public IP
+      block_traffic: disable traffic on the NAT (but keep it in the route table!)
+  EOF
+}
+
+variable "internet_gateway" {
+  type = object({
+    enable = bool
+  })
+
+  default = {
+    enable = true
+  }
+  description = <<EOF
+    map of object to configure Internet Gateway
+      enable: set to true to create a Internet Gateway and automatically add route rule in public route table
+  EOF
+}
+
+variable "service_gateway" {
+  type = object({
+    enable     = bool
+    service_id = string
+  })
+
+  default = {
+    enable     = false
+    service_id = ""
+  }
+  description = <<EOF
+    map of object to configure Service Gateway
+      enable    : set to true to create a Service Gateway and automatically add route rule in private route table
+      service_id: The Services ID (check OCI Service Gateway docs)
+  EOF
+}
+
+# Subnets
 variable "private_subnets" {
   type = map(object({
     name              = string
@@ -51,6 +104,7 @@ variable "public_subnets" {
   EOL
 }
 
+# Routing
 variable "public_route_table_rules" {
   type = map(object({
     destination       = string
@@ -83,6 +137,7 @@ variable "private_route_table_rules" {
   EOL
 }
 
+# Security
 variable "default_security_list_rules" {
   type = object({
     public_subnets = object({
@@ -122,26 +177,4 @@ variable "default_security_list_rules" {
     }
   }
   description = "map of objects for allowed tcp and udp ingress/egress ports to the internet (0.0.0.0/0)"
-}
-
-variable "nat_configuration" {
-  type = object({
-    public_ip_id  = string
-    block_traffic = bool
-  })
-  default = {
-    block_traffic = false
-    public_ip_id  = ""
-  }
-
-  description = <<EOF
-    map of object to configure NAT
-      public_ip_id: ID of reserved public IP. Leave empty if you want oci to create random public IP
-      block_traffic: disable traffic on the NAT
-  EOF
-}
-
-variable "enable_internet_gateway" {
-  type    = bool
-  default = true
 }

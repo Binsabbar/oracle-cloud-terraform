@@ -2,6 +2,7 @@
   - [What is created as part of the module?](#what-is-created-as-part-of-the-module)
   - [Note About Default Security Lists:](#note-about-default-security-lists)
   - [Note about Route Table and Security List](#note-about-route-table-and-security-list)
+  - [Note about Gateways](#note-about-gateways)
   - [Limitations](#limitations)
   
 # Network
@@ -12,8 +13,8 @@ The module will create a single virtual cloud network, with no subnet by default
 
 When the VCN is created, the following objects are created by default:
 * DHCP: Used by default for both public and private subnets
-* Internet Gateway (defaultInternetGateway): it is attached to any created public subnet
-* NAT GAteway (defaultNatGateway): It is attached to any created private subnet (configurable via variable `nat_configuration`)
+* Internet Gateway (defaultInternetGateway): it is attached to any created public subnet (configurable via variable `internet_gateway`)
+* NAT GAteway (defaultNatGateway): It is attached to any created private subnet (configurable via variable `nat_gateway`)
 * Route Table (defaultRouteTable): if no route table id is passed for a public subnet, this route table is used for the public subnet. The public default route table is configurable using `public_route_table_rules` variable.
 * Private Route Table (defaultPrivateRouteTable): if no route table id is passed for a private subnet, this route table is used for the private subnet. The private default route table is configurable using `private_route_table_rules` variable.
 * Default Public Security List: This list is attached to EVERY public subnet created.
@@ -29,9 +30,11 @@ When the VCN is created, the following objects are created by default:
 * Security List: the module will create defaul subnet list rules, and you can enhance that further by creating your own security list and pass them as IDs to the subnet. You can also use `default_security_list_rules` to specify list of egress ports to the internet for the public and private subnets.
 
 ## Note about Gateways
-* NAT gateway is configurable via `nat_configuration` variable. Traffic can be blocked. When `nat_configuration.block_traffic` is set to true, the route table rule `0.0.0.0/0` via NAT is removed from table.
+* NAT Gateway is configurable via `nat_gateway` variable. When it is created, route rule to `0.0.0.0` is automatically added to `private_route_table` via the nat gateway. To disable creation of Nat Gateway, set `nat_gateway.enable` to `false`. Moreover, to enable creation, but block traffic, set `nat_gateway.block_traffic` to `true`.
 
-* Internet gateway can be disabled via `enable_internet_gateway` variable.
+* Internet Gateway can be disabled via `internet_gateway.enable` variable.
+
+* Servie Gateway is configurable via `service_gateway` variable, and can be disabled as well. When it is created, route rule to "Services ID" is automatically added to `private_route_table`.
 
 ## Limitations
 * The module does not support VCN Peering.
@@ -54,7 +57,7 @@ module "network" {
 
   compartment_id        = "ocixxxxxx.xxxxxx.xxxxx"
   name                  = "vcn"
-  cidr_block            = "192.168.0.0/16"
+  cidr_block            = "192.168.0.0/20"
 
   private_subnets = {
     "private-a" = {
@@ -101,11 +104,19 @@ module "network" {
     }
   }
 
-  nat_configuration = {
-    public_ip_id = "oci.xxxxxxxx"
+  nat_gateway = {
+    enable        = true
+    public_ip_id  = "oci.xxxxxxxx"
     block_traffic = true
   }
 
-  enable_internet_gateway = false
+  internet_gateway = {
+    enable = true
+  }
+
+  service_gateway = {
+    enable = true
+    service_id = ""
+  }
 }
 ```
