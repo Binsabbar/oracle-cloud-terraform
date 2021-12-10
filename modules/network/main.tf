@@ -15,31 +15,34 @@ resource "oci_core_default_dhcp_options" "dhcp_options" {
 
 // Gateways
 resource "oci_core_internet_gateway" "internet_gateway" {
+  count = var.internet_gateway.enable ? 1 : 0
+
   compartment_id = var.compartment_id
   vcn_id         = oci_core_vcn.vcn.id
-  enabled        = var.enable_internet_gateway
+  enabled        = var.internet_gateway.enable
   display_name   = "defaultInternetGateway"
 }
 
 resource "oci_core_nat_gateway" "nat_gateway" {
+  count = var.nat_gateway.enable ? 1 : 0
+
   compartment_id = var.compartment_id
   vcn_id         = oci_core_vcn.vcn.id
   display_name   = "defaultNatGateway"
-  public_ip_id   = var.nat_configuration.public_ip_id
-  block_traffic  = var.nat_configuration.block_traffic
+  public_ip_id   = var.nat_gateway.public_ip_id
+  block_traffic  = var.nat_gateway.block_traffic
 }
-
 
 // Routes
 resource "oci_core_default_route_table" "public_route_table" {
   manage_default_resource_id = oci_core_vcn.vcn.default_route_table_id
   display_name               = "defaultRouteTable"
   dynamic "route_rules" {
-    for_each = var.enable_internet_gateway != true ? [] : toset([1])
+    for_each = var.internet_gateway.enable == true ? toset([0]) : []
     content {
       destination       = "0.0.0.0/0"
       destination_type  = "CIDR_BLOCK"
-      network_entity_id = oci_core_internet_gateway.internet_gateway.id
+      network_entity_id = oci_core_internet_gateway.internet_gateway[0].id
     }
   }
   dynamic "route_rules" {
@@ -59,11 +62,11 @@ resource "oci_core_route_table" "private_route_table" {
   display_name   = "defaultPrivateRouteTable"
 
   dynamic "route_rules" {
-    for_each = var.nat_configuration.block_traffic == true ? [] : toset([1])
+    for_each = var.nat_gateway.enable == true ? toset([0]) : []
     content {
       destination       = "0.0.0.0/0"
       destination_type  = "CIDR_BLOCK"
-      network_entity_id = oci_core_nat_gateway.nat_gateway.id
+      network_entity_id = oci_core_nat_gateway.nat_gateway[0].id
     }
   }
   dynamic "route_rules" {
