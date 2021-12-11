@@ -24,17 +24,16 @@ variable "instances" {
         prohibit_public_ip_on_vnic = bool
       })
       primary_vnic = object({
-        primary_ip = string # Leave empty if no need for it
+        primary_ip = string
         secondary_ips = map(object({
-          # Use oci_core_private_ip to attach private ip to existing primary vnic
           name       = string
-          ip_address = string # must be in the same subnet
+          ip_address = string
         }))
       })
     })
     secondary_vnics = map(object({
       name                   = string
-      primary_ip             = string # Leave empty for dynamic allocation
+      primary_ip             = string
       subnet_id              = string
       nsg_ids                = list(string)
       skip_source_dest_check = bool
