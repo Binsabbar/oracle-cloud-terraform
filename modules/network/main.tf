@@ -1,3 +1,17 @@
+// 
+locals {
+  public_route_table_key  = "igw=${var.internet_gateway.enable}"
+  private_route_table_key = "natgw=${var.nat_gateway.enable}:svcgw=${var.service_gateway.enable}"
+
+  private_route_table = {
+    "${local.private_route_table_key}" = {}
+  }
+
+  public_route_table = {
+    "${local.public_route_table_key}" = {}
+  }
+}
+
 resource "oci_core_vcn" "vcn" {
   cidr_block     = var.cidr_block
   compartment_id = var.compartment_id
@@ -35,6 +49,7 @@ resource "oci_core_nat_gateway" "nat_gateway" {
 
 // Routes
 resource "oci_core_default_route_table" "public_route_table" {
+  for_each                   = local.public_route_table
   manage_default_resource_id = oci_core_vcn.vcn.default_route_table_id
   display_name               = "defaultRouteTable"
   dynamic "route_rules" {
@@ -57,6 +72,8 @@ resource "oci_core_default_route_table" "public_route_table" {
 }
 
 resource "oci_core_route_table" "private_route_table" {
+  for_each = local.private_route_table
+
   compartment_id = var.compartment_id
   vcn_id         = oci_core_vcn.vcn.id
   display_name   = "defaultPrivateRouteTable"
@@ -88,7 +105,6 @@ resource "oci_core_subnet" "public_subnet" {
   prohibit_public_ip_on_vnic = false
   vcn_id                     = oci_core_vcn.vcn.id
   dhcp_options_id            = oci_core_default_dhcp_options.dhcp_options.id
-  route_table_id             = lookup(each.value.optionals, "route_table_id", oci_core_default_route_table.public_route_table.id)
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.value.name} subnet"
   security_list_ids          = concat([oci_core_default_security_list.public_subnet_security_list.id], each.value.security_list_ids)
@@ -101,8 +117,20 @@ resource "oci_core_subnet" "private_subnet" {
   prohibit_public_ip_on_vnic = true
   vcn_id                     = oci_core_vcn.vcn.id
   dhcp_options_id            = oci_core_default_dhcp_options.dhcp_options.id
-  route_table_id             = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table.id)
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.key} subnet"
   security_list_ids          = concat([oci_core_security_list.private_subnet_security_list.id], each.value.security_list_ids)
+}
+
+// Route Table Association
+resource "oci_core_route_table_attachment" "public_route_table_attachment" {
+  for_each       = var.public_subnets
+  subnet_id      = oci_core_subnet.public_subnet[each.key].id
+  route_table_id = lookup(each.value.optionals, "route_table_id", oci_core_default_route_table.public_route_table[local.public_route_table_key].id)
+}
+
+resource "oci_core_route_table_attachment" "private_route_table_attachment" {
+  for_each       = var.private_subnets
+  subnet_id      = oci_core_subnet.private_subnet[each.key].id
+  route_table_id = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table[local.private_route_table_key].id)
 }
