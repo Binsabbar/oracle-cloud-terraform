@@ -116,7 +116,8 @@ module "network" {
 
   service_gateway = {
     enable = true
-    service_id = ""
+    service_id = "ocid1.service.oc1.xxxxxxx"
+    route_rule_destination = "all-pox-services-in-oracle-services-network"
   }
 }
 ```
