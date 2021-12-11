@@ -1,6 +1,6 @@
 # V2:
 ## _**Breaking Changes**_
-* `public_ip` module input name is changed from 'ips` to `untracked_ips`.
+* `public_ip` module input name is changed from `ips` to `untracked_ips`.
   * This is to distinguish public IPs that will be managed by Terraform. 
   * output of module changed. Previously named `ips` renamed to `untracked_ips`
 * `object-storage` module input is updated to include configuration for `lifecycle` managements.
@@ -8,6 +8,25 @@
 * `network` module input is updated as following:
   * `allowed_ingress_ports` is removed and replaced by the new key `tcp_ingress_ports_from_all` in `default_security_list_rules.public_subnets`.
     * `allowed_ingress_ports` was applied only to **public subnet security list** as TCP ingress. Whatever value you had there add it to `default_security_list_rules.public_subnets.tcp_ingress_ports_from_all`
+  * `tcp_ingress_ports_from_vcn` and `udp_ingress_ports_from_vcn` are added to `default_security_list_rules.private_subnets`
+  * NAT Gateway and Internet Gateway resource name has changed. Run the following command manually to update the state names
+  
+  Internet Gateway Resource 
+  ```
+  terraform state mv module.NETWORK_MODULE_NAME.oci_core_internet_gateway mv module.module.NETWORK_MODULE_NAME.oci_core_internet_gateway\[0\]
+  ```
+  Nat Gateway Resource 
+  ```
+  terraform state mv module.NETWORK_MODULE_NAME.oci_core_nat_gateway mv module.module.NETWORK_MODULE_NAME.oci_core_nat_gateway\[0\]
+  ```
+  Public Route Table Resource 
+  ```
+  terraform state mv module.NETWORK_MODULE_NAME.oci_core_default_route_table.public_route_table module.NETWORK_MODULE_NAME.oci_core_default_route_table.public_route_table\[\"igw=true\"\]
+  ```
+  Private Route Table Resource
+  ```
+  terraform state mv module.NETWORK_MODULE_NAME.oci_core_route_table.private_route_table module.NETWORK_MODULE_NAME.oci_core_route_table.private_route_table\[\"natgw=true:svcgw=false\"\]
+  ```
 * `instances` modules output is updated:
   * `public_ip` and `private_ip`, and `private_ip` is renamed to `ip_address`:
   ```
@@ -32,10 +51,10 @@
     ...
     ...
     config = { 
-      primary_vnic = { 
+      primary_vnic = {  <------ this line start
         primary_ip = "", 
         secondary_ips = {}
-      }
+      } <------ this line end
     }
     ...
     ...
@@ -50,7 +69,7 @@
       ...
       ...
       }
-      secondary_vnics = {}
+      secondary_vnics = {} <------ this line
       ...
       ...
     }
@@ -62,8 +81,9 @@
 * (`instance`) Ability to add multiple secondary VNICs and multiple private IPs
 * (`public-ip`) Ability to attach public ip to a given private IP
 * (`network`) Ability to 
-  * configure `NAT Gateway` (block traffic, assign reserved public IP)
+  * configure `NAT Gateway` (enable/disable, block traffic, assign reserved public IP)
   * configure `Internet Gateway` (enable/disable gateway)
+  * Create `Service Gateway`.
 
 ## **Enhancement**
 * (instances) Allow rename of instance withour recration (breaking change)
