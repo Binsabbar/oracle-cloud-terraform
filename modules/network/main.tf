@@ -47,6 +47,17 @@ resource "oci_core_nat_gateway" "nat_gateway" {
   block_traffic  = var.nat_gateway.block_traffic
 }
 
+resource "oci_core_service_gateway" "service_gateway" {
+  count = var.service_gateway.enable ? 1 : 0
+
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_vcn.vcn.id
+  display_name   = "defaultServiceGateway"
+  services {
+      service_id = var.service_gateway.service_id
+  }
+}
+
 // Routes
 resource "oci_core_default_route_table" "public_route_table" {
   for_each                   = local.public_route_table
@@ -86,6 +97,16 @@ resource "oci_core_route_table" "private_route_table" {
       network_entity_id = oci_core_nat_gateway.nat_gateway[0].id
     }
   }
+  
+  dynamic "route_rules" {
+    for_each = var.service_gateway.enable == true ? toset([0]) : []
+    content {
+      destination       = var.service_gateway.route_rule_destination
+      destination_type  = "SERVICE_CIDR_BLOCK"
+      network_entity_id = oci_core_service_gateway.service_gateway[0].id
+    }
+  }
+  
   dynamic "route_rules" {
     for_each = var.private_route_table_rules
     content {
