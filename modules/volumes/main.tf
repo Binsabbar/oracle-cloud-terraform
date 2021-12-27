@@ -5,7 +5,7 @@ locals {
     }
   ]...)
 
-  does_reference_to_backup_policy_key_name_exist = alltrue([ for k, v in var.volumes : v.reference_to_backup_policy_key_name != null? contains(keys(var.backup_policies), v.reference_to_backup_policy_key_name):true ])
+  does_reference_to_backup_policy_key_name_exist = alltrue([for k, v in var.volumes : v.reference_to_backup_policy_key_name != null ? contains(keys(var.backup_policies), v.reference_to_backup_policy_key_name) : true])
 }
 
 // Error Checking if reference_to_backup_policy_key_name exists in var.backup_policies (work around described here https://github.com/hashicorp/terraform/issues/15469#issuecomment-814789329)
@@ -44,7 +44,7 @@ resource "oci_core_volume" "volume" {
   }
 }
 
-// Attachment 
+// Volume Attachment to Instnace
 resource "oci_core_volume_attachment" "volume_attachment" {
   for_each = local.instance_volume_attachments
 
@@ -59,25 +59,30 @@ resource "oci_core_volume_attachment" "volume_attachment" {
   use_chap                            = lookup(each.value.optionals, "use_chap", "false")
 }
 
-# // Backup Policy
-# resource "oci_core_volume_backup_policy" "volume_backup_policy" {
-#     compartment_id = var.compartment_id
-#     destination_region = var.volume_backup_policy_destination_region
-#     display_name = var.volume_backup_policy_display_name
-#     schedules {
-#         backup_type = var.volume_backup_policy_schedules_backup_type
-#         period = var.volume_backup_policy_schedules_period
-#         retention_seconds = var.volume_backup_policy_schedules_retention_seconds
+// Backup Policy
+resource "oci_core_volume_backup_policy" "volume_backup_policy" {
+  for_each = var.backup_policies
 
-#         day_of_month = var.volume_backup_policy_schedules_day_of_month
-#         day_of_week = var.volume_backup_policy_schedules_day_of_week
-#         hour_of_day = var.volume_backup_policy_schedules_hour_of_day
-#         month = var.volume_backup_policy_schedules_month
-#         offset_seconds = var.volume_backup_policy_schedules_offset_seconds
-#         offset_type = var.volume_backup_policy_schedules_offset_type
-#         time_zone = var.volume_backup_policy_schedules_time_zone
-#     }
-# }
+  compartment_id     = each.value.compartment_id
+  destination_region = each.value.destination_region
+  display_name       = each.value.name
+
+  dynamic "schedules" {
+    for_each = each.value.schedules
+    content {
+      offset_seconds    = 0
+      offset_type       = "STRUCTURED"
+      backup_type       = schedules.value.backup_type
+      period            = schedules.value.period
+      retention_seconds = schedules.value.retention_seconds
+      time_zone         = lookup(schedules.value.optionals, "time_zone", "UTC")
+      hour_of_day       = lookup(schedules.value.optionals, "hour_of_day", 0)
+      day_of_week       = lookup(schedules.value.optionals, "day_of_week", "MONDAY")
+      day_of_month      = lookup(schedules.value.optionals, "day_of_month", 1)
+      month             = lookup(schedules.value.optionals, "month", "JANUARY")
+    }
+  }
+}
 
 
 # // Policy Attachment
