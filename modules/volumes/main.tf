@@ -29,7 +29,7 @@ resource "oci_core_volume" "volume" {
   }
 
   dynamic "source_details" {
-    for_each = each.value.cloned ? each.value.source_volume : []
+    for_each = length(each.value.source_volume) != 0 ? [each.value.source_volume] : []
     content {
       id   = source_details.value.id
       type = source_details.value.type
@@ -61,6 +61,7 @@ resource "oci_core_volume_attachment" "volume_attachment" {
 #         backup_type = var.volume_backup_policy_schedules_backup_type
 #         period = var.volume_backup_policy_schedules_period
 #         retention_seconds = var.volume_backup_policy_schedules_retention_seconds
+
 #         day_of_month = var.volume_backup_policy_schedules_day_of_month
 #         day_of_week = var.volume_backup_policy_schedules_day_of_week
 #         hour_of_day = var.volume_backup_policy_schedules_hour_of_day
