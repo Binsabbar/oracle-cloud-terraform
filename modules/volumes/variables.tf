@@ -1,3 +1,33 @@
+variable "backup_policies" {
+  type = map(object({
+    compartment_id = string
+    name = string
+    region = string
+    schedules = object({
+      type = string
+      period = string
+      retention_seconds = number
+      optionals = map(string)
+      # day_of_month 
+      # day_of_week
+      # hour_of_day
+      # month
+      # offset_seconds
+      # offset_type
+      # time_zone
+    })
+  }))
+
+  validation {
+    condition = alltrue(flatten([
+      for k, v in var.backup_policies : [
+        for option in keys(v.schedules.optionals) : contains(["day_of_month", "day_of_week", "hour_of_day", "month", "offset_seconds", "offset_type", "zone"], option)
+      ]
+    ]))
+    error_message = "The var.backup_policies.*.schedules.optionals accepts \"day_of_month\", \"day_of_week\", \"hour_of_day\", \"month\", \"offset_seconds\", \"offset_type\", \"zone\"."
+  }
+}
+
 variable "volumes" {
   type = map(object({
     name                = string
@@ -5,7 +35,7 @@ variable "volumes" {
     availability_domain = string
     size_in_gbs         = string
     disable_replicas    = bool
-    reference_to_backup_policy_key_name = string
+    reference_to_backup_policy_key_name = string  # The name of the key in var.backup_policies
     cross_ad_replicas = map(object({
       destination_availability_domain = string
       replica_name                    = string
