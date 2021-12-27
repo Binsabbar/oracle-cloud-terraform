@@ -5,38 +5,33 @@ variable "volumes" {
     availability_domain = string
     size_in_gbs         = string
     disable_replicas    = bool
+    reference_to_backup_policy_key_name = string
     cross_ad_replicas = map(object({
       destination_availability_domain = string
       replica_name                    = string
     }))
-    cloned = bool
-    source_volume = list(object({
-      id   = string
-      type = string
-    }))
+    source_volume = map(string)
+      # id   = string
+      # type = string
     instances_attachment = map(object({
       instance_id  = string
       is_shareable = bool
       optionals    = map(string)
-      # type = string
-      # is_read_only = bool
-      # is_pv_encryption_in_transit_enabled = bool
-      # encryption_in_transit_type = string
-      # use_chap = bool
+        # type = string
+        # is_read_only = bool
+        # is_pv_encryption_in_transit_enabled = bool
+        # encryption_in_transit_type = string
+        # use_chap = bool
     }))
     optionals = map(string)
-    # kms_id = string
-    # auto_tuned = bool
-    # vpus_per_gb = number
+      # kms_id = string
+      # auto_tuned = bool
+      # vpus_per_gb = number
   }))
 
-
   validation {
-    condition = alltrue([
-      for k, v in var.volumes :
-      length(v.source_volume) < 2
-    ])
-    error_message = "The volumes.*.source_volume cannot contain more than 1 value."
+    condition = alltrue(flatten([for k, v in var.volumes : [for source_volume_key in keys(v.source_volume): contains(["id", "type"], source_volume_key)]]))
+    error_message = "The volumes.*.source_volume must be map consisting of the following two keys \"id\" and \"type\"."
   }
 
   validation {
