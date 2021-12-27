@@ -4,6 +4,13 @@ locals {
       for attch_k, attach_v in vol_v.instances_attachment : "${vol_k}-${attch_k}" => merge(attach_v, { volume_key = vol_k })
     }
   ]...)
+
+  does_reference_to_backup_policy_key_name_exist = alltrue([ for k, v in var.volumes : v.reference_to_backup_policy_key_name != null? contains(keys(var.backup_policies), v.reference_to_backup_policy_key_name):true ])
+}
+
+// Error Checking if reference_to_backup_policy_key_name exists in var.backup_policies (work around described here https://github.com/hashicorp/terraform/issues/15469#issuecomment-814789329)
+resource "null_resource" "does_reference_to_backup_policy_key_name_exist" {
+  count = local.does_reference_to_backup_policy_key_name_exist ? 0 : "ERROR: volumes.*.reference_to_backup_policy_key_name must exist in var.backup_policies"
 }
 
 // Volume
