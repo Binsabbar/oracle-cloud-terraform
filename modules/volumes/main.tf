@@ -1,98 +1,56 @@
-variable "volumes" {
-  type = map(object({
-    name = string
-    compartment_id = string
-    availability_domain = string
-    size_in_gbs = string
-    disable_replicas = bool
-    cross_ad_replicas = map(object({
-      destination_availability_domain = string
-      replica_name = string
-    }))
-    cloned  = bool
-    source_volume = list(object({
-      id = string
-      type = string
-    }))
-    optionals = map(string)
-    # kms_id
-    # auto_tuned
-    # vpus_per_gb
-  }))
-
-  
-  validation {
-    condition = alltrue([
-      for k, v in var.volumes:
-      length(v.source_volume) < 2
-    ])
-    error_message = "The volumes.*.source_volume cannot contain more than 1 value."
-  }
-  
-  validation {
-    condition = alltrue(flatten([
-      for k, v in var.volumes: [
-        for option in keys(v.optionals): contains(["kms_id", "auto_tuned", "vpus_per_gb"], option)
-      ]
-    ]))
-    error_message = "The volumes.*.optionals accepts \"kms_id\", \"auto_tuned\", \"vpus_per_gb\"."
-  }
+locals {
+  instance_volume_attachments = merge([
+    for vol_k, vol_v in var.volumes : {
+      for attch_k, attach_v in vol_v.instances_attachment : "${vol_k}-${attch_k}" => merge(attach_v, { volume_key = vol_k })
+    }
+  ]...)
 }
 
 // Volume
 resource "oci_core_volume" "volume" {
-    for_each = var.volumes
+  for_each = var.volumes
 
-    compartment_id = each.value.compartment_id
-    availability_domain = each.value.availability_domain
-    display_name = each.value.name
-    size_in_gbs = each.value.size_in_gbs
-    
-    kms_key_id = lookup(each.value.optionals, "kms_id", "")
-    is_auto_tune_enabled = lookup(each.value.optionals, "auto_tuned", "true")
-    vpus_per_gb = lookup(each.value.optionals, "vpus_per_gb", "20")
-    
-    block_volume_replicas_deletion = each.value.disable_replicas
-    dynamic "block_volume_replicas" {
-      for_each = each.value.disable_replicas ? {} : each.value.cross_region_replica
-      content {
-        availability_domain = block_volume_replicas.value.replica_region
-        display_name = block_volume_replicas.value.replica_name
-      }
+  compartment_id      = each.value.compartment_id
+  availability_domain = each.value.availability_domain
+  display_name        = each.value.name
+  size_in_gbs         = each.value.size_in_gbs
+
+  kms_key_id           = lookup(each.value.optionals, "kms_id", "")
+  is_auto_tune_enabled = lookup(each.value.optionals, "auto_tuned", "true")
+  vpus_per_gb          = lookup(each.value.optionals, "vpus_per_gb", "20")
+
+  block_volume_replicas_deletion = each.value.disable_replicas
+  dynamic "block_volume_replicas" {
+    for_each = each.value.disable_replicas ? {} : each.value.cross_region_replica
+    content {
+      availability_domain = block_volume_replicas.value.replica_region
+      display_name        = block_volume_replicas.value.replica_name
     }
-    
-    dynamic "source_details" {
-      for_each = each.value.cloned ? each.value.source_volume:[]
-      content {
-        id = source_details.value.id
-        type = source_details.value.type
-      }
+  }
+
+  dynamic "source_details" {
+    for_each = each.value.cloned ? each.value.source_volume : []
+    content {
+      id   = source_details.value.id
+      type = source_details.value.type
     }
+  }
 }
 
-
-
 // Attachment 
-# resource "oci_core_volume_attachment" "volume_paravirtualized_attachment" {
-#     attachment_type = value.attachment_type
-#     instance_id = each.value.instance_id
-#     volume_id = oci_core_volume.volume.id
-#     display_name = each.key
-#     is_read_only = each.value.is_read_only
-#     is_shareable = each.value.is_shareable    
-#     is_pv_encryption_in_transit_enabled =  each.value.is_pv_encryption_in_transit_enabled
-# }
+resource "oci_core_volume_attachment" "volume_attachment" {
+  for_each = local.instance_volume_attachments
 
-# resource "oci_core_volume_attachment" "volume_attachment" {
-#     attachment_type = value.attachment_type
-#     instance_id = each.value.instance_id
-#     volume_id = oci_core_volume.volume.id
-#     display_name = each.key
-#     is_read_only = each.value.is_read_only
-#     is_shareable = each.value.is_shareable
-#     encryption_in_transit_type = lookup("", "NONE")
-#     use_chap = each.value.use_chap
-# }
+  display_name                        = each.key
+  volume_id                           = oci_core_volume.volume[each.value.volume_key].id
+  attachment_type                     = lookup(each.value.optionals, "type", "paravirtualized")
+  instance_id                         = each.value.instance_id
+  is_read_only                        = lookup(each.value.optionals, "is_read_only", "false")
+  is_shareable                        = each.value.is_shareable
+  is_pv_encryption_in_transit_enabled = lookup(each.value.optionals, "is_pv_encryption_in_transit_enabled", "false")
+  encryption_in_transit_type          = lookup(each.value.optionals, "encryption_in_transit_type", "NONE")
+  use_chap                            = lookup(each.value.optionals, "use_chap", "false")
+}
 
 # // Backup Policy
 # resource "oci_core_volume_backup_policy" "volume_backup_policy" {
