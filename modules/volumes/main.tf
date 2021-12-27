@@ -85,11 +85,13 @@ resource "oci_core_volume_backup_policy" "volume_backup_policy" {
 }
 
 
-# // Policy Attachment
-# resource "oci_core_volume_backup_policy_assignment" "volume_backup_policy_assignment" {
-#     asset_id = oci_core_volume.test_volume.id
-#     policy_id = oci_core_volume_backup_policy.test_volume_backup_policy.id
-# }
+// Policy Attachment
+resource "oci_core_volume_backup_policy_assignment" "volume_backup_policy_assignment" {
+  for_each = { for volume_k, volume_v in var.volumes : volume_k => volume_v if volume_v.reference_to_backup_policy_key_name != null }
+
+  asset_id  = oci_core_volume.volume[each.key].id
+  policy_id = oci_core_volume_backup_policy.volume_backup_policy[each.value.reference_to_backup_policy_key_name].id
+}
 
 # // Group
 # resource "oci_core_volume_group" "test_volume_group" {
