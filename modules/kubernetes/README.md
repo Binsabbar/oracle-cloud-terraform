@@ -18,16 +18,17 @@ module "kubernetes" {
   cluster_name                = "kubernetes"
   enable_kubernetes_dashboard = false
   lb_subnet_ids               = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
-  k8s_version                 = "v1.18.10"
+  cluster_k8s_version                 = "v1.18.10"
   node_pools                  = {
     "node-pool-a" = {
-      compartment_id      = "ocixxxxxx.xxxxxx.xxxxx"
-      ssh_public_key      = "ssh-rsa xxxxxxxxxx"
-      availability_domain = "ocixxxxxx.xxxxxx.xxxxx"
-      subnet_id           = "ocixxxxxx.xxxxxx.xxxxx"
-      shape               = "VM-XXXXXx"
-      size                = 2
-      image_id            = "ocixxxxxx.xxxxxx.xxxxx"
+      compartment_id        = "ocixxxxxx.xxxxxx.xxxxx"
+      ssh_public_key        = "ssh-rsa xxxxxxxxxx"
+      availability_domain   = "ocixxxxxx.xxxxxx.xxxxx"
+      subnet_id             = "ocixxxxxx.xxxxxx.xxxxx"
+      shape                 = "VM-XXXXXx"
+      size                  = 2
+      node_pool_k8s_version = "v1.18.10"
+      image_id              = "ocixxxxxx.xxxxxx.xxxxx"
       labels = {
         "my-label" : "k8s-label"
       }
@@ -40,6 +41,7 @@ module "kubernetes" {
       subnet_id           = "ocixxxxxx.xxxxxx.xxxxx"
       shape               = "VM-XXXXXx"
       size                = 4
+      node_pool_k8s_version = "v1.18.10"
       image_id            = "ocixxxxxx.xxxxxx.xxxxx"
       labels = {
         "my-label" : "k8s-label"
