@@ -2,7 +2,7 @@ resource "oci_containerengine_cluster" "cluster" {
   compartment_id     = var.compartment_id
   name               = var.cluster_name
   vcn_id             = var.vcn_id
-  kubernetes_version = var.k8s_version
+  kubernetes_version = var.cluster_k8s_version
 
   options {
     add_ons {
@@ -18,7 +18,7 @@ resource "oci_containerengine_node_pool" "node_pool" {
 
   cluster_id         = oci_containerengine_cluster.cluster.id
   compartment_id     = each.value.compartment_id
-  kubernetes_version = var.k8s_version
+  kubernetes_version = each.value.node_pool_k8s_version
   name               = "${each.key}-node-pool"
   node_shape         = each.value.shape
   ssh_public_key     = each.value.ssh_public_key

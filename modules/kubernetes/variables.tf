@@ -2,7 +2,12 @@ variable "vcn_id" {
   type = string
 }
 
-variable "k8s_version" {
+variable "cluster_k8s_version" {
+  type    = string
+  default = "v1.17.9"
+}
+
+variable "node_pool_k8s_version" {
   type    = string
   default = "v1.17.9"
 }
