@@ -4,12 +4,7 @@ variable "vcn_id" {
 
 variable "cluster_k8s_version" {
   type    = string
-  default = "v1.17.9"
-}
-
-variable "node_pool_k8s_version" {
-  type    = string
-  default = "v1.17.9"
+  default = "v1.19.15"
 }
 
 variable "compartment_id" {
@@ -41,6 +36,7 @@ variable "node_pools" {
     image_id            = string
     labels              = map(string)
     subnet_id           = string
+    k8s_version         = string
   }))
 
   description = <<EOL
@@ -53,5 +49,6 @@ variable "node_pools" {
     image_id           : ocid of the image
     labels             : map of key/string values to be added to the node during creation
     subnet_id          : ocid of the subnet to create the node in.
+    k8s_version        : set the version of the node pool
   EOL
 }
