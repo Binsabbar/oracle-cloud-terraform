@@ -9,6 +9,7 @@ output "instance_config" {
       ubuntu_20                   = "ocid1.image.oc1.me-jeddah-1.aaaaaaaay5jjjjj5bv2hh5553oi2ljo7nc36dxhx75sarcecs5ozlu374lja"
       oracle_linux_7_8_2020_09_23 = "ocid1.image.oc1.me-jeddah-1.aaaaaaaaaqsxujxurzktxkwx4umh3k7vawylcpi6qibvduvx4cuf5vctajea"
       oracle_linux_7_9_2021_01_12 = "ocid1.image.oc1.me-jeddah-1.aaaaaaaawnlta4ua2sytgjsdd7asdb4naqbgpbiycpcmicdpi3jufh2qajuq"
+      oracle_linux_8_4_2021_10_20 = "ocid1.image.oc1.me-jeddah-1.aaaaaaaag74rit3jqqu4q4vjeabrvmhg767s4kcazzyj5nufvo3joshrlsta"
     }
 
     shapes = {
