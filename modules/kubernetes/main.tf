@@ -42,4 +42,12 @@ resource "oci_containerengine_node_pool" "node_pool" {
     image_id    = each.value.image_id
     source_type = "IMAGE"
   }
+
+  dynamic "node_shape_config" {
+    for_each = length(each.value.flex_shape_config) == 2 ? [1] : []
+    content {
+      memory_in_gbs = each.value.flex_shape_config.memory_in_gbs
+      ocpus         = each.value.flex_shape_config.ocpus
+    }
+  }
 }
