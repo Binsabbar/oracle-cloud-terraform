@@ -54,7 +54,7 @@ resource "oci_core_service_gateway" "service_gateway" {
   vcn_id         = oci_core_vcn.vcn.id
   display_name   = "defaultServiceGateway"
   services {
-      service_id = var.service_gateway.service_id
+    service_id = var.service_gateway.service_id
   }
 }
 
@@ -97,7 +97,7 @@ resource "oci_core_route_table" "private_route_table" {
       network_entity_id = oci_core_nat_gateway.nat_gateway[0].id
     }
   }
-  
+
   dynamic "route_rules" {
     for_each = var.service_gateway.enable == true ? toset([0]) : []
     content {
@@ -106,7 +106,7 @@ resource "oci_core_route_table" "private_route_table" {
       network_entity_id = oci_core_service_gateway.service_gateway[0].id
     }
   }
-  
+
   dynamic "route_rules" {
     for_each = var.private_route_table_rules
     content {
