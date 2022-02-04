@@ -13,13 +13,14 @@ output "instance_config" {
     }
 
     shapes = {
-      micro          = "VM.Standard.E2.1.Micro"
-      standard-ocp1  = "VM.Standard2.1"
-      standard-ocp2  = "VM.Standard2.2"
-      standard-ocp4  = "VM.Standard2.4"
-      standard-ocp8  = "VM.Standard2.8"
-      standard-ocp16 = "VM.Standard2.16"
-      standard-ocp24 = "VM.Standard2.24"
+      micro            = "VM.Standard.E2.1.Micro"
+      standard-ocp1    = "VM.Standard2.1"
+      standard-ocp2    = "VM.Standard2.2"
+      standard-ocp4    = "VM.Standard2.4"
+      standard-ocp8    = "VM.Standard2.8"
+      standard-ocp16   = "VM.Standard2.16"
+      standard-ocp24   = "VM.Standard2.24"
+      standard-e3-flex = "VM.Standard.E3.Flex"
     }
   }
 }
