@@ -33,6 +33,7 @@ variable "node_pools" {
     availability_domain = string
     shape               = string
     size                = number
+    volume_size_in_gbs  = number
     image_id            = string
     labels              = map(string)
     subnet_id           = string
@@ -47,6 +48,7 @@ variable "node_pools" {
     availability_domain: the AD to create nodes in
     shape              : machine/instance shape
     size               : size of disk in GB
+    volume_size_in_gbs : Size of Boot volume in GB per node
     image_id           : ocid of the image
     labels             : map of key/string values to be added to the node during creation
     subnet_id          : ocid of the subnet to create the node in.
