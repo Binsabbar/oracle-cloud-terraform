@@ -39,8 +39,9 @@ resource "oci_containerengine_node_pool" "node_pool" {
   }
 
   node_source_details {
-    image_id    = each.value.image_id
-    source_type = "IMAGE"
+    image_id                = each.value.image_id
+    source_type             = "IMAGE"
+    boot_volume_size_in_gbs = each.value.boot_volume_size_in_gbs
   }
 
   dynamic "node_shape_config" {

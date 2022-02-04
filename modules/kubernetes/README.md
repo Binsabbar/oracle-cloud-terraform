@@ -31,6 +31,7 @@ module "kubernetes" {
       availability_domain   = "ocixxxxxx.xxxxxx.xxxxx"
       subnet_id             = "ocixxxxxx.xxxxxx.xxxxx"
       shape                 = "VM-XXXXXx"
+      volume_size_in_gbs    = 500
       size                  = 2
       k8s_version           = "v1.18.10"
       image_id              = "ocixxxxxx.xxxxxx.xxxxx"
@@ -45,6 +46,7 @@ module "kubernetes" {
       availability_domain = "ocixxxxxx.xxxxxx.xxxxx"
       subnet_id           = "ocixxxxxx.xxxxxx.xxxxx"
       shape               = "VM-XXXXXx"
+      volume_size_in_gbs  = 50
       size                = 4
       k8s_version         = "v1.18.10"
       image_id            = "ocixxxxxx.xxxxxx.xxxxx"
