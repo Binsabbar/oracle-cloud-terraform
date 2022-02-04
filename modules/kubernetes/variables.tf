@@ -37,6 +37,7 @@ variable "node_pools" {
     labels              = map(string)
     subnet_id           = string
     k8s_version         = string
+    flex_shape_config   = map(string)
   }))
 
   description = <<EOL
@@ -50,5 +51,16 @@ variable "node_pools" {
     labels             : map of key/string values to be added to the node during creation
     subnet_id          : ocid of the subnet to create the node in.
     k8s_version        : set the version of the node pool
+    flex_shape_config  : customize number of ocpus and memory when using Flex Shape
   EOL
+
+
+  validation {
+    condition = alltrue(flatten([
+      for k, v in var.node_pools : [
+        for keys in keys(v.flex_shape_config) : contains(["ocpus", "memory_in_gbs"], keys)
+      ]
+    ]))
+    error_message = "The node_pools.*.flex_shape_config accepts only \"ocpus\", \"memory_in_gbs\"."
+  }
 }
