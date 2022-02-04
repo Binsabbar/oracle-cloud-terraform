@@ -48,14 +48,14 @@ variable "internet_gateway" {
 
 variable "service_gateway" {
   type = object({
-    enable     = bool
-    service_id = string
+    enable                 = bool
+    service_id             = string
     route_rule_destination = string
   })
 
   default = {
-    enable     = false
-    service_id = ""
+    enable                 = false
+    service_id             = ""
     route_rule_destination = ""
   }
   description = <<EOF
