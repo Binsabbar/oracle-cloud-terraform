@@ -44,7 +44,7 @@ variable "node_pools" {
     ssh_public_key     : string of ssh-rsa keys to be added to the created nodes/workers in the pool
     availability_domain: the AD to create nodes in
     shape              : machine/instance shape
-    size               : size of disk in GB
+    size               : count of the number of nodes in hte pool
     image_id           : ocid of the image
     labels             : map of key/string values to be added to the node during creation
     subnet_id          : ocid of the subnet to create the node in.
