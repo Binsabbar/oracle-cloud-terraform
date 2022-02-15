@@ -26,6 +26,21 @@ variable "lb_subnet_ids" {
   description = "The Subnet IDs where svc of type LoadBalancers will have their LBs created"
 }
 
+variable "endpoint_config" {
+  type = object({
+    is_public_ip_enabled = bool
+    nsg_ids = set(string)
+    subnet_id = string
+  })
+
+  description = <<EOF
+    Configuration for cluster endpoint
+    is_public_ip_enabled : attach public IP
+    nsg_ids : list network security group to attach on endpoint
+    subnet  : placement of cluster master node
+  EOF
+}
+
 variable "node_pools" {
   type = map(object({
     compartment_id      = string
