@@ -74,12 +74,13 @@
       ...
     }
     ```
-* (`kubernetes`) The following new variables are added. 
+* (`kubernetes`) The following new variables are added (Only supported for NextGen Clusters. Do not upgrade to V2 if you are using old clusters). 
   * `k8s_version` is renamed to `cluster_k8s_version`
+  * `endpoint_config`: set it to existing configuration (take it from UI)
   * `node_pools[].volume_size_in_gbs`: Set it to `50` to keep current configuration as is.
   * `node_pools[].k8s_version`: Set it to the previous value of `k8s_version` to keep current configuration as is.
   * `node_pools[].flex_shape_config`: Set it to `{}`
-  
+  * `node_pools[].node_metadata`: Set it to `{}`
 ## **New** 
 * Add `vault` module to manage KMS (only key management is enabled)
 * (`object-storage`) Allow to add `lifecycle-rules` to buckets.
@@ -92,6 +93,7 @@
   * Create `Service Gateway`.
 * (`kubernetes`) Ability to use `Flex Shape`
 * (`kubernetes`) Ability to change node volume size
+* (`kubernetes`) Ability to use NextGen Cluster
 
 
 ## **Enhancement**
