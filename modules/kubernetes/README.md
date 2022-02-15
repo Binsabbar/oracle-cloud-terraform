@@ -24,6 +24,11 @@ module "kubernetes" {
   enable_kubernetes_dashboard = false
   lb_subnet_ids               = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
   cluster_k8s_version         = "v1.18.10"
+  endpoint_config             = {
+    is_public_ip_enabled = false
+    nsg_ids = ["oci.xxxxxx"]
+    subnet_id = "oci.xxxxxxxx"
+  }
   node_pools                  = {
     "node-pool-a" = {
       compartment_id        = "ocixxxxxx.xxxxxx.xxxxx"
