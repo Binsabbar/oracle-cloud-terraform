@@ -11,7 +11,7 @@ variable "backup_policies" {
       # day_of_month 
       # day_of_week
       # hour_of_day
-      # month
+      # month 
       # time_zone
     }))
   }))
