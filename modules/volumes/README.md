@@ -2,14 +2,27 @@
 
 Create and manage "Block Volumes" and their backup policies across regions. Read more about Block Volumes [here](https://docs.oracle.com/en-us/iaas/Content/Block/Concepts/overview.htm).
 
+# Volume Attachment
+Once the volume is created, you can attach it to multiple instances. By default the volume will be attached as `paravirtualized`. However you have the option to overwrite this under `volumes[].instances_attachment[].optionals.type`.
+
+## Sharing volume with multiple instances
+Ensure that you turn on the `volumes[].instances_attachment[].is_shareable` to `true`.
+
 # Note about Backup Policy
+OCI already provides its own backup policies. However, this modules DOES NOT support using existing policies. You will have to define the policy in this module to be abl to use it with a volume.
+
+When creating a policy, you need to be careful with `backup_policies[].schedules[].optionals`. Depending on the value of `backup_policies[].schedules[].backup_type` you will need to set the `backup_policies[].schedules[].optionals` values. See example below and refer to (core_volume_backup_policy)[https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_volume_backup_policy].
 
 # Replication
+The module supports replication across another region. Just set `volumes[].cross_ad_replicas[].destination_availability_domain` and  `volumes[].cross_ad_replicas[].replica_name` as many times as you want. Ensure that you set `volumes[].disable_replicas` to `false`
 
 # Creating Volume from other source
+To create a volume from an existing volume, all you have to do is to set `volumes[].source_volume.id` and `volumes[].source_volume.type`. This makes it possible to clone an existing volume and use it as new one.
 
 # Limitations 
-
+* Using predefined OCI Backup Policy not supported.
+* `offsetSeconds` Backup Policy are NOT supported.
+*  
 # Example
 
 ```js
