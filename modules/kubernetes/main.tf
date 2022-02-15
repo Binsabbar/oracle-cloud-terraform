@@ -22,6 +22,8 @@ resource "oci_containerengine_node_pool" "node_pool" {
   name               = "${each.key}-node-pool"
   node_shape         = each.value.shape
   ssh_public_key     = each.value.ssh_public_key
+  node_metadata      = each.value.node_metadata
+
   dynamic "initial_node_labels" {
     for_each = each.value.labels
     content {
@@ -29,7 +31,6 @@ resource "oci_containerengine_node_pool" "node_pool" {
       value = initial_node_labels.value
     }
   }
-
   node_config_details {
     size = each.value.size
     placement_configs {

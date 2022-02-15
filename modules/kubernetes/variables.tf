@@ -39,6 +39,7 @@ variable "node_pools" {
     subnet_id           = string
     k8s_version         = string
     flex_shape_config   = map(string)
+    node_metadata       = map(string)
   }))
 
   description = <<EOL
@@ -54,6 +55,7 @@ variable "node_pools" {
     subnet_id          : ocid of the subnet to create the node in.
     k8s_version        : set the version of the node pool
     flex_shape_config  : customize number of ocpus and memory when using Flex Shape
+    node_metadata      : key/value for node metadata
   EOL
 
 
