@@ -1,7 +1,7 @@
 # V2:
 ## _**Breaking Changes**_
 * `public_ip` module input name is changed from `ips` to `untracked_ips`.
-  * This is to distinguish public IPs that will be managed by Terraform. 
+  * This is to distinguish public IPs that will be managed by Terraform (private IP assignment are not tracked by Terraform). This is used in service like `NLB`. 
   * output of module changed. Previously named `ips` renamed to `untracked_ips`
 * `object-storage` module input is updated to include configuration for `lifecycle` managements.
   * Add the following key to every bucket created `lifecycle-rules = {}`. To configure rules, refer to module's readme.
@@ -28,7 +28,7 @@
   terraform state mv module.NETWORK_MODULE_NAME.oci_core_route_table.private_route_table module.NETWORK_MODULE_NAME.oci_core_route_table.private_route_table\[\"natgw=true:svcgw=false\"\]
   ```
 * `instances` modules output is updated:
-  * `public_ip` and `private_ip`, and `private_ip` is renamed to `ip_address`:
+  * `public_ip` and `private_ip` changed to include vnic info, and primary ip. Also `private_ip` is renamed to `ip_address`:
   ```
   "primary_vnic" = {
       "primary_ip" = {
@@ -74,6 +74,12 @@
       ...
     }
     ```
+* (`kubernetes`) The following new variables are added. 
+  * `k8s_version` is renamed to `cluster_k8s_version`
+  * `node_pools[].volume_size_in_gbs`: Set it to `50` to keep current configuration as is.
+  * `node_pools[].k8s_version`: Set it to the previous value of `k8s_version` to keep current configuration as is.
+  * `node_pools[].flex_shape_config`: Set it to `{}`
+  
 ## **New** 
 * Add `vault` module to manage KMS (only key management is enabled)
 * (`object-storage`) Allow to add `lifecycle-rules` to buckets.
@@ -84,9 +90,13 @@
   * configure `NAT Gateway` (enable/disable, block traffic, assign reserved public IP)
   * configure `Internet Gateway` (enable/disable gateway)
   * Create `Service Gateway`.
+* (`kubernetes`) Ability to use `Flex Shape`
+* (`kubernetes`) Ability to change node volume size
+
 
 ## **Enhancement**
-* (instances) Allow rename of instance withour recration (breaking change)
+* (`instances`) Allow rename of instance withour recration (breaking change)
   * You need to add `name` attribute to the instance objects you already created.
-* (network) Allow display name of subnet to be updated (breaking change)
+* (`network`) Allow display name of subnet to be updated (breaking change)
   * You need to add `name` attribute to the subnet objects you already created.
+* (`kuberentes`) Ability to set master node version separately from node pool version.
