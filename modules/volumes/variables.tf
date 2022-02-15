@@ -26,6 +26,22 @@ variable "backup_policies" {
     ]))
     error_message = "The var.backup_policies.*.schedules.optionals accepts \"day_of_month\", \"day_of_week\", \"hour_of_day\", \"month\", \"offset_seconds\", \"offset_type\", \"zone\"."
   }
+
+  description = <<EOF
+    compartment_id     : which compartment to create the volume in
+    name               : policy name
+    destination_region : Backup destination region for this policy
+    schedules          : map of backup scheduling configuration
+      backup_type       : type of the backup (INCREMENTAL, FULL)
+      period            : backup frequency (ONE_DAY, ONE_WEEK, ONE_MONTH, ONE_YEAR)
+      retention_seconds : for how long to keep the backup for?
+      optionals         : map of extra optional schedules configuration 
+        day_of_month (Default: `1`)
+        day_of_week  (Default: `MONDAY`)
+        hour_of_day  (Default: `0`)
+        month        (Default: `JANUARY`)
+        time_zone    (Default: `UTC`) : Support either `UTC` or `REGIONAL_DATA_CENTER_TIME`
+  EOF
 }
 
 variable "volumes" {
@@ -82,4 +98,32 @@ variable "volumes" {
     ]))
     error_message = "The volumes.*.optionals accepts \"kms_id\", \"auto_tuned\", \"vpus_per_gb\"."
   }
+
+  description = <<EOF
+    name                                : name of the oci volume
+    compartment_id                      : which compartment to create the volume in
+    availability_domain                 : in which availability domain to create the volume
+    size_in_gbs                         : volume size in GB
+    disable_replicas                    : wether to enable or disable replication of volume accross other availability domain
+    reference_to_backup_policy_key_name : name of the backup policy key in var.backup_policies (Leave Empty is no backup is required)
+    cross_ad_replicas                   : Map of replicas configuration. You can have multiple replication 
+      destination_availability_domain : name of the availability domain
+      replica_name                    : name of the replica 
+    source_volume: map of source volume configuration
+      id   : the ocid of the target source 
+      type : type of the source (volume, bootvolume). Check OCI docs for supported types
+    instances_attachment : map of instance attachements configurations
+      instance_id  : ocid of the instance
+      is_shareable : where to make this attachment shareable or not. Check OCI docs for sharable volumes
+      optionals    : map of optional values to overwirte for instance attachments (leave empty to use default value {})
+        type                                (Default: `paravirtualized`)                     
+        is_read_only                        (Default: `false`)
+        is_pv_encryption_in_transit_enabled (Default: `false`) 
+        encryption_in_transit_type          (default: `NONE`)
+        use_chap                            (Default: `false`)
+    optionals : map of optional values for volumes configuration (leave empty to use default value {})
+      kms_id      (Default: '')
+      auto_tuned  (Default: `true`)
+      vpus_per_gb (Default: `20`)
+  EOF
 }
