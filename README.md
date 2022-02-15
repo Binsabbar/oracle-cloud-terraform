@@ -97,9 +97,11 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 |                              module                              | Description                                                                                                             |
 | :--------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
 |         [common-config](modules/common-config/README.md)         | Contains common configuration that can be used between other modules, such as IDs for computing shape, os versions, etc |
+|                 [vault](modules/vault/README.md)                 | Create Vault and manages keys                                                                                           |
 |   [file-storage-systme](modules/file-storage-system/README.md)   | Create a file storage system with exports, export paths and mount targets in a given VCN                                |
 |              [identity](modules/identity/README.md)              | IAM management, compartment and policies for creating users, groups, compartments, and policies                         |
 |             [instances](modules/instances/README.md)             | Create compute instances and attach a network security group id in a given subnets and VCN                              |
+|               [volumes](modules/volumes/README.md)               | Create Volumes, Backup Policy and manages volumes attachments                                                           |
 |            [kuberentes](modules/kubernetes/README.md)            | Creates k8s cluster and node pools in the given VCN                                                                     |
 |         [load-balancer](modules/load-balancer/README.md)         | WIP - Not ready                                                                                                         |
 |                 [mysql](modules/mysql/README.md)                 | Creates MYSQL Database in a given VCN                                                                                   |
