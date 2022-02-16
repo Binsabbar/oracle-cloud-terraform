@@ -92,7 +92,7 @@
   * Create `Service Gateway`.
 * (`kubernetes`) Ability to use `Flex Shape`
 * (`kubernetes`) Ability to change node volume size
-
+* (`identity`) Ability to map IdP groups to oci groups.
 
 ## **Enhancement**
 * (`instances`) Allow rename of instance withour recration (breaking change)
