@@ -24,6 +24,22 @@ variable "enable_delete" {
   description = "wether to allow this compartement to be deleted if there are resources"
 }
 
+variable "identity_group_mapping" {
+  type = map(object({
+    idp_group_name = string
+    oci_group_id   = string
+    idp_ocid       = string
+  }))
+  default     = {}
+  description = <<EOF
+  This is optional. 
+  Map of group mapping between idp groups and oci groups
+    idp_group_name  : the name of idp group
+    oci_group_id    :  ocid group
+    idp_ocid        : the OCID of the IDP integration.
+  EOF
+}
+
 variable "memberships" {
   type        = map(set(string))
   default     = {}
