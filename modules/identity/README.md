@@ -2,6 +2,7 @@
   - [Using this module](#using-this-module)
     - [Creating users and groups](#creating-users-and-groups)
       - [Example: if you need to create 4 users and map them to two groups](#example-if-you-need-to-create-4-users-and-map-them-to-two-groups)
+    - [Mapping IdP groups to OCI groups](#mapping-idp-groups-to-oci-groups)
     - [Creating service accounts](#creating-service-accounts)
     - [Important Node about groups and service accounts](#important-node-about-groups-and-service-accounts)
     - [Creating compartments](#creating-compartments)
@@ -76,6 +77,71 @@ module "IAM" {
   memberships = local.memberships
 }
 ```
+
+### Mapping IdP groups to OCI groups
+When connecting to IdP for SSO. You can map IdP groups to OCI groups using this module. To do that, you need to create groups in a module and the mapping in a different module. For example as following:
+
+```
+locals {
+  users = {
+    "abdullah" = "abdullah@email.com"
+    "abeer"    = "abeer@email.com"
+    "anwar"    = "anwar@email.com"
+    "mohammed" = "mohammed@email.com"
+  }
+
+  memberships = {
+    "portfolio-a" = [
+      local.users.abdullah,
+      local.users.anwar
+    ]
+
+    "portfolio-b" = [
+      local.users.abeer,
+      local.users.mohammed
+    ]
+
+    "admins" = [
+      local.users.abdullah,
+      local.users.anwar,
+      local.users.abeer,
+      local.users.mohammed
+    ]
+  }
+}
+
+module "IAM" {
+  path = PATH_TO_MODULE
+
+  tenant_id = "oci.xxxxxxxxx.xxxxxx"
+  memberships = local.memberships
+}
+
+module "idp_mapping" {
+  path = PATH_TO_MODULE
+
+  tenant_id = "oci.xxxxxxxxx.xxxxxx"
+  identity_group_mapping = {
+    "admins" = {
+      idp_group_name = "sso-oci-admin"
+      oci_group_id   = module.IAM.groups.admins.id
+      idp_ocid       = "oci.xxxxxxxxxx."
+    }
+    "portfolio-a" = {
+      idp_group_name = "sso-oci-portfolio-a"
+      oci_group_id   = module.IAM.groups.portfolio-a.id
+      idp_ocid       = "oci.xxxxxxxxxx."
+    }
+    "portfolio-b" = {
+      idp_group_name = "sso-oci-portfolio-b"
+      oci_group_id   = module.IAM.groups.portfolio-b.id
+      idp_ocid       = "oci.xxxxxxxxxx."
+    }
+  }
+}
+```
+
+***note that I created `module.IAM` to create groups, then created `module.idp_mapping` to map oci groups to idp groups.***
 
 ### Creating service accounts
 Service accounts are accounts that meant to used by machines. When a service account is created, a group with the same name of the service account is created as well. This allows you to apply policy to the service account using its group name. Since you can't apply policy directly to a user.

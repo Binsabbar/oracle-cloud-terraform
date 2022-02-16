@@ -120,3 +120,13 @@ resource "oci_identity_policy" "policies" {
 
   depends_on = [local.depends_on]
 }
+
+
+## IdP Mapping
+resource "oci_identity_idp_group_mapping" "idp_group_mapping" {
+  for_each = var.identity_group_mapping
+
+  group_id             = each.value.oci_group_id
+  identity_provider_id = each.value.idp_ocid
+  idp_group_name       = each.value.idp_group_name
+}
