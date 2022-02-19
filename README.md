@@ -119,6 +119,7 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 | repo release | oci terraform provider version |
 | :----------: | :----------------------------- |
 |     v1.0     | 4.20.0                         |
+|     v2.0     | 4.44                           |
 
 ## Using the module in your project from github.com:
 As explained in [Terraform Modules](https://www.terraform.io/docs/language/modules/sources.html#github), you can use this repo to refer to the modules defined here. Since all modules are hosted in the same git repo, you can the `special double-slash` syntax as stated [here](https://www.terraform.io/docs/language/modules/sources.html#modules-in-package-sub-directories). You can also set specific version using `ref` argument.
@@ -131,13 +132,13 @@ In summary:
 Example
 ```
 module "identity" {
-  source = "github.com/Binsabbar/oracle-cloud-terraform//modules/identity?ref=v1.0"
+  source = "github.com/Binsabbar/oracle-cloud-terraform//modules/identity?ref=v2.0"
   ...
   ...
 }
 
 module "object-storage" {
-  source = "github.com/Binsabbar/oracle-cloud-terraform//modules/object-storage?ref=v1.1"
+  source = "github.com/Binsabbar/oracle-cloud-terraform//modules/object-storage?ref=v2.1"
   ...
   ...
 }
@@ -148,5 +149,5 @@ module "object-storage" {
 Thanks to the following folks for providing suggestions and improvments to this project.
 * Abdullah Aljubayri [Thwwaq](https://github.com/Thwwaq) (waf module)
 * Abeer Alotaibi [octopus20](https://github.com/octopus20) (network-load-balancer module)
-* Grzegorz M [grzesjam](https://github.com/grzesjam) (public-ip module)
-* Mateusz Kozakiewicz [mateuszkozakiewicz](https://github.com/mateuszkozakiewicz) (public-ip module)
+* Grzegorz M [grzesjam](https://github.com/grzesjam) (v1.0 public-ip module)
+* Mateusz Kozakiewicz [mateuszkozakiewicz](https://github.com/mateuszkozakiewicz) (v1.0 public-ip module)
