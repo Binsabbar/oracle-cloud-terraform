@@ -11,7 +11,7 @@ Each object in the input list represent an instance that can have its own config
 Using this module you can attach multiple VNICs to your instance. Moreover, you can assign secondary IP (e.g as floating IP) to each of VNIC.
 
 # Assign Public IP to an instnace
-To attach public IP to any private IP created in this module, you have to do that in `public_ip` module. Refer to `public_ip` module for how to attach private IP to public IP.
+To attach public IP to any private IP created in this module, you have to do that in `public_ip` module. Refer to `public_ip` module for how to attach private IP to public IP. Using this module output, you can get the private ip OCID and use it in `public_ip` module.
 
 ## Limitations
 * Advance Configuration of the instance is not yet possible using this module. The only configuration acceptable are the ones defined in `variables.tf`.
