@@ -1,6 +1,6 @@
 # Public IP
 
-Create and reserve public IPs in a given compartment. This module is self documented, check `variables.tf`
+Create and reserve public IPs in a given compartment. This module is self documented, check `variables.tf`.
 
 ## `untracked_ips` vs `tracked_ips`
 
@@ -70,6 +70,10 @@ and you want to STOP tracking `machine-1` public IP.
 ```
 terraform state mv module.my_public_ips.oci_core_public_ip.tracked_ip\[\"machine-1\"\] mv module.my_public_ips.oci_core_public_ip.ip\[\"machine-1\"\]
 ```
+
+# Attach Public IP to a compute instance
+instances created in module `instance`, outputs private ip OCID, which can be refered here.
+
 # Example
 ```h
 module "public_ips" {
@@ -85,6 +89,11 @@ module "public_ips" {
     "public_ip_v" = {
       # will assign the public IP to the private IP of private_ip_id
       private_ip_id = "ocixxxxxx.xxxxxx.xxxxx"
+      name          = "public B"
+    }
+    "public_ip_b" = {
+      # will assign the public IP to the private IP of private_ip_id
+      private_ip_id = module.myinstnace.instances["machine-1"].primary_vnic.primary_ip.id
       name          = "public B"
     }
   }
