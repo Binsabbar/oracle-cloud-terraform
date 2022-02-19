@@ -4,6 +4,7 @@
   - [Note about Route Table and Security List](#note-about-route-table-and-security-list)
   - [Note about Gateways](#note-about-gateways)
   - [Limitations](#limitations)
+- [Example](#example)
   
 # Network
 Probably one of the most important modules after [identity](../identity/README.md). Most of the objects created in Oracle Cloud must belong to a network in order to use it. This module configurs virtual cloud network. Read more about VCN concepts [here](https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/overview.htm). Have a look at `variables.tf` to check the list of required variables.
@@ -39,6 +40,7 @@ When the VCN is created, the following objects are created by default:
 ## Limitations
 * The module does not support VCN Peering.
 
+# Example
 VCN without any subnet:
 ```h
 source = PATH_TO_MODULE
