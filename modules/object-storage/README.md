@@ -1,7 +1,6 @@
 # Object Storage
 
-Create Object Storage buckets and output list of urls for all buckets. This module is self documented, check `variables.tf`
-
+Create Object Storage buckets and output list of urls for all buckets. This module is self documented, check `variables.tf`. The example below uses object lifecycle rules for `DELETE`, `INFREQUENT_ACCESS`, `ARCHIVE` and `ABORT`.
 
 # Example
 ```h
@@ -15,17 +14,27 @@ module "buckets" {
       storage_tier   = "Standard"
       is_public      = true
       lifecycle_rules = {
-        "test-1" = {
-          name               = "test"
-          action             = "DELETE"
+        "nfrequent-access-after-100-days" = {
+          name               = "nfrequent-access-after-100-days"
+          action             = "INFREQUENT_ACCESS"
           enabled            = true
           target             = "objects"
-          time               = 1
+          time               = 100
           time_unit          = "DAYS"
           exclusion_patterns = []
           inclusion_patterns = []
           inclusion_prefixes = []
-
+        }
+        "archive-300-days" = {
+          name               = "archive-300-days"
+          action             = "ARCHIVE"
+          enabled            = true
+          target             = "objects"
+          time               = 300
+          time_unit          = "DAYS"
+          exclusion_patterns = []
+          inclusion_patterns = []
+          inclusion_prefixes = []
         }
       }
       optionals      = {
@@ -40,17 +49,27 @@ module "buckets" {
       storage_tier   = "Standard"
       is_public      = true
       lifecycle_rules = {
-        "test-2" = {
-          name               = "test2"
-          action             = "ARCHIVE"
+        "rm-90-days-old" = {
+          name               = "rm-90-days-old"
+          action             = "DELETE"
           enabled            = true
           target             = "objects"
-          time               = 1
+          time               = 90
           time_unit          = "DAYS"
           exclusion_patterns = []
           inclusion_patterns = []
           inclusion_prefixes = []
-
+        }
+        "rm-uncommited-upload" = {
+          name               = "rm-uncommited-upload"
+          action             = "ABORT"
+          enabled            = true
+          target             = "multipart-uploads"
+          time               = 5
+          time_unit          = "DAYS"
+          exclusion_patterns = []
+          inclusion_patterns = []
+          inclusion_prefixes = []
         }
       }
       optionals      = {}
