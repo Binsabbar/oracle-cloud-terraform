@@ -1,7 +1,7 @@
 output "instances" {
   value = {
     for k, instance in oci_core_instance.instances : k => {
-      id           = k.id
+      id           = instance.id
       primary_vnic = {
         primary_ip = [
           for ip in data.oci_core_private_ips.primary_vnic_primary_private_ip[k].private_ips : {
