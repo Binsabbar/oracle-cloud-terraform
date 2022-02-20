@@ -1,4 +1,9 @@
-# V2:
+# v2.0.1:
+## Fix
+* `instances`: fix output of module (use `instance.id` instead of `k.id`)
+* `instances`: fix `assign_private_dns_record` default value.
+  
+# v2.0:
 _**Please see breaking changes section before upgrading.**_
 
 ## **New** 
@@ -46,23 +51,34 @@ _**Please see breaking changes section before upgrading.**_
   terraform state mv module.NETWORK_MODULE_NAME.oci_core_route_table.private_route_table module.NETWORK_MODULE_NAME.oci_core_route_table.private_route_table\[\"natgw=true:svcgw=false\"\]
   ```
 * `instances` modules output is updated:
-  * `public_ip` and `private_ip` changed to include vnic info, and primary ip. Also `private_ip` is renamed to `ip_address`:
+  * `public_ip` and `private_ip` changed to include vnic info, and primary ip. Also `private_ip` is renamed to `ip_address`. The new instance output is like the following:
+  from:
   ```
-  "primary_vnic" = {
-      "primary_ip" = {
-        "id" = "ocid1.privateip.oc1.xxxxxxxxxxxxxxxx"
-        "ip_address" = "xxx.xxx.xxx.xxx"
-        "public_ip" = "xxx.xxx.xxx.xxx"
-        "subnet_id" = "ocid1.subnet.oc1.xxxxxxxxxxxxxxx"
-        "vnic_id" = "ocid1.vnic.oc1.xxxxxxxxxxxxxxx"
+  MY_INSTANCE = {
+    private_ip = "xxx.xxx.xxx.xxx"
+    public_ip  = "xxx.xxx.xxx.xxx"
+  }
+  ```
+  to
+  ```
+  MY_INSTANCE = {
+    id = ocid.instance.xxxxxxxxxxxxx
+    primary_vnic = {
+      primary_ip = {
+        id = "ocid1.privateip.oc1.xxxxxxxxxxxxxxxx"
+        ip_address = "xxx.xxx.xxx.xxx"
+        public_ip = "xxx.xxx.xxx.xxx"
+        subnet_id = "ocid1.subnet.oc1.xxxxxxxxxxxxxxx"
+        vnic_id = "ocid1.vnic.oc1.xxxxxxxxxxxxxxx"
       }
-      "secondary_ips" = {
-        ...
-        ...
-      }
+      secondary_ips = {}
+    }
+    secondary_vnics = {}
   }
   ```
 * `instances` modules input is updated as following:
+  * input has new attribute `name`. It must be added to instance block, set it to `name = "INSTANCE_NAME"`
+  * input has new attribute `optionals`. It must be added to instance block. Set it to `{}`
   * `config` object has new attribute `primary_vnic`.
     * Add the following when upgrading to fix it.
     ```
