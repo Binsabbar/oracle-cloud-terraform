@@ -10,7 +10,7 @@ When the node pool configuration is updated, the existing worker nodes will keep
 ## Using Flex Shapes
 You have the options to use AMD flex shaeps. Just set `flex_shape_config` key in `node_pools` varible per nood pool. The variable `flex_shape_config` should have the following two keys `ocpus` and `memory_in_gbs`. See example below.
 
-Note that, Flex Shape works only with AMD shape `VM.Standard.E3.Flex` and `VM.Standard.E4.Flex`. 
+Note that, Flex Shape works only with AMD shape `VM.Standard.E3.Flex` and `VM.Standard.E4.Flex`, and Intel `VM.Standard3.Flex`.
 
 ## Example
 Creating a cluster with 2 node pools
