@@ -20,6 +20,7 @@ output "instance_config" {
       standard-ocp8    = "VM.Standard2.8"
       standard-ocp16   = "VM.Standard2.16"
       standard-ocp24   = "VM.Standard2.24"
+      standard3-flex   = "VM.Standard3.Flex"
       standard-e3-flex = "VM.Standard.E3.Flex"
     }
   }
