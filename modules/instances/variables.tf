@@ -16,9 +16,10 @@ variable "instances" {
     state                    = string
     autherized_keys          = string
     config = object({
-      shape           = string
-      image_id        = string
-      network_sgs_ids = list(string)
+      shape             = string
+      flex_shape_config = map(string)
+      image_id          = string
+      network_sgs_ids   = list(string)
       subnet = object({
         id                         = string,
         prohibit_public_ip_on_vnic = bool
@@ -57,6 +58,7 @@ variable "instances" {
     autherized_keys         : single string containing the SSH-RSA keys seperated by \n
     config                  : object of instance configuration
       shape           : name of the VM shape to be used
+      flex_shape_config     : customize number of ocpus and memory when using Flex Shape
       image_id        : ocid of the boot image
       network_sgs_ids : list network security groups ids to be applied to the main interface
       subnet          : object for the subnet configuration
@@ -80,4 +82,14 @@ variable "instances" {
     optionals : set of key/value map that can be used for customise default values.
       preserve_boot_volume  : whether to keep boot volume after delete or not
   EOF
+
+  validation {
+    condition = alltrue(flatten([
+      for k, v in var.instances : [
+        for key in keys(v.config.flex_shape_config) :
+        contains(["ocpus", "memory_in_gbs"], key)
+      ]
+    ]))
+    error_message = "The instances.*.config.flex_shape_config accepts only \"ocpus\", \"memory_in_gbs\"."
+  }
 }
