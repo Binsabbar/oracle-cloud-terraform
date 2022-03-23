@@ -1,3 +1,30 @@
+# v2.1.0:
+_**Please see breaking changes section before upgrading.**_
+## **New**
+* `instances`: add posibility to use flex shape configuration
+
+## _**Breaking Changes**_
+* `instances` modules input is updated. A new key `flex_shape_config` is now required under `var.instances.*.config`.
+  * Add `flex_shape_config` and set its value to `{}`. Example of partial instance object. See module's readme for full example.
+```
+"instance-a" = {
+  name                     = "instance-a"
+  availability_domain_name = "ocixxxxxx.xxxxxx.xxxxx"
+  fault_domain_name        = "ocixxxxxx.xxxxxx.xxxxx"
+  compartment_id           = "ocixxxxxx.xxxxxx.xxxxx"
+  volume_size              = 500
+  autherized_keys          = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxx\n ssh-rsa xxxxxxxxxxxxxxxxxxxxxx"
+  state                    = "RUNNING"
+  config = {
+    shape    = "ocixxxxxx.xxxxxx.xxxxx"
+    flex_shape_config = {}    <-------------------------------------------------------------------- note this line
+    ...
+    ...
+    ...
+    ...
+  }
+}
+```
 # v2.0.1:
 ## Fix
 * `instances`: fix output of module (use `instance.id` instead of `k.id`)
