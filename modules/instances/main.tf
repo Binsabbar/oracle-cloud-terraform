@@ -49,6 +49,13 @@ resource "oci_core_instance" "instances" {
     ssh_authorized_keys = each.value.autherized_keys
   }
 
+  dynamic "shape_config" {
+    for_each = length(each.value.config.flex_shape_config) == 2 ? [1] : []
+    content {
+      memory_in_gbs = each.value.config.flex_shape_config.memory_in_gbs
+      ocpus         = each.value.config.flex_shape_config.ocpus
+    }
+  }
   create_vnic_details {
     subnet_id                 = each.value.config.subnet.id
     assign_public_ip          = each.value.config.subnet.prohibit_public_ip_on_vnic == false
