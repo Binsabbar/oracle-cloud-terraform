@@ -26,6 +26,19 @@ variable "lb_subnet_ids" {
   description = "The Subnet IDs where svc of type LoadBalancers will have their LBs created"
 }
 
+variable "cloudinit_nodepool" {
+  type = map(any)
+}
+
+variable "cloudinit_nodepool_common" {
+  type = string
+}
+
+variable "worker_echo" {
+  type = string
+}
+
+
 variable "node_pools" {
   type = map(object({
     compartment_id      = string
