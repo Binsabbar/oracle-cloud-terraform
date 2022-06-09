@@ -51,4 +51,9 @@ resource "oci_containerengine_node_pool" "node_pool" {
       ocpus         = each.value.flex_shape_config.ocpus
     }
   }
+
+  # cloud-init
+  node_metadata = {
+    user_data = var.cloudinit_nodepool_common == "" && lookup(var.cloudinit_nodepool, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.cloudinit_nodepool, each.key, null) != null ? filebase64(lookup(var.cloudinit_nodepool, each.key, null)) : filebase64(var.cloudinit_nodepool_common)
+  }
 }

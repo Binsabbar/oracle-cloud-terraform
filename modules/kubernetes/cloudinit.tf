@@ -1,0 +1,22 @@
+locals {
+  worker_script_template = templatefile("${path.module}/cloudinit/worker.template.sh",
+    {
+      worker_echo = var.worker_echo
+    }
+  )
+
+}
+
+# cloud-init for workers
+data "cloudinit_config" "worker" {
+  gzip          = false
+  base64_encode = true
+
+  part {
+    filename     = "worker.sh"
+    content_type = "text/x-shellscript"
+    content      = local.worker_script_template
+  }
+
+}
+
