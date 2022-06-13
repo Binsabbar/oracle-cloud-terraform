@@ -1,3 +1,8 @@
+# v2.1.1:
+## Fix
+* `instances`: fix `assign_private_dns_record` default value. The release in `v2.0.1` broke the functionality. This value has to always be true since we always set the hostname label.
+
+
 # v2.1.0:
 _**Please see breaking changes section before upgrading.**_
 ## **New**
