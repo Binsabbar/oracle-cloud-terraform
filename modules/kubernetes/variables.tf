@@ -29,8 +29,8 @@ variable "lb_subnet_ids" {
 variable "endpoint_config" {
   type = object({
     is_public_ip_enabled = bool
-    nsg_ids = set(string)
-    subnet_id = string
+    nsg_ids              = set(string)
+    subnet_id            = string
   })
 
   description = <<EOF

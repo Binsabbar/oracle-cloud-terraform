@@ -4,10 +4,10 @@ resource "oci_containerengine_cluster" "cluster" {
   vcn_id             = var.vcn_id
   kubernetes_version = var.cluster_k8s_version
 
-  endpoint_config {    
+  endpoint_config {
     is_public_ip_enabled = var.endpoint_config.is_public_ip_enabled
-    nsg_ids = var.endpoint_config.nsg_ids
-    subnet_id = var.endpoint_config.subnet_id
+    nsg_ids              = var.endpoint_config.nsg_ids
+    subnet_id            = var.endpoint_config.subnet_id
   }
   options {
     add_ons {
