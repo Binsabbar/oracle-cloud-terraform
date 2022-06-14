@@ -46,6 +46,8 @@ variable "instances" {
     }))
     optionals = map(any)
     # preserve_boot_volume =  bool (true)
+    # boot_volume_id = string
+    # boot_source_type = string
   }))
   description = <<EOF
     map of objects that represent instances to create. The key name is the instance name that is used for FQDN
@@ -81,6 +83,8 @@ variable "instances" {
         ip_address = string
     optionals : set of key/value map that can be used for customise default values.
       preserve_boot_volume  : whether to keep boot volume after delete or not
+      boot_volume_id        : when need to boot from an existing boot volume, set this value to a volume ID
+      boot_source_type      : when need to change boot type: `image` or `bootVolume`
   EOF
 
   validation {

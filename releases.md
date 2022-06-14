@@ -1,7 +1,15 @@
+# v2.2.0:
+## **New**
+* `instances`: Add an option to boot a new instance from an existing bootVolume (check doc for `instance` module).
+## _**Breaking Changes**_
+None
+
 # v2.1.1:
 ## Fix
 * `instances`: fix `assign_private_dns_record` default value. The release in `v2.0.1` broke the functionality. This value has to always be true since we always set the hostname label.
 
+## _**Breaking Changes**_
+None
 
 # v2.1.0:
 _**Please see breaking changes section before upgrading.**_
