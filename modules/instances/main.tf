@@ -67,10 +67,21 @@ resource "oci_core_instance" "instances" {
     private_ip                = each.value.config.primary_vnic.primary_ip
   }
 
-  source_details {
-    source_type             = "image"
-    source_id               = each.value.config.image_id
-    boot_volume_size_in_gbs = each.value.volume_size
+  dynamic "source_details" {
+    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? [1]:[]
+    content {
+      source_type             = lookup(each.value.optionals, "boot_source_type") 
+      source_id               = lookup(each.value.optionals, "boot_volume_id")
+      boot_volume_size_in_gbs = each.value.volume_size
+    }
+  }
+  dynamic "source_details" {
+    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? []:[1]
+    content {
+      source_type             = "image"
+      source_id               = each.value.config.image_id
+      boot_volume_size_in_gbs = each.value.volume_size
+    }
   }
 }
 
