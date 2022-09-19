@@ -47,6 +47,7 @@ resource "oci_core_instance" "instances" {
   state                = each.value.state
   metadata = {
     ssh_authorized_keys = each.value.autherized_keys
+    user_data           = lookup(each.value.optionals, "user_data", null)
   }
 
   dynamic "shape_config" {
@@ -68,15 +69,15 @@ resource "oci_core_instance" "instances" {
   }
 
   dynamic "source_details" {
-    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? [1]:[]
+    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? [1] : []
     content {
-      source_type             = lookup(each.value.optionals, "boot_source_type") 
+      source_type             = lookup(each.value.optionals, "boot_source_type")
       source_id               = lookup(each.value.optionals, "boot_volume_id")
       boot_volume_size_in_gbs = each.value.volume_size
     }
   }
   dynamic "source_details" {
-    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? []:[1]
+    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? [] : [1]
     content {
       source_type             = "image"
       source_id               = each.value.config.image_id

@@ -48,6 +48,7 @@ variable "instances" {
     # preserve_boot_volume =  bool (true)
     # boot_volume_id = string
     # boot_source_type = string
+    # user_data        = string
   }))
   description = <<EOF
     map of objects that represent instances to create. The key name is the instance name that is used for FQDN
