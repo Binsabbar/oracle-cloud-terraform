@@ -1,3 +1,10 @@
+# v3.0.0:
+## **New**
+* `networks`:
+  * Ability to attach a route table to (NAT, Internet, Service) gateways.
+## _**Breaking Changes**_
+None
+
 # v2.2.0:
 ## **New**
 * `instances`: Add an option to boot a new instance from an existing bootVolume (check doc for `instance` module).
