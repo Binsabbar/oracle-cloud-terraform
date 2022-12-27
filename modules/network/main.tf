@@ -35,6 +35,8 @@ resource "oci_core_internet_gateway" "internet_gateway" {
   vcn_id         = oci_core_vcn.vcn.id
   enabled        = var.internet_gateway.enable
   display_name   = "defaultInternetGateway"
+
+  route_table_id = lookup(var.internet_gateway.optionals, "route_table_id", null)
 }
 
 resource "oci_core_nat_gateway" "nat_gateway" {
@@ -45,6 +47,8 @@ resource "oci_core_nat_gateway" "nat_gateway" {
   display_name   = "defaultNatGateway"
   public_ip_id   = var.nat_gateway.public_ip_id
   block_traffic  = var.nat_gateway.block_traffic
+
+  route_table_id = lookup(var.nat_gateway.optionals, "route_table_id", null)
 }
 
 resource "oci_core_service_gateway" "service_gateway" {
@@ -56,6 +60,7 @@ resource "oci_core_service_gateway" "service_gateway" {
   services {
     service_id = var.service_gateway.service_id
   }
+  route_table_id = lookup(var.service_gateway.optionals, "route_table_id", null)
 }
 
 // Routes
