@@ -14,3 +14,8 @@ output "public_subnets" {
   }
 }
 
+output "lpg" {
+  value = { for gateway_name, value in oci_core_local_peering_gateway.peering_gateway :
+    gateway_name => value
+  }
+}
