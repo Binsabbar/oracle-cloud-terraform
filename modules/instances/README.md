@@ -2,6 +2,7 @@
   - [Using Flex Shapes](#using-flex-shapes)
 - [Assign Public IP to an instnace](#assign-public-ip-to-an-instnace)
 - [Booting from an existing Boot Volume](#booting-from-an-existing-boot-volume)
+- [User Metadata](#user-metadata)
   - [Limitations](#limitations)
   - [Examples](#examples)
   
@@ -25,6 +26,9 @@ To attach public IP to any private IP created in this module, you have to do tha
 # Booting from an existing Boot Volume 
 It is possible to boot a new instance from an existing boot volume using the `optionals` key in the `instances` map. If not set, a new boot volume will be created from scratch and used. In order to boot from an existing bootVolume set
 `instances[*].optionals.boot_volume_id` and `instances[*].optionals.boot_source_type = "bootVolume`.
+
+# User Metadata
+To pass script to run during cloud init phase, use the `user_data` parameter in the instance, which is part of the `optionals` parameter. See example below
 
 ## Limitations
 * Advance Configuration of the instance is not yet possible using this module. The only configuration acceptable are the ones defined in `variables.tf`.
@@ -65,6 +69,7 @@ locals {
       optionals = {
         boot_source_type = "bootVolume"
         boot_volume_id   = "ocid1.bootvolume.oc1.xxxxxxxxxxxxxxxxxxxxxxx"
+        user_data        = "BASE64_CLOUD_INIT_SCRIPT_GOES_HERE"
       }
     }
     
