@@ -4,6 +4,7 @@
   * Ability to pass `user_data` as param for instance creation.
 * `networks`:
   * Ability to attach a route table to (NAT, Internet, Service) gateways.
+  * Add Local Peering Gateway option.
 ## _**Breaking Changes**_
 None
 
