@@ -1,4 +1,4 @@
-# v3.0.0:
+# v2.3.0:
 ## **New**
 * `instances`:
   * Ability to pass `user_data` as param for instance creation.
