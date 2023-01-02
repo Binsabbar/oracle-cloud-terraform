@@ -17,11 +17,13 @@ variable "nat_gateway" {
     enable        = bool
     public_ip_id  = string
     block_traffic = bool
+    optionals     = map(string)
   })
   default = {
     enable        = true
     block_traffic = false
     public_ip_id  = ""
+    optionals     = {}
   }
 
   description = <<EOF
@@ -29,20 +31,26 @@ variable "nat_gateway" {
       enable       : set to true to create a NAT Gateway and automatically add route rule in private route table
       public_ip_id : ID of reserved public IP. Leave empty if you want oci to create random public IP
       block_traffic: disable traffic on the NAT (but keep it in the route table!)
+      optionals        : map of optional values
+        route_table_id: route table id to be used instead of default one
   EOF
 }
 
 variable "internet_gateway" {
   type = object({
-    enable = bool
+    enable    = bool
+    optionals = map(string)
   })
 
   default = {
-    enable = true
+    enable    = true
+    optionals = {}
   }
   description = <<EOF
     map of object to configure Internet Gateway
       enable: set to true to create a Internet Gateway and automatically add route rule in public route table
+      optionals        : map of optional values
+        route_table_id: route table id to be used instead of default one
   EOF
 }
 
@@ -51,17 +59,22 @@ variable "service_gateway" {
     enable                 = bool
     service_id             = string
     route_rule_destination = string
+    optionals              = map(string)
   })
 
   default = {
     enable                 = false
     service_id             = ""
     route_rule_destination = ""
+    optionals              = {}
   }
+
   description = <<EOF
     map of object to configure Service Gateway
       enable    : set to true to create a Service Gateway and automatically add route rule in private route table
       service_id: The Services ID (check OCI Service Gateway docs)
+      optionals        : map of optional values
+        route_table_id: route table id to be used instead of default one
   EOF
 }
 
@@ -179,4 +192,23 @@ variable "default_security_list_rules" {
     }
   }
   description = "map of objects for allowed tcp and udp ingress/egress ports to the internet (0.0.0.0/0)"
+}
+
+variable "local_peering_gateway" {
+  type = map(object({
+    name              = string
+    peer_id           = string
+    route_table_id    = string
+    destination_cidrs = set(string)
+  }))
+
+  default     = {}
+  description = <<EOF
+    map of object to configure Local Peering Gateway
+      name              : The name of the peering gateway
+      peer_id           : The OCID of the target Peering ID in the other VCN
+      route_table_id    : route table of the local peering gateway (it will be attached to LPG)
+      destination_cidrs : list of other subnets/vcns cidrs to route trafic to from via this gateway. This will create route table rules in both
+      default public and private route tables. Leave empty if you intend to configure them manually.
+  EOF
 }
