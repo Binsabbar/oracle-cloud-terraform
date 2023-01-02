@@ -3,7 +3,7 @@
   - [Note About Default Security Lists:](#note-about-default-security-lists)
   - [Note about Route Table and Security List](#note-about-route-table-and-security-list)
   - [Note about Gateways](#note-about-gateways)
-  - [Limitations](#limitations)
+  - [Local Peering Gateway](#local-peering-gateway)
 - [Example](#example)
   
 # Network
@@ -41,8 +41,41 @@ When the VCN is created, the following objects are created by default:
   * `nat_gateway.optionals.route_table_id`
   * `service_gateway.optionals.route_table_id`
 
-## Limitations
-* The module does not support VCN Peering.
+
+## Local Peering Gateway
+***WARNING: you can't create two difference gateways then peer them at once. Changing the peering ID will destroy the gateway, then re-create it. So at least in the 2nd gateway you need the ID of the other getway***
+
+To peer an instance with another, you will need to follow certain steps in order. Here are the steps:
+1. Create a gateway using this module without supplying the peering id.
+2. Get the OCID of the newly created Gateway.
+3. In the other VCN's peering gateway, paste the OCID of the gateway.
+
+Example:
+
+VCN-A
+```h
+local_peering_gateway = {
+  "peering-with-b" = {
+    name              = "peeringWithB"
+    peer_id           = null
+    route_table_id    = ""
+    destination_cidrs = []
+  }
+}
+```
+Assume that gives the ID: `ocid.peering.xxxxxxxA`
+
+VCN-B
+```h
+local_peering_gateway = {
+  "peering-with-a" = {
+    name              = "peeringWithA"
+    peer_id           = "ocid.peering.xxxxxxxA"
+    route_table_id    = ""
+    destination_cidrs = []
+  }
+}
+```
 
 # Example
 VCN without any subnet:
@@ -129,6 +162,21 @@ module "network" {
     route_rule_destination = "all-pox-services-in-oracle-services-network"
     optionals     = {
       route_table_id = "oci.xxxxxxxxx"
+    }
+  }
+
+  local_peering_gateway = {
+    "peering-with-a" = {
+      name              = "peeringWithA"
+      peer_id           = "ocid.peering.xxxxxxxA"
+      route_table_id    = ""
+      destination_cidrs = []
+    }
+    "peering-with-c" = {
+      name              = "peeringWithC"
+      peer_id           = "ocid.peering.xxxxxxxC"
+      route_table_id    = ""
+      destination_cidrs = []
     }
   }
 }
