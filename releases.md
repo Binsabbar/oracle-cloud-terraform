@@ -1,5 +1,7 @@
 # v3.0.0:
 ## **New**
+* `instances`:
+  * Ability to pass `user_data` as param for instance creation.
 * `networks`:
   * Ability to attach a route table to (NAT, Internet, Service) gateways.
 ## _**Breaking Changes**_
