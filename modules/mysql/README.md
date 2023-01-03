@@ -18,7 +18,7 @@ module "mysql" {
       optionals           = {
         admin_username = "my-db-admin-user"
         shape_name = "MySQL.VM.Standard.E3.1.8GB"
-        retention_in_days = 50
+        retention_in_days = 35
         backup_window_start_time = "00:00"
         maintenance_window_start_time = "sat 22:00"
         size_in_gb = 500
