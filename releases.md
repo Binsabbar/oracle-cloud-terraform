@@ -1,3 +1,13 @@
+# v2.3.1:
+## **New**
+* `Mysql`:
+  * Add ignore_changes feature to `admin_password` param.
+## Fix
+* `Mysql`: fix `retention_in_days` value in README.md.
+
+## _**Breaking Changes**_
+None
+
 # v2.3.0:
 ## **New**
 * `instances`:
