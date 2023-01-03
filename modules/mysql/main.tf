@@ -21,7 +21,9 @@ resource "oci_mysql_mysql_db_system" "mysql_db_system" {
 
   admin_password = each.value.admin_password
   admin_username = lookup(each.value.optionals, "username", "admin")
-
+  lifecycle {
+    ignore_changes = [admin_password]
+  }
   shape_name       = lookup(each.value.optionals, "shape_name", local.shapes.small)
   configuration_id = lookup(each.value.optionals, "configuration_id", local.configurations_id.small)
 
