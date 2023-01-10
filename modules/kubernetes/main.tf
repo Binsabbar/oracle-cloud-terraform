@@ -43,6 +43,11 @@ resource "oci_containerengine_node_pool" "node_pool" {
       subnet_id           = each.value.subnet_id
     }
   }
+  lifecycle {
+    ignore_changes = [
+      node_config_details.size
+    ]
+  }
 
   node_source_details {
     image_id                = each.value.image_id
