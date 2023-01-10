@@ -1,3 +1,14 @@
+# v2.3.2:
+## **New**
+* `Kubernetes`:
+  * Add ignore_changes feature to `size` param in node pool to prevent terraform from reverting the kubernetes cluster autoscaler changes.
+## Fix
+None
+
+## _**Breaking Changes**_
+None
+
+
 # v2.3.1:
 ## **New**
 * `Mysql`:
