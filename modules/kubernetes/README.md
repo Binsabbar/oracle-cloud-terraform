@@ -12,6 +12,9 @@ You have the options to use AMD flex shaeps. Just set `flex_shape_config` key in
 
 Note that, Flex Shape works only with AMD shape `VM.Standard.E3.Flex` and `VM.Standard.E4.Flex`, and Intel `VM.Standard3.Flex`.
 
+## Node sizing and Auto-scale
+When you need to create a node pool for autoscale, `node_size` must be ignored by Terraform state. Hence, you need to create a pool with initial size of `0`. This will automatically ignore size changes in the pool by Terraform.
+
 ## Example
 Creating a cluster with 2 node pools
 ```h
@@ -55,6 +58,25 @@ module "kubernetes" {
       node_metadata       = {}                
       volume_size_in_gbs  = 50
       size                = 4
+      k8s_version         = "v1.18.10"
+      image_id            = "ocixxxxxx.xxxxxx.xxxxx"
+      flex_shape_config = {
+        ocpus         = 4
+        memory_in_gbs = 64
+      }
+      labels = {
+        "my-label" : "k8s-label"
+      }
+    }
+    "node-pool-autoscale" = {
+      compartment_id      = "ocixxxxxx.xxxxxx.xxxxx"
+      ssh_public_key      = "ssh-rsa xxxxxxxxxx"
+      availability_domain = "ocixxxxxx.xxxxxx.xxxxx"
+      subnet_id           = "ocixxxxxx.xxxxxx.xxxxx"
+      shape               = "VM-XXXXXx"
+      node_metadata       = {}                
+      volume_size_in_gbs  = 50
+      size                = 0   # this will force terraform to ignore changes to the pool size when autoscale kicks in
       k8s_version         = "v1.18.10"
       image_id            = "ocixxxxxx.xxxxxx.xxxxx"
       flex_shape_config = {
