@@ -1,4 +1,4 @@
-# v2.3.2:
+# v2.4.0:
 ## **New**
 * `Kubernetes`:
   * Ability to create autoscaling node pool with node `size=0` and the size param is ignored by Terraform state.
