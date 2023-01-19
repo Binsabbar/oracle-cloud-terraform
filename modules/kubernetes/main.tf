@@ -25,6 +25,13 @@ resource "oci_containerengine_cluster" "cluster" {
     }
     service_lb_subnet_ids = var.lb_subnet_ids
   }
+
+  lifecycle {
+    ignore_changes = [
+      options[0].service_lb_subnet_ids
+    ]
+    prevent_destroy = true
+  }
 }
 
 resource "oci_containerengine_node_pool" "node_pool" {
