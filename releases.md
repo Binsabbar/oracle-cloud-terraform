@@ -1,11 +1,24 @@
-# v2.4.2:
+# v2.5.0:
 ## **New**
+* `network`: Add route rule to the default public route table when service gateway is enabled (note this is optional to add it to public subnet). Please refer to [known issues with service gateway in public subnet](https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm#sgw-route-rule-conflict) before enabling it in public subnet.
+
+## **Fix**
 None
-## Fix
-* Add route rule to the default public route table when service gateway is enabled (note this is optional to add it to public subnet). Please refer to [known issues with service gateway in public subnet](https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm#sgw-route-rule-conflict) before enabling it in public subnet.
 
 ## _**Breaking Changes**_
-None
+* `network` modules input is updated. A new key `add_route_rule_in_public_subnet` is now required under `var.service_gateway`.
+  * Add `add_route_rule_in_public_subnet` and set its value to `false`. See module's readme for full example.
+```
+service_gateway = {
+  enable = true
+  service_id = "ocid1.service.oc1.xxxxxxx"
+  route_rule_destination = "all-pox-services-in-oracle-services-network"
+  add_route_rule_in_public_subnet = false <-------------------------------------- note this line
+  optionals     = {
+    route_table_id = "oci.xxxxxxxxx"
+  }
+}
+``` 
 
 # v2.4.1:
 ## **New**
