@@ -56,17 +56,19 @@ variable "internet_gateway" {
 
 variable "service_gateway" {
   type = object({
-    enable                 = bool
-    service_id             = string
-    route_rule_destination = string
-    optionals              = map(string)
+    enable                          = bool
+    service_id                      = string
+    route_rule_destination          = string
+    add_route_rule_in_public_subnet = bool
+    optionals                       = map(string)
   })
 
   default = {
-    enable                 = false
-    service_id             = ""
-    route_rule_destination = ""
-    optionals              = {}
+    enable                          = false
+    service_id                      = ""
+    route_rule_destination          = ""
+    add_route_rule_in_public_subnet = false
+    optionals                       = {}
   }
 
   description = <<EOF
