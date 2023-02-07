@@ -1,6 +1,6 @@
 // 
 locals {
-  public_route_table_key  = "igw=${var.internet_gateway.enable}"
+  public_route_table_key  = "igw=${var.internet_gateway.enable}:svcgw=${var.service_gateway.enable}"
   private_route_table_key = "natgw=${var.nat_gateway.enable}:svcgw=${var.service_gateway.enable}"
 
   private_route_table = {
@@ -103,7 +103,14 @@ resource "oci_core_default_route_table" "public_route_table" {
       network_entity_id = oci_core_local_peering_gateway.peering_gateway[route_rules.value.name].id
     }
   }
-
+  dynamic "route_rules" {
+    for_each = var.service_gateway.enable == true ? toset([0]) : []
+    content {
+      destination       = var.service_gateway.route_rule_destination
+      destination_type  = "SERVICE_CIDR_BLOCK"
+      network_entity_id = oci_core_service_gateway.service_gateway[0].id
+    }
+  }
   dynamic "route_rules" {
     for_each = var.public_route_table_rules
     content {
