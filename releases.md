@@ -1,6 +1,15 @@
+# v2.4.2:
+## **New**
+None
+## Fix
+* Add route rule to the default public route table when service gateway is enabled (note this is optional to add it to public subnet). Please refer to [known issues with service gateway in public subnet](https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm#sgw-route-rule-conflict) before enabling it in public subnet.
+
+## _**Breaking Changes**_
+None
+
 # v2.4.1:
 ## **New**
-Nonde
+None
 ## Fix
 * Ignore changes made to `options[0].service_lb_subnet_ids`, since changing the value can destory the cluster. OKE does not allow updating Service LoadBalncer Subnet anymore, and, it is still there in the API. However, you are not restircted to deploy service load balancer to another subnet using annotations (https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md).
 * add `prevent_destroy` to true, to avoid destorying the cluster due to changes made outside of Terraform.

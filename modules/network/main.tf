@@ -104,7 +104,7 @@ resource "oci_core_default_route_table" "public_route_table" {
     }
   }
   dynamic "route_rules" {
-    for_each = var.service_gateway.enable == true ? toset([0]) : []
+    for_each = var.service_gateway.enable == true && var.service_gateway.add_route_rule_in_public_subnet == true ? toset([0]) : []
     content {
       destination       = var.service_gateway.route_rule_destination
       destination_type  = "SERVICE_CIDR_BLOCK"

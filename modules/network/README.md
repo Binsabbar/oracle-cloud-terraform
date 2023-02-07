@@ -35,7 +35,8 @@ When the VCN is created, the following objects are created by default:
 
 * Internet Gateway can be disabled via `internet_gateway.enable` variable.
 
-* Servie Gateway is configurable via `service_gateway` variable, and can be disabled as well. When it is created, route rule to "Services ID" is automatically added to `private_route_table`.
+* Servie Gateway is configurable via `service_gateway` variable, and can be disabled as well. When it is created, route rule to "Services ID" is automatically added to `private_route_table` for the default route tabel of the private subnet. To add the route rule to the `public_route_table` for the default route table in public subnet, set the value `var.service_gateway.add_route_rule_in_public_subnet` to `true`.
+
 * All gateways accept an optional parameter that attach a route table. Use one of the variables:
   * `internet_gateway.optionals.route_table_id`
   * `nat_gateway.optionals.route_table_id`
@@ -160,6 +161,7 @@ module "network" {
     enable = true
     service_id = "ocid1.service.oc1.xxxxxxx"
     route_rule_destination = "all-pox-services-in-oracle-services-network"
+    add_route_rule_in_public_subnet = true
     optionals     = {
       route_table_id = "oci.xxxxxxxxx"
     }
