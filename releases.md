@@ -1,3 +1,13 @@
+# v2.5.1:
+## **New**
+None
+
+## **Fix**
+add `prevent_destroy` to true, to avoid destorying the instances due to changes made outside of Terraform.
+
+
+## _**Breaking Changes**_
+None
 # v2.5.0:
 ## **New**
 * `network`: Add route rule to the default public route table when service gateway is enabled (note this is optional to add it to public subnet). Please refer to [known issues with service gateway in public subnet](https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm#sgw-route-rule-conflict) before enabling it in public subnet.

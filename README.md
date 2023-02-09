@@ -151,3 +151,4 @@ Thanks to the following folks for providing suggestions and improvments to this 
 * Abeer Alotaibi [octopus20](https://github.com/octopus20) (network-load-balancer module)
 * Grzegorz M [grzesjam](https://github.com/grzesjam) (v1.0 public-ip module)
 * Mateusz Kozakiewicz [mateuszkozakiewicz](https://github.com/mateuszkozakiewicz) (v1.0 public-ip module)
+* Ahmed Asim [ahmedasimmetwally](https://github.com/AhmedAsimMetwally) (v2.5.0 network module) (v2.5.1 instances module)
