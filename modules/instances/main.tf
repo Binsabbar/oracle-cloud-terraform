@@ -49,6 +49,9 @@ resource "oci_core_instance" "instances" {
     ssh_authorized_keys = each.value.autherized_keys
     user_data           = lookup(each.value.optionals, "user_data", null)
   }
+  lifecycle {
+    prevent_destroy = true
+  }
 
   dynamic "shape_config" {
     for_each = length(each.value.config.flex_shape_config) == 2 ? [1] : []
