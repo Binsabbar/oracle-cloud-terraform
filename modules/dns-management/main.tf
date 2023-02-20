@@ -21,7 +21,7 @@ resource "oci_dns_rrset" "dns_rrset" {
     content {
       domain = "${items.value.domain}.${each.value.name}"
       rdata  = items.value.rdata
-      rtype  = each.value.rtype
+      rtype  = items.value.rtype
       ttl    = items.value.ttl
     }
   }
