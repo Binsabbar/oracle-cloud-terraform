@@ -22,8 +22,9 @@ variable "compartment_id" {
 
 variable "zones" {
   type = map(object({
-    name  = string
-    rtype = string
+    name        = string
+    domain_name = string
+    rtype       = string
     records = map(object({
       domain = string
       rdata  = string
