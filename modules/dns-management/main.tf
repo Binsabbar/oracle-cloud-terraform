@@ -11,14 +11,14 @@ resource "oci_dns_rrset" "dns_rrset" {
   for_each        = var.records
   domain          = each.value.domain_name
   rtype           = each.value.rtype
-  zone_name_or_id = each.value.name
+  zone_name_or_id = each.value.zone_name
   compartment_id  = var.compartment_id
   view_id         = var.view_id
   scope           = var.scope
   items = {
     domain = each.value.domain_name
-    rdata  = each.value.records.rdata
+    rdata  = each.value.rdata
     rtype  = each.value.rtype
-    ttl    = each.value.records.ttl
+    ttl    = each.value.ttl
   }
 }
