@@ -22,9 +22,14 @@ variable "compartment_id" {
 
 variable "zones" {
   type = map(object({
-    name        = string
+    name  = string
+    rtype = string
+  }))
+}
+
+variable "records" {
+  type = map(object({
     domain_name = string
-    rtype       = string
     records = map(object({
       domain = string
       rdata  = string
@@ -43,4 +48,3 @@ variable "zones" {
   EOF
 
 }
-
