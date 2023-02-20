@@ -22,20 +22,17 @@ variable "compartment_id" {
 
 variable "zones" {
   type = map(object({
-    name  = string
-    rtype = string
+    name = string
   }))
 }
 
 variable "records" {
   type = map(object({
     domain_name = string
-    items = map(object({
-      domain = string
-      rdata  = string
-      rtype  = string
-      ttl    = number
-    }))
+    zone_name   = string
+    rdata       = string
+    rtype       = string
+    ttl         = number
   }))
   description = <<EOF
     name - (Required) The target fully-qualified domain name (FQDN) within the target zone.
