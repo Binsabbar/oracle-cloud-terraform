@@ -1,5 +1,5 @@
 output "dns_record" {
-  value = {
-    record = oci_dns_rrset.dns_rrset.items
+  value = { for items, value in oci_dns_rrset.dns_rrset :
+    records => value
   }
 }
