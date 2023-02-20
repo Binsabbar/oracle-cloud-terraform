@@ -9,20 +9,16 @@ resource "oci_dns_zone" "dns_zone" {
 
 resource "oci_dns_rrset" "dns_rrset" {
   for_each        = var.zones
-  domain          = each.value.name
+  domain          = each.value.domain_name
   rtype           = each.value.rtype
   zone_name_or_id = each.value.name
   compartment_id  = var.compartment_id
   view_id         = var.view_id
   scope           = var.scope
-
-  dynamic "items" {
-    for_each = each.value.records
-    content {
-      domain = "${each.value.name}"
-      rdata  = items.value.rdata
-      rtype  = "${each.value.rtype}"
-      ttl    = items.value.ttl
-    }
+  items = {
+    domain = each.value.domain_name
+    rdata  = each.value.records.rdata
+    rtype  = each.value.rtype
+    ttl    = each.value.records.ttl
   }
 }
