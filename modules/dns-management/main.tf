@@ -19,9 +19,9 @@ resource "oci_dns_rrset" "dns_rrset" {
   dynamic "items" {
     for_each = each.value.records
     content {
-      domain = "${items.value.domain}.${each.value.name}"
+      domain = "${each.value.name}"
       rdata  = items.value.rdata
-      rtype  = items.value.rtype
+      rtype  = "${each.value.rtype}"
       ttl    = items.value.ttl
     }
   }
