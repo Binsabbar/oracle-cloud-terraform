@@ -30,7 +30,7 @@ variable "zones" {
 variable "records" {
   type = map(object({
     domain_name = string
-    records = map(object({
+    items = map(object({
       domain = string
       rdata  = string
       rtype  = string

@@ -8,7 +8,7 @@ resource "oci_dns_zone" "dns_zone" {
 }
 
 resource "oci_dns_rrset" "dns_rrset" {
-  for_each        = var.zones
+  for_each        = var.records
   domain          = each.value.domain_name
   rtype           = each.value.rtype
   zone_name_or_id = each.value.name
