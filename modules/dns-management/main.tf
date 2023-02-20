@@ -15,7 +15,7 @@ resource "oci_dns_rrset" "dns_rrset" {
   compartment_id  = var.compartment_id
   view_id         = var.view_id
   scope           = var.scope
-  items = {
+  items {
     domain = each.value.domain_name
     rdata  = each.value.rdata
     rtype  = each.value.rtype
