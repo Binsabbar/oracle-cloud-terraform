@@ -30,9 +30,9 @@ variable "records" {
   type = map(object({
     domain_name = string
     zone_name   = string
-    rdata       = string
     rtype       = string
-    ttl         = number
+    # rdata       = string
+    # ttl         = number
   }))
   description = <<EOF
     name - (Required) The target fully-qualified domain name (FQDN) within the target zone.
