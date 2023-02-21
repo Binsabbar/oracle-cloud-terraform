@@ -31,17 +31,15 @@ variable "records" {
     domain_name = string
     zone_name   = string
     rtype       = string
-    # rdata       = string
-    # ttl         = number
+    rdata       = string
+    ttl         = number
   }))
   description = <<EOF
-    name - (Required) The target fully-qualified domain name (FQDN) within the target zone.
-    rtype - (Required) The type of the target RRSet within the target zone.
-    records - (Optional) (Updatable) NOTE Omitting items at time of create, will delete any existing records in the RRSet
-        domain - (Required) The fully qualified domain name where the record can be located.
-        rdata - (Required) (Updatable) The record's data, as whitespace-delimited tokens in type-specific presentation format. All RDATA is normalized and the returned presentation of your RDATA may differ from its initial input. For more information about RDATA, see Supported DNS Resource Record Types
-        rtype - (Required) The canonical name for the record's type, such as A or CNAME. For more information, see Resource Record (RR) TYPEs.
-        ttl - (Required) (Updatable) The Time To Live for the record, in seconds.    
+    domain_name - The target fully-qualified domain name (FQDN) within the target zone.
+    zone_name - The name or OCID of the target zone.
+    rtype - The type of the target RRSet within the target zone.
+    rdata - The record's data, as whitespace-delimited tokens in type-specific presentation format. All RDATA is normalized and the returned presentation of your RDATA may differ from its initial input. For more information about RDATA, see Supported DNS Resource Record Types
+    ttl - The Time To Live for the record, in seconds.    
   EOF
 
 }
