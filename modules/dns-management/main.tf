@@ -21,4 +21,7 @@ resource "oci_dns_rrset" "dns_rrset" {
     rtype  = each.value.rtype
     ttl    = each.value.ttl
   }
+  depends_on = [
+    oci_dns_zone.dns_zone
+  ]
 }
