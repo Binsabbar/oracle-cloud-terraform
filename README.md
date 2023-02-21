@@ -112,7 +112,7 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 |             [public-ip](modules/public-ip/README.md)             | Creates a reserved public IP that can be attached to instances or load balancers                                        |
 |         [security-list](modules/security-list/README.md)         | Creates network security lists                                                                                          |
 |                   [waf](modules/waf/README.md)                   | Creates a WAF.                                                                                                          |
-|                   [dns](modules/dns/README.md)                   | Creates a DNS management system.                                                                                        |
+|                   [dns](modules/dns-management/README.md)        | Creates a DNS management system.                                                                                        |
 
 # Releases
 
