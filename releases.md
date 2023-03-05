@@ -1,3 +1,13 @@
+# v2.6.0:
+## **New**
+* `dns`: add ability to manage dns records in oci dns service
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+None
+
 # v2.5.0:
 ## **New**
 * `network`: Add route rule to the default public route table when service gateway is enabled (note this is optional to add it to public subnet). Please refer to [known issues with service gateway in public subnet](https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm#sgw-route-rule-conflict) before enabling it in public subnet.
