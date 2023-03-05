@@ -1,4 +1,4 @@
-# File Storage System
+# DNS Management System
 
 This module allows you to create a full DNS management system. Read more about DNS concepts at [oracle](https://docs.oracle.com/en-us/iaas/Content/DNS/Concepts/dnszonemanagement.htm). It consists of two components, a DNS Zone and a DNS Record.
 
