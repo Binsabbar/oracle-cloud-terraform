@@ -5,11 +5,12 @@ output "instances" {
       primary_vnic = {
         primary_ip = [
           for ip in data.oci_core_private_ips.primary_vnic_primary_private_ip[k].private_ips : {
-            id         = ip.id
-            ip_address = ip.ip_address
-            vnic_id    = ip.vnic_id
-            subnet_id  = ip.subnet_id
-            public_ip  = instance.public_ip
+            id             = ip.id
+            ip_address     = ip.ip_address
+            vnic_id        = ip.vnic_id
+            subnet_id      = ip.subnet_id
+            public_ip      = instance.public_ip
+            hostname_label = ip.hostname_label
           } if ip.is_primary
         ][0]
         secondary_ips = {
@@ -25,17 +26,19 @@ output "instances" {
         vnic.vnic_key => {
           primary_ip = [
             for ip in data.oci_core_private_ips.secondary_vnic_attachment_ips["${vnic.instance_key}:${vnic.vnic_key}"].private_ips : {
-              id         = ip.id
-              ip_address = ip.ip_address
-              vnic_id    = ip.vnic_id
-              subnet_id  = ip.subnet_id
+              id             = ip.id
+              ip_address     = ip.ip_address
+              vnic_id        = ip.vnic_id
+              subnet_id      = ip.subnet_id
+              hostname_label = ip.hostname_label
             } if ip.is_primary
           ][0]
           secondary_ips = {
             for ip in local.flattened_secondary_vnic_secondary_ips :
             ip.secondary_ip_key => {
-              id         = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].id
-              ip_address = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].ip_address
+              id             = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].id
+              ip_address     = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].ip_address
+              hostname_label = oci_core_private_ip.secondary_vnic_additional_ips["${ip.instance_key}:${ip.vnic_key}:${ip.secondary_ip_key}"].hostname_label
             } if ip.instance_key == k
           }
         } if vnic.instance_key == k
