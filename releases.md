@@ -1,3 +1,14 @@
+# v2.6.1:
+## **New**
+* `instances`: add `hostname_label` to the output
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+None
+
+
 # v2.6.0:
 ## **New**
 * `dns`: add ability to manage dns records in oci dns service
