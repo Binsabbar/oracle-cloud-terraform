@@ -84,6 +84,12 @@ resource "oci_core_instance" "instances" {
       boot_volume_size_in_gbs = each.value.volume_size
     }
   }
+
+  lifecycle {
+    ignore_changes = [ 
+      metadata.user_data
+     ]
+  }
 }
 
 # Getting Primary Initial Private IP for an instance
