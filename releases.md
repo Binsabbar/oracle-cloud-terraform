@@ -1,3 +1,13 @@
+# v2.6.2:
+## **New**
+None
+
+## **Fix**
+* Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 
+
+## _**Breaking Changes**_
+None
+
 # v2.6.1:
 ## **New**
 * `instances`: add `hostname_label` to the output
