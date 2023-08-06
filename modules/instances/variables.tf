@@ -133,9 +133,10 @@ variable "instances" {
         name       = string
         ip_address = string
     optionals : set of key/value map that can be used for customise default values.
-      preserve_boot_volume  : whether to keep boot volume after delete or not
-      boot_volume_id        : when need to boot from an existing boot volume, set this value to a volume ID
-      boot_source_type      : when need to change boot type: `image` or `bootVolume`
+      preserve_boot_volume                     : whether to keep boot volume after delete or not
+      boot_volume_id                           : when need to boot from an existing boot volume, set this value to a volume ID
+      boot_source_type                         : when need to change boot type: `image` or `bootVolume`
+      reference_to_backup_policy_key_name      : reference to policy key name in the input `var.boot_volume_backup_policies`. If empty, no backup will be scheduled
   EOF
 
   validation {

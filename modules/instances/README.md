@@ -2,6 +2,7 @@
   - [Using Flex Shapes](#using-flex-shapes)
 - [Assign Public IP to an instnace](#assign-public-ip-to-an-instnace)
 - [Booting from an existing Boot Volume](#booting-from-an-existing-boot-volume)
+- [Boot Volume Backup](#boot-volume-backup)
 - [User Metadata](#user-metadata)
   - [Limitations](#limitations)
   - [Examples](#examples)
@@ -27,6 +28,9 @@ To attach public IP to any private IP created in this module, you have to do tha
 It is possible to boot a new instance from an existing boot volume using the `optionals` key in the `instances` map. If not set, a new boot volume will be created from scratch and used. In order to boot from an existing bootVolume set
 `instances[*].optionals.boot_volume_id` and `instances[*].optionals.boot_source_type = "bootVolume`.
 
+# Boot Volume Backup
+By default no backup schedule will be created for the boot volume. You need to create a backup policy in this module in `var.boot_volume_backup_policies`, then attach it to the instance `instances[*].optionals.reference_to_backup_policy_key_name` variable. This way, a backup will be scheduled for the boot volume of the instance. See example below. Please notes that the value of `reference_to_backup_policy_key_name` must be the same name of the key used in the `var.boot_volume_backup_policies`.
+
 # User Metadata
 To pass script to run during cloud init phase, use the `user_data` parameter in the instance, which is part of the `optionals` parameter. See example below
 
@@ -36,7 +40,7 @@ To pass script to run during cloud init phase, use the `user_data` parameter in 
 ## Examples
 To create 2 instances:
 ```h
-locals { 
+locals {
   instances = {
     "prod-jumpbox" = {
       name                     = "jumpbox-production"
@@ -118,7 +122,9 @@ locals {
           }
         }
       }
-      optionals = {}
+      optionals = {
+        reference_to_backup_policy_key_name = "my-backup"
+      }
     }
 }
 
@@ -126,5 +132,52 @@ module "instances" {
   source = PATH_TO_MODULE
 
   instances = local.instances
+  boot_volume_backup_policies = {
+    "my-backup" = {
+      compartment_id     = "ocixxxxxx.xxxxxx.xxxxx"
+      name               = "My Backup policy"
+      destination_region = "" # leave empty if you do not have another region in oci
+      schedules = {
+        "daily" = {
+          backup_type       = "INCREMENTAL"
+          period            = "ONE_DAY"
+          retention_seconds = 3600 * 24 # one day
+          optionals = {
+            hour_of_day = 23
+          }
+        }
+        "weekly" = {
+          backup_type       = "FULL"
+          period            = "ONE_WEEK"
+          retention_seconds = 3600 * 24 * 7 # one week
+          optionals = {
+            hour_of_day = 0
+            day_of_week = "FRIDAY"
+          }
+        }
+        "monthly" = {
+          backup_type       = "FULL"
+          period            = "ONE_MONTH"
+          retention_seconds = 3600 * 24 * 30 # # one month
+          optionals = {
+            hour_of_day  = 0
+            day_of_week  = "SUNDAY"
+            day_of_month = 28
+          }
+        }
+        "yearly" = {
+          backup_type       = "FULL"
+          period            = "ONE_YEAR"
+          retention_seconds = 3600 * 24 * 30 * 12 # # one year
+          optionals = {
+            hour_of_day  = 0
+            day_of_week  = "SUNDAY"
+            day_of_month = 30
+            month        = "DECEMBER"
+          }
+        }
+      }
+    }
+  }
 }
 ```
