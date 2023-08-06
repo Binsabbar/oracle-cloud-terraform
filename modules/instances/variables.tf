@@ -6,6 +6,54 @@ locals {
   }
 }
 
+variable "boot_volume_backup_policies" {
+  type = map(object({
+    compartment_id     = string
+    name               = string
+    destination_region = string
+    schedules = map(object({
+      backup_type       = string
+      period            = string
+      retention_seconds = number
+      optionals         = map(string)
+      # day_of_month 
+      # day_of_week
+      # hour_of_day
+      # month 
+      # time_zone
+    }))
+  }))
+
+  default = {}
+
+  validation {
+    condition = alltrue(flatten([
+      for k, v in var.boot_volume_backup_policies : [
+        for kk, schedule in v.schedules : [
+          for option in keys(schedule.optionals) : contains(["day_of_month", "day_of_week", "hour_of_day", "month", "zone"], option)
+        ]
+      ]
+    ]))
+    error_message = "The var.boot_volume_backup_policies.*.schedules.optionals accepts \"day_of_month\", \"day_of_week\", \"hour_of_day\", \"month\", \"offset_seconds\", \"offset_type\", \"zone\"."
+  }
+
+  description = <<EOF
+    compartment_id     : which compartment to create the volume in
+    name               : policy name
+    destination_region : Backup destination region for this policy
+    schedules          : map of backup scheduling configuration
+      backup_type       : type of the backup (INCREMENTAL, FULL)
+      period            : backup frequency (ONE_DAY, ONE_WEEK, ONE_MONTH, ONE_YEAR)
+      retention_seconds : for how long to keep the backup for?
+      optionals         : map of extra optional schedules configuration 
+        day_of_month (Default: `1`)
+        day_of_week  (Default: `MONDAY`)
+        hour_of_day  (Default: `0`)
+        month        (Default: `JANUARY`)
+        time_zone    (Default: `UTC`) : Support either `UTC` or `REGIONAL_DATA_CENTER_TIME`
+  EOF
+}
+
 variable "instances" {
   type = map(object({
     name                     = string
@@ -49,7 +97,9 @@ variable "instances" {
     # boot_volume_id = string
     # boot_source_type = string
     # user_data        = string
+    # reference_to_backup_policy_key_name = string # The name of the key in var.boot_volume_backup_policies
   }))
+
   description = <<EOF
     map of objects that represent instances to create. The key name is the instance name that is used for FQDN
     name                    : the name of instance

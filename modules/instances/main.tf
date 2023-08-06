@@ -130,3 +130,37 @@ data "oci_core_private_ips" "secondary_vnic_attachment_ips" {
   for_each = { for v in local.flattened_secondary_vnics : "${v.instance_key}:${v.vnic_key}" => v }
   vnic_id  = oci_core_vnic_attachment.secondary_vnic_attachment[each.key].vnic_id
 }
+
+// Backup Policy
+resource "oci_core_volume_backup_policy" "boot_volume_backup_policy" {
+  for_each = var.boot_volume_backup_policies
+
+  compartment_id     = each.value.compartment_id
+  destination_region = each.value.destination_region
+  display_name       = each.value.name
+
+  dynamic "schedules" {
+    for_each = each.value.schedules
+    content {
+      offset_seconds    = 0
+      offset_type       = "STRUCTURED"
+      backup_type       = schedules.value.backup_type
+      period            = schedules.value.period
+      retention_seconds = schedules.value.retention_seconds
+      time_zone         = lookup(schedules.value.optionals, "time_zone", "UTC")
+      hour_of_day       = lookup(schedules.value.optionals, "hour_of_day", 0)
+      day_of_week       = lookup(schedules.value.optionals, "day_of_week", "MONDAY")
+      day_of_month      = lookup(schedules.value.optionals, "day_of_month", 1)
+      month             = lookup(schedules.value.optionals, "month", "JANUARY")
+    }
+  }
+}
+
+
+// Policy Attachment
+resource "oci_core_volume_backup_policy_assignment" "boot_volume_backup_policy_assignment" {
+  for_each = { for k, v in var.instances : k => v if lookup(v.optionals, "reference_to_backup_policy_key_name", null) != null }
+
+  asset_id  = oci_core_instance[each.key].boot_volume_id
+  policy_id = oci_core_volume_backup_policy.boot_volume_backup_policy[each.value.reference_to_backup_policy_key_name].id
+}
