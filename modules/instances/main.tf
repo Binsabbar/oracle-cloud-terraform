@@ -162,5 +162,5 @@ resource "oci_core_volume_backup_policy_assignment" "boot_volume_backup_policy_a
   for_each = { for k, v in var.instances : k => v if lookup(v.optionals, "reference_to_backup_policy_key_name", null) != null }
 
   asset_id  = oci_core_instance.instances[each.key].boot_volume_id
-  policy_id = oci_core_volume_backup_policy.boot_volume_backup_policy[each.value.reference_to_backup_policy_key_name].id
+  policy_id = oci_core_volume_backup_policy.boot_volume_backup_policy[each.value.optionals.reference_to_backup_policy_key_name].id
 }

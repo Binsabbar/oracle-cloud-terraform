@@ -1,3 +1,14 @@
+# v2.7.0:
+## **New**
+* `instances`: add `boot_volume_backup_policies` to the input as optional value.
+* `instances`: add `instances[*].optional.reference_to_backup_policy_key_name` to the `instance` variable input as optional value to enable scheduled backup of boot volume
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+None
+
 # v2.6.1:
 ## **New**
 * `instances`: add `hostname_label` to the output
