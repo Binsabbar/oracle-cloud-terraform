@@ -15,27 +15,15 @@ variable "boot_volume_backup_policies" {
       backup_type       = string
       period            = string
       retention_seconds = number
-      optionals         = map(string)
-      # day_of_month 
-      # day_of_week
-      # hour_of_day
-      # month 
-      # time_zone
+      time_zone = optional(string, "UTC")
+      hour_of_day = optional(number, 0)
+      day_of_week = optional(string, "MONDAY")
+      day_of_month  = optional(number, 1)
+      month  = optional(string, "JANUARY")
     }))
   }))
 
   default = {}
-
-  validation {
-    condition = alltrue(flatten([
-      for k, v in var.boot_volume_backup_policies : [
-        for kk, schedule in v.schedules : [
-          for option in keys(schedule.optionals) : contains(["day_of_month", "day_of_week", "hour_of_day", "month", "zone"], option)
-        ]
-      ]
-    ]))
-    error_message = "The var.boot_volume_backup_policies.*.schedules.optionals accepts \"day_of_month\", \"day_of_week\", \"hour_of_day\", \"month\", \"offset_seconds\", \"offset_type\", \"zone\"."
-  }
 
   description = <<EOF
     compartment_id     : which compartment to create the volume in
@@ -45,12 +33,11 @@ variable "boot_volume_backup_policies" {
       backup_type       : type of the backup (INCREMENTAL, FULL)
       period            : backup frequency (ONE_DAY, ONE_WEEK, ONE_MONTH, ONE_YEAR)
       retention_seconds : for how long to keep the backup for?
-      optionals         : map of extra optional schedules configuration 
-        day_of_month (Default: `1`)
-        day_of_week  (Default: `MONDAY`)
-        hour_of_day  (Default: `0`)
-        month        (Default: `JANUARY`)
-        time_zone    (Default: `UTC`) : Support either `UTC` or `REGIONAL_DATA_CENTER_TIME`
+      day_of_month      : (Default: `1`)
+      day_of_week       : (Default: `MONDAY`)
+      hour_of_day       : (Default: `0`)
+      month             : (Default: `JANUARY`)
+      time_zone         : (Default: `UTC`) : Support either `UTC` or `REGIONAL_DATA_CENTER_TIME`
   EOF
 }
 

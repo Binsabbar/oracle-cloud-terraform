@@ -136,11 +136,11 @@ resource "oci_core_volume_backup_policy" "boot_volume_backup_policy" {
       backup_type       = schedules.value.backup_type
       period            = schedules.value.period
       retention_seconds = schedules.value.retention_seconds
-      time_zone         = lookup(schedules.value.optionals, "time_zone", "UTC")
-      hour_of_day       = lookup(schedules.value.optionals, "hour_of_day", 0)
-      day_of_week       = lookup(schedules.value.optionals, "day_of_week", "MONDAY")
-      day_of_month      = lookup(schedules.value.optionals, "day_of_month", 1)
-      month             = lookup(schedules.value.optionals, "month", "JANUARY")
+      time_zone         = schedules.value.time_zone
+      hour_of_day       = schedules.value.hour_of_day
+      day_of_week       = schedules.value.day_of_week
+      day_of_month      = schedules.value.day_of_month
+      month             = schedules.value.month
     }
   }
 }
