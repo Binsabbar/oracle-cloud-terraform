@@ -43,11 +43,11 @@ resource "oci_core_instance" "instances" {
   compartment_id       = each.value.compartment_id
   shape                = each.value.config.shape
   display_name         = each.value.name
-  preserve_boot_volume = lookup(each.value.optionals, "preserve_boot_volume", true)
+  preserve_boot_volume = each.value.boot_volume_config.preserve_boot_volume
   state                = each.value.state
   metadata = {
     ssh_authorized_keys = each.value.autherized_keys
-    user_data           = lookup(each.value.optionals, "user_data", null)
+    user_data           = each.value.user_data
   }
 
   dynamic "shape_config" {
@@ -68,21 +68,10 @@ resource "oci_core_instance" "instances" {
     private_ip                = each.value.config.primary_vnic.primary_ip
   }
 
-  dynamic "source_details" {
-    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? [1] : []
-    content {
-      source_type             = lookup(each.value.optionals, "boot_source_type")
-      source_id               = lookup(each.value.optionals, "boot_volume_id")
-      boot_volume_size_in_gbs = each.value.volume_size
-    }
-  }
-  dynamic "source_details" {
-    for_each = contains(keys(each.value.optionals), "boot_volume_id") && contains(keys(each.value.optionals), "boot_source_type") ? [] : [1]
-    content {
-      source_type             = "image"
-      source_id               = each.value.config.image_id
-      boot_volume_size_in_gbs = each.value.volume_size
-    }
+  source_details {
+    source_type             = each.value.boot_volume_config.boot_from_image? "image":"bootVolume"
+    source_id               = each.value.boot_volume_config.source_id
+    boot_volume_size_in_gbs = each.value.boot_volume_config.volume_size
   }
 }
 
@@ -159,8 +148,8 @@ resource "oci_core_volume_backup_policy" "boot_volume_backup_policy" {
 
 // Policy Attachment
 resource "oci_core_volume_backup_policy_assignment" "boot_volume_backup_policy_assignment" {
-  for_each = { for k, v in var.instances : k => v if lookup(v.optionals, "reference_to_backup_policy_key_name", null) != null }
+  for_each = { for k, v in var.instances : k => v if v.boot_volume_config.reference_to_backup_policy_key_name != null }
 
   asset_id  = oci_core_instance.instances[each.key].boot_volume_id
-  policy_id = oci_core_volume_backup_policy.boot_volume_backup_policy[each.value.optionals.reference_to_backup_policy_key_name].id
+  policy_id = oci_core_volume_backup_policy.boot_volume_backup_policy[each.value.boot_volume_config.reference_to_backup_policy_key_name].id
 }

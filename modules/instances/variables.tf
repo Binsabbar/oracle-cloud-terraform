@@ -60,13 +60,12 @@ variable "instances" {
     availability_domain_name = string
     fault_domain_name        = string
     compartment_id           = string
-    volume_size              = number
     state                    = string
     autherized_keys          = string
+    user_data                = optional(string, null)
     config = object({
       shape             = string
       flex_shape_config = map(string)
-      image_id          = string
       network_sgs_ids   = list(string)
       subnet = object({
         id                         = string,
@@ -92,12 +91,13 @@ variable "instances" {
         ip_address = string
       }))
     }))
-    optionals = map(any)
-    # preserve_boot_volume =  bool (true)
-    # boot_volume_id = string
-    # boot_source_type = string
-    # user_data        = string
-    # reference_to_backup_policy_key_name = string # The name of the key in var.boot_volume_backup_policies
+    boot_volume_config = object({
+      volume_size                         = number
+      source_id                           = string
+      boot_from_image                     = optional(bool, true)
+      preserve_boot_volume                = optional(bool, true)
+      reference_to_backup_policy_key_name = optional(string, null)
+    })
   }))
 
   description = <<EOF
@@ -132,7 +132,7 @@ variable "instances" {
       secondary_ips = map of objects for secondary IP configuration
         name       = string
         ip_address = string
-    optionals : set of key/value map that can be used for customise default values.
+    optionals :
       preserve_boot_volume                     : whether to keep boot volume after delete or not
       boot_volume_id                           : when need to boot from an existing boot volume, set this value to a volume ID
       boot_source_type                         : when need to change boot type: `image` or `bootVolume`
@@ -147,5 +147,15 @@ variable "instances" {
       ]
     ]))
     error_message = "The instances.*.config.flex_shape_config accepts only \"ocpus\", \"memory_in_gbs\"."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.instances :
+        (v.boot_volume_config.boot_from_image && v.boot_volume_config.image_id != null)
+        || (!v.boot_volume_config.boot_from_image && v.boot_volume_config.boot_volume_id != null) 
+    ])
+
+    error_message = "The instances.*.boot_volume_config.image_id must be set if boot_from_image is true, oterwise, boot_from_image must be set"
   }
 }
