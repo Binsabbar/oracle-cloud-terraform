@@ -51,7 +51,7 @@ resource "oci_core_instance" "instances" {
   }
 
   dynamic "shape_config" {
-    for_each = length(each.value.config.flex_shape_config) == 2 ? [1] : []
+    for_each = each.value.config.flex_shape_config != null? [1]:[]
     content {
       memory_in_gbs = each.value.config.flex_shape_config.memory_in_gbs
       ocpus         = each.value.config.flex_shape_config.ocpus

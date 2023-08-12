@@ -52,7 +52,10 @@ variable "instances" {
     user_data                = optional(string, null)
     config = object({
       shape             = string
-      flex_shape_config = map(string)
+      flex_shape_config = optional(object({
+        ocpus = string
+        memory_in_gbs = string
+      }), null)
       network_sgs_ids   = list(string)
       subnet = object({
         id                         = string,
@@ -125,24 +128,4 @@ variable "instances" {
       boot_source_type                         : when need to change boot type: `image` or `bootVolume`
       reference_to_backup_policy_key_name      : reference to policy key name in the input `var.boot_volume_backup_policies`. If empty, no backup will be scheduled
   EOF
-
-  validation {
-    condition = alltrue(flatten([
-      for k, v in var.instances : [
-        for key in keys(v.config.flex_shape_config) :
-        contains(["ocpus", "memory_in_gbs"], key)
-      ]
-    ]))
-    error_message = "The instances.*.config.flex_shape_config accepts only \"ocpus\", \"memory_in_gbs\"."
-  }
-
-  validation {
-    condition = alltrue([
-      for k, v in var.instances :
-        (v.boot_volume_config.boot_from_image && v.boot_volume_config.image_id != null)
-        || (!v.boot_volume_config.boot_from_image && v.boot_volume_config.boot_volume_id != null) 
-    ])
-
-    error_message = "The instances.*.boot_volume_config.image_id must be set if boot_from_image is true, oterwise, boot_from_image must be set"
-  }
 }
