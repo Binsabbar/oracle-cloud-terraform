@@ -47,7 +47,7 @@ variable "instances" {
     availability_domain_name = string
     fault_domain_name        = string
     compartment_id           = string
-    state                    = string
+    state                    = optional(string, "RUNNING")
     autherized_keys          = string
     user_data                = optional(string, null)
     config = object({
