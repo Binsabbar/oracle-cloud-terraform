@@ -47,8 +47,8 @@ variable "instances" {
     availability_domain_name = string
     fault_domain_name        = string
     compartment_id           = string
-    state                    = optional(string, "RUNNING")
     autherized_keys          = string
+    state                    = optional(string, "RUNNING")
     user_data                = optional(string, null)
     config = object({
       shape             = string
@@ -61,13 +61,13 @@ variable "instances" {
         id                         = string,
         prohibit_public_ip_on_vnic = bool
       })
-      primary_vnic = object({
+      primary_vnic = optional(object({
         primary_ip = string
-        secondary_ips = map(object({
+        secondary_ips = optional(map(object({
           name       = string
           ip_address = string
-        }))
-      })
+        })), {})
+      }), null)
     })
     secondary_vnics = map(object({
       name                   = string

@@ -7,7 +7,7 @@ locals {
         name             = secondary_ip.name
         ip_address       = secondary_ip.ip_address
       }
-    ]
+    ] if instance.config.primary_vnic != null
   ])
 
   flattened_secondary_vnics = flatten([
@@ -65,7 +65,7 @@ resource "oci_core_instance" "instances" {
     nsg_ids                   = each.value.config.network_sgs_ids
     skip_source_dest_check    = false
     assign_private_dns_record = true
-    private_ip                = each.value.config.primary_vnic.primary_ip
+    private_ip                = each.value.config.primary_vnic != null ? each.value.config.primary_vnic.primary_ip:""
   }
 
   source_details {
