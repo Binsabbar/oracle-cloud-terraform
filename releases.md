@@ -1,3 +1,13 @@
+# v2.7.1:
+## **New**
+None
+
+## **Fix**
+Change VNIC's `skip_source_dest_check` to an optional variable input
+
+## _**Breaking Changes**_
+None
+
 # v2.7.0:
 ## **New**
 * `instances`: add `boot_volume_backup_policies` to the input as optional value.
