@@ -3,7 +3,7 @@
 None
 
 ## **Fix**
-Change VNIC's `skip_source_dest_check` to an optional variable input
+Change VNIC's `skip_source_dest_check` to an optional variable input.
 
 ## _**Breaking Changes**_
 None
