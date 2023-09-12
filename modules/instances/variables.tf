@@ -78,7 +78,6 @@ variable "instances" {
           name       = string
           ip_address = string
         }))
-        skip_source_dest_check = bool
       })
     })
     secondary_vnics = map(object({

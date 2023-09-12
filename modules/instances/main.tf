@@ -63,7 +63,7 @@ resource "oci_core_instance" "instances" {
     display_name              = "${each.key}Vnic"
     hostname_label            = each.key
     nsg_ids                   = each.value.config.network_sgs_ids
-    skip_source_dest_check    = lookup(each.value.config.primary_vnic, "skip_source_dest_check", false)
+    skip_source_dest_check    = lookup(each.value.optionals, "skip_source_dest_check", false)
     assign_private_dns_record = true
     private_ip                = each.value.config.primary_vnic.primary_ip
   }
