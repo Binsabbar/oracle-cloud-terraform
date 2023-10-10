@@ -57,6 +57,12 @@ resource "oci_core_instance" "instances" {
       ocpus         = each.value.config.flex_shape_config.ocpus
     }
   }
+
+  availability_config {
+    is_live_migration_preferred = each.value.is_live_migration_preferred
+    recovery_action             = each.value.recovery_action
+  }
+
   create_vnic_details {
     subnet_id                 = each.value.config.subnet.id
     assign_public_ip          = each.value.config.subnet.prohibit_public_ip_on_vnic == false
