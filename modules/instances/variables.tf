@@ -56,13 +56,15 @@ variable "boot_volume_backup_policies" {
 
 variable "instances" {
   type = map(object({
-    name                     = string
-    availability_domain_name = string
-    fault_domain_name        = string
-    compartment_id           = string
-    volume_size              = number
-    state                    = string
-    autherized_keys          = string
+    name                        = string
+    availability_domain_name    = string
+    fault_domain_name           = string
+    compartment_id              = string
+    volume_size                 = number
+    state                       = string
+    autherized_keys             = string
+    recovery_action             = string
+    is_live_migration_preferred = bool
     config = object({
       shape             = string
       flex_shape_config = map(string)

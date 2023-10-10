@@ -1,3 +1,39 @@
+# v2.8.0:
+## **New**
+* `instances`: add new argument availability_config. for VM migration during infrastructure maintenance events
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+* `instances` modules input is updated. A new key `flex_shape_config` is now required under `var.instances.*.config`.
+  * Add `is_live_migration_preferred` and set its value to `true`. Example of partial instance object. 
+  * Add `recovery_action` and set its value to `RESTORE_INSTANCE`. Example of partial instance object. 
+```
+ instances = {
+    "prod-jumpbox" = {
+      name                        = "jumpbox-production"
+      availability_domain_name    = "ocixxxxxx.xxxxxx.xxxxx"
+      fault_domain_name           = "ocixxxxxx.xxxxxx.xxxxx"
+      compartment_id              = "ocixxxxxx.xxxxxx.xxxxx"
+      volume_size                 = 500
+      autherized_keys             = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxx\n ssh-rsa xxxxxxxxxxxxxxxxxxxxxx"
+      state                       = "RUNNING" 
+      recovery_action             = "RESTORE_INSTANCE"  <--------------------------------------------------- note this line
+      is_live_migration_preferred = true    <--------------------------------------------------- note this line
+    ...
+    ...
+    ...
+    ...
+  }
+}
+```
+
+# v2.5.0:
+## **New**
+* `network`: Add route rule to the default public route table when service gateway is enabled (note this is optional to add it to public subnet). Please refer to [known issues with service gateway in public subnet](https://docs.oracle.com/en-us/iaas/Content/Network/Reference/known_issues_for_networking.htm#sgw-route-rule-conflict) before enabling it in public subnet.
+
+
 # v2.7.1:
 ## **New**
 None

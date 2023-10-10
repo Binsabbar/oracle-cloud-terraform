@@ -43,13 +43,15 @@ To create 2 instances:
 locals {
   instances = {
     "prod-jumpbox" = {
-      name                     = "jumpbox-production"
-      availability_domain_name = "ocixxxxxx.xxxxxx.xxxxx"
-      fault_domain_name        = "ocixxxxxx.xxxxxx.xxxxx"
-      compartment_id           = "ocixxxxxx.xxxxxx.xxxxx"
-      volume_size              = 500
-      autherized_keys          = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxx\n ssh-rsa xxxxxxxxxxxxxxxxxxxxxx"
-      state                    = "RUNNING"
+      name                        = "jumpbox-production"
+      availability_domain_name    = "ocixxxxxx.xxxxxx.xxxxx"
+      fault_domain_name           = "ocixxxxxx.xxxxxx.xxxxx"
+      compartment_id              = "ocixxxxxx.xxxxxx.xxxxx"
+      volume_size                 = 500
+      autherized_keys             = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxx\n ssh-rsa xxxxxxxxxxxxxxxxxxxxxx"
+      state                       = "RUNNING"
+      recovery_action             = "RESTORE_INSTANCE"
+      is_live_migration_preferred = true
       config = {
         shape    = "ocixxxxxx.xxxxxx.xxxxx"
         flex_shape_config = {
