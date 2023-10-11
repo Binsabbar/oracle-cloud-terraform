@@ -1,12 +1,12 @@
 # v2.8.0:
 ## **New**
-* `instances`: add new argument availability_config. for VM migration during infrastructure maintenance events
+* `instances`: add new argument `availability_config`. for VM migration during infrastructure maintenance events
 
 ## **Fix**
 None
 
 ## _**Breaking Changes**_
-* `instances` modules input is updated. A new key `flex_shape_config` is now required under `var.instances.*.config`.
+* `instances` modules input is updated. A new key `availability_config` is now required under `var.instances.*.config`.
   * Add `is_live_migration_preferred` and set its value to `true`. Example of partial instance object. 
   * Add `recovery_action` and set its value to `RESTORE_INSTANCE`. Example of partial instance object. 
 ```
