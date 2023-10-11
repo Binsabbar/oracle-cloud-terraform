@@ -56,15 +56,13 @@ variable "boot_volume_backup_policies" {
 
 variable "instances" {
   type = map(object({
-    name                        = string
-    availability_domain_name    = string
-    fault_domain_name           = string
-    compartment_id              = string
-    volume_size                 = number
-    state                       = string
-    autherized_keys             = string
-    recovery_action             = string
-    is_live_migration_preferred = bool
+    name                     = string
+    availability_domain_name = string
+    fault_domain_name        = string
+    compartment_id           = string
+    volume_size              = number
+    state                    = string
+    autherized_keys          = string
     config = object({
       shape             = string
       flex_shape_config = map(string)
@@ -80,6 +78,10 @@ variable "instances" {
           name       = string
           ip_address = string
         }))
+      })
+      availability_config = object({
+        recovery_action             = string,
+        is_live_migration_preferred = bool
       })
     })
     secondary_vnics = map(object({
@@ -124,6 +126,10 @@ variable "instances" {
         secondary_ips : map of objects for secondary IP configuration
           name         : the name of IP
           ip_address   : custom IP that must be in the same subnet above of VNIC. If left empty, oci will create IP dynamically
+      availability_config :  object for VM migration configuration
+        recovery_action : The lifecycle state for an instance when it is recovered after infrastructure maintenance.
+        is_live_migration_preferred : Whether to live migrate supported VM instances to a healthy physical VM host without disrupting.
+
     secondary_vnics: map of object for secondary VNIC configuration
       name       = the name of VNIC
       primary_ip =  custom initial IP. If left empty, oci will create IP dynamically.

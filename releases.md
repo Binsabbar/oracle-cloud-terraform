@@ -11,22 +11,24 @@ None
   * Add `recovery_action` and set its value to `RESTORE_INSTANCE`. Example of partial instance object. 
 ```
  instances = {
-    "prod-jumpbox" = {
-      name                        = "jumpbox-production"
-      availability_domain_name    = "ocixxxxxx.xxxxxx.xxxxx"
-      fault_domain_name           = "ocixxxxxx.xxxxxx.xxxxx"
-      compartment_id              = "ocixxxxxx.xxxxxx.xxxxx"
-      volume_size                 = 500
-      autherized_keys             = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxx\n ssh-rsa xxxxxxxxxxxxxxxxxxxxxx"
-      state                       = "RUNNING" 
-      recovery_action             = "RESTORE_INSTANCE"  <--------------------------------------------------- note this line
-      is_live_migration_preferred = true    <--------------------------------------------------- note this line
+   ...
+   ...
+   ...
+      network_sgs_ids = [
+          "ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx",
+        ]
+        primary_vnic = {
+          primary_ip = ""
+          secondary_ips = {}
+        }
+        availability_config   = {   <--------------------------------------------------- note this block 
+          recovery_action             = "RESTORE_INSTANCE"  
+          is_live_migration_preferred = false
+        }
+      }
+
     ...
     ...
-    ...
-    ...
-  }
-}
 ```
 
 # v2.7.1:

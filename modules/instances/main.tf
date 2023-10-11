@@ -59,8 +59,8 @@ resource "oci_core_instance" "instances" {
   }
 
   availability_config {
-    is_live_migration_preferred = each.value.is_live_migration_preferred
-    recovery_action             = each.value.recovery_action
+    is_live_migration_preferred = each.value.config.availability_config.is_live_migration_preferred
+    recovery_action             = each.value.config.availability_config.recovery_action
   }
 
   create_vnic_details {
