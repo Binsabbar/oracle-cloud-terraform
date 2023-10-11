@@ -50,8 +50,6 @@ locals {
       volume_size                 = 500
       autherized_keys             = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxx\n ssh-rsa xxxxxxxxxxxxxxxxxxxxxx"
       state                       = "RUNNING"
-      recovery_action             = "RESTORE_INSTANCE"
-      is_live_migration_preferred = true
       config = {
         shape    = "ocixxxxxx.xxxxxx.xxxxx"
         flex_shape_config = {
@@ -69,6 +67,10 @@ locals {
         primary_vnic = {
           primary_ip = ""
           secondary_ips = {}
+        }
+        availability_config   = { 
+          recovery_action             = "RESTORE_INSTANCE"
+          is_live_migration_preferred = false
         }
       }
       secondary_vnics = {}
