@@ -1,3 +1,13 @@
+# v2.8.1:
+## **New**
+None
+
+## **Fix**
+* Correct `path` argument by `source` argument to specify the module path in `identity` module usage examples in `README.md`.
+  
+## _**Breaking Changes**_
+None
+
 # v2.8.0:
 ## **New**
 * `instances`: add new argument `availability_config`. for VM migration during infrastructure maintenance events
