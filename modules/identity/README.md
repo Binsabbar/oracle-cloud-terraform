@@ -153,7 +153,20 @@ module "IAM" {
   path = PATH_TO_MODULE
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
-  service_accounts = ["terraform-cli", "github-client"] # then using the service accout name, you can assign policy to the service account.
+  service_accounts = {
+    "terraform-cli" = { 
+      name = "terraform-cli", 
+      capabilities = {
+        api_keys = true
+      }
+    }, 
+    "github-client" = {
+      name = "github-client", 
+      capabilities = {
+        smtp_credentials = true
+      }
+    }
+  }
 }
 ```
 
@@ -276,7 +289,20 @@ locals {
     ]
   }
 
-  service_accounts = ["terraform-cicd"]
+  service_accounts = {
+    "terraform-cli" = { 
+      name = "terraform-cli", 
+      capabilities = {
+        api_keys = true
+      }
+    }, 
+    "github-client" = {
+      name = "github-client", 
+      capabilities = {
+        smtp_credentials = true
+      }
+    }
+  }
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
 }
