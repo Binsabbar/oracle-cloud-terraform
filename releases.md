@@ -3,7 +3,8 @@
 * `identity`: add new argument `capabilities` in `var.service_accounts` variable.
 
 ## **Fix**
-None
+* Correct `path` argument by `source` argument to specify the module path in `identity` module usage examples in `README.md`.
+
 ## _**Breaking Changes**_
 * `identity` modules input for `service_accounts` is updated. A new key `capabilities` is now required under `var.service_accounts.*`.
   * Add `capabilities` and set its value to `{}`.
@@ -29,8 +30,6 @@ to:
 >  ...
 >}
 ```
-
-
 
 # v2.8.0:
 ## **New**
