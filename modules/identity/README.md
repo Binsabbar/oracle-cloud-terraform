@@ -71,7 +71,7 @@ locals {
 }
 
 module "IAM" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
   memberships = local.memberships
@@ -111,14 +111,14 @@ locals {
 }
 
 module "IAM" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
   memberships = local.memberships
 }
 
 module "idp_mapping" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
   identity_group_mapping = {
@@ -150,10 +150,23 @@ Service accounts are accounts that meant to used by machines. When a service acc
 
 ```h
 module "IAM" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
-  service_accounts = ["terraform-cli", "github-client"] # then using the service accout name, you can assign policy to the service account.
+  service_accounts = {
+    "terraform-cli" = { 
+      name = "terraform-cli", 
+      capabilities = {
+        api_keys = true
+      }
+    }, 
+    "github-client" = {
+      name = "github-client", 
+      capabilities = {
+        smtp_credentials = true
+      }
+    }
+  }
 }
 ```
 
@@ -188,7 +201,7 @@ locals {
 }
 
 module "top_level_compartments" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = local.tenant_id
 
@@ -210,7 +223,7 @@ module "top_level_compartments" {
 }
 
 module "child_compartments" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = local.tenant_id
 
@@ -233,7 +246,7 @@ Some policies must be attached to the tenancy itself, but not to a compartment. 
 
 ```h
 module "tenancy_policies" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
   tenancy_policies = {
@@ -276,13 +289,26 @@ locals {
     ]
   }
 
-  service_accounts = ["terraform-cicd"]
+  service_accounts = {
+    "terraform-cli" = { 
+      name = "terraform-cli", 
+      capabilities = {
+        api_keys = true
+      }
+    }, 
+    "github-client" = {
+      name = "github-client", 
+      capabilities = {
+        smtp_credentials = true
+      }
+    }
+  }
 
   tenant_id = "oci.xxxxxxxxx.xxxxxx"
 }
 
 module "main_iam" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id        = local.tenant_id
   memberships      = local.memberships
@@ -312,7 +338,7 @@ module "main_iam" {
 }
 
 module "child_compartments" {
-  path = PATH_TO_MODULE
+  source = PATH_TO_MODULE
 
   tenant_id = local.tenant_id
 

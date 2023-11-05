@@ -1,3 +1,36 @@
+# v2.9.0:
+## **New**
+* `identity`: add new argument `capabilities` in `var.service_accounts` variable.
+
+## **Fix**
+* Correct `path` argument by `source` argument to specify the module path in `identity` module usage examples in `README.md`.
+
+## _**Breaking Changes**_
+* `identity` modules input for `service_accounts` is updated. A new key `capabilities` is now required under `var.service_accounts.*`.
+  * Add `capabilities` and set its value to `{}`.
+
+from:
+>```h
+>module "identity" {
+>  ...
+>  service_accounts = toset(["terraform-cli"])
+>  ...
+>}
+>```
+to:
+>```h
+>module "identity" {
+>  ...
+>  service_accounts = {
+>    "terraform-cli" = { 
+>      name = "terraform-cli", 
+>      capabilities = {}
+>    }
+>  }
+>  ...
+>}
+```
+
 # v2.8.0:
 ## **New**
 * `instances`: add new argument `availability_config`. for VM migration during infrastructure maintenance events
