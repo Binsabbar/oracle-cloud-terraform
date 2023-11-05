@@ -51,15 +51,33 @@ variable "memberships" {
   EOF
 }
 
+# Note this will completely changed in V3 of this module
 variable "service_accounts" {
-  type        = set(string)
-  default     = []
+  type    = map(object({ name = string, capabilities = map(bool) }))
+  default = {}
+
+  validation {
+    condition = alltrue(flatten([
+      for key, service_account in var.service_accounts : [
+        for capability in keys(service_account.capabilities) : contains(["api_keys", "auth_tokens", "console_password", "customer_secret_keys", "smtp_credentials"], capability)
+      ]
+    ]))
+    error_message = "The var.service_accounts.*.capabilities accepts \"api_keys\", \"auth_tokens\", \"console_password\", \"customer_secret_keys\", \"smtp_credentials\"."
+  }
+
   description = <<EOF
     This variable is optonal.
-    Set of service account users. A group with the same name of the service account
+    map of service account names. A group with the same name of the service account
     will be created and the service account will be added to it. This is because
     policy can only be applied to group. This way you can attach policy to the service
     account by using its name as group name.
+      name: name of the service account and its group
+      capabilities: map of bool to set service_account capabilities. Allowed values:
+        api_keys
+        auth_tokens
+        console_password
+        customer_secret_keys
+        smtp_credentials
   EOF
 }
 
