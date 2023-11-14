@@ -43,7 +43,7 @@ resource "oci_core_network_security_group" "security_group" {
 // Create INGRESS rules
 resource "oci_core_network_security_group_security_rule" "ingress_rule" {
   for_each = { for rule in local.flatten_rules :
-    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports}" => rule
+    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports.min}:${rule.ports.max}" => rule
   if rule.direction == "INGRESS" }
 
   network_security_group_id = oci_core_network_security_group.security_group[each.value.group].id
@@ -78,7 +78,7 @@ resource "oci_core_network_security_group_security_rule" "ingress_rule" {
 // Create EGRESS rules
 resource "oci_core_network_security_group_security_rule" "egress_rule" {
   for_each = { for rule in local.flatten_rules :
-    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports}" => rule
+    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports.min}:${rule.ports.max}" => rule
   if rule.direction == "EGRESS" }
 
   network_security_group_id = oci_core_network_security_group.security_group[each.value.group].id
