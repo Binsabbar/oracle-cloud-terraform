@@ -1,3 +1,28 @@
+# v2.10.0:
+## **New**
+* `network-sg`: change input type to support ports range in `var.network_security_groups.*.ports` variable.
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+* `network-sg` modules input for `network_security_groups` is updated. The subkey `port` is replaced with `ports` and it is now a map of two objects `max` and `min`. 
+
+```h
+network_security_groups = {
+    "group_1" = {
+      "rule_1" = {
+        direction = "INGRESS"
+        protocol  = "tcp"
+        port      = { min : 9090, max : 9090 }
+        ips       = ["192.168.100.12", "192.168.100.12"]
+      }
+    }
+}
+```
+* Currently there is no easy migration path for this change, since the terraform resource name is updated. However, destroying and recreating the rules is the best and fastest way to do it, however, it might impact your networks for few minutes. Alternatively, reference the new release in a new module definition, and migration your rules one by one.
+
+
 # v2.9.0:
 ## **New**
 * `identity`: add new argument `capabilities` in `var.service_accounts` variable.

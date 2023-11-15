@@ -11,9 +11,9 @@ locals {
   // map the network_security_groups into an array of all rules flattened
   /*
   from:
-    {"group-1" = {"rule-1" = { ips = [1, 2], port=22, ...}}, ....}
+    {"group-1" = {"rule-1" = { ips = [1, 2], ports = {min: 22, max: 22}, ...}}, ....}
   To:
-    [{group = "group-1", rulename= "rule-1", port = 22, ip = 1}, {group = "group-1", rulename= "rule-1", port = 22, ip = 2} ]
+    [{group = "group-1", rulename= "rule-1", ports = {min: 22, max: 22}, ip = 1}, {group = "group-1", rulename= "rule-1", ports = {min: 22, max: 22}, ip = 2} ]
   */
   flatten_rules = flatten([
     for group, rules in var.network_security_groups : [
