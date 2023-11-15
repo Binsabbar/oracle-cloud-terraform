@@ -12,7 +12,6 @@ Using this module you can configure an NSG and customise rules for each group. H
 * IP Protocols are limited only to TCP and UDP
 * Destination or Source are limited to type `CIDR_BLOCK` (IP address only)
 * All rules are stateful.
-* Port range for rules is not supported (Each rule covers a single port, so you have to create multiple rules for each port)
 * No support for setting the source port (Port is limited to destination of packet)
 
 ## Rules and IPs
@@ -26,7 +25,7 @@ Creating two security groups with the following rules:
 * Group 1:
   * Rule 1: allow TCP ingress to IPs ["192.168.100.12", "192.168.100.12"] to port 9090
   * Rule 2: allow TCP ingress to IPs ["192.168.100.14", "192.168.100.16"] to port 9091
-  * Rule 3: allow TCP egress from IPs ["192.168.100.12", "192.168.100.12"] to port 8000
+  * Rule 3: allow TCP egress from IPs ["192.168.100.12", "192.168.100.12"] to port range 8000-8002
 * Group 2:
   * Rule 1: allow UDP ingress from IPs ["192.168.200.12", "192.168.200.13"] to port 30091
   * Rule 2: allow TCP ingress from IPs ["192.168.200.12", "192.168.100.12"] to port 9000
@@ -42,19 +41,19 @@ module "network_secuirty_groups" {
       "rule_1" = {
         direction = "INGRESS"
         protocol  = "tcp"
-        port      = 9090
+        port      = { min : 9090, max : 9090 }
         ips       = ["192.168.100.12", "192.168.100.12"]
       }
       "rule_2" = {
         direction = "INGRESS"
         protocol  = "tcp"
-        port      = 9091
+        port      = { min : 9091, max : 9091 }
         ips       = ["192.168.100.14", "192.168.100.16"]
       }
       "rule_1" = {
         direction = "EGRESS"
         protocol  = "tcp"
-        port      = 8000
+        port      = { min : 8000, max : 8002 }
         ips       = ["192.168.100.12", "192.168.100.12"]
       }
     }
@@ -63,13 +62,13 @@ module "network_secuirty_groups" {
       "rule_1" = {
         direction = "INGRESS"
         protocol  = "udp"
-        port      = 30091
+        port      = { min : 30091, max : 30091 }
         ips       = ["192.168.200.12", "192.168.200.13"]
       }
       "rule_2" = {
         direction = "INGRESS"
         protocol  = "tcp"
-        port      = 9000
+        port      = { min : 9000, max : 9000 }
         ips       = ["192.168.200.12", "192.168.100.12"]
       }
     }

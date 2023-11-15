@@ -153,3 +153,4 @@ Thanks to the following folks for providing suggestions and improvments to this 
 * Grzegorz M [grzesjam](https://github.com/grzesjam) (v1.0 public-ip module)
 * Mateusz Kozakiewicz [mateuszkozakiewicz](https://github.com/mateuszkozakiewicz) (v1.0 public-ip module)
 * Abdullah Bin Rasheed [Twirlyz](https://github.com/Twirlyz) (dns module)
+* Remaz Altuwaim [remaz2250](https://github.com/remaz2250) (v2.8.0 and v2.10.0 instance/network-sg module)

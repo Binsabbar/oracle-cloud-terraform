@@ -11,9 +11,9 @@ locals {
   // map the network_security_groups into an array of all rules flattened
   /*
   from:
-    {"group-1" = {"rule-1" = { ips = [1, 2], port=22, ...}}, ....}
+    {"group-1" = {"rule-1" = { ips = [1, 2], ports = {min: 22, max: 22}, ...}}, ....}
   To:
-    [{group = "group-1", rulename= "rule-1", port = 22, ip = 1}, {group = "group-1", rulename= "rule-1", port = 22, ip = 2} ]
+    [{group = "group-1", rulename= "rule-1", ports = {min: 22, max: 22}, ip = 1}, {group = "group-1", rulename= "rule-1", ports = {min: 22, max: 22}, ip = 2} ]
   */
   flatten_rules = flatten([
     for group, rules in var.network_security_groups : [
@@ -23,7 +23,7 @@ locals {
           rulename  = rulename
           direction = rule.direction
           protocol  = rule.protocol
-          port      = rule.port
+          ports     = rule.ports
           ip        = ip
         }
       ]
@@ -43,7 +43,7 @@ resource "oci_core_network_security_group" "security_group" {
 // Create INGRESS rules
 resource "oci_core_network_security_group_security_rule" "ingress_rule" {
   for_each = { for rule in local.flatten_rules :
-    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.port}" => rule
+    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports.min}:${rule.ports.max}" => rule
   if rule.direction == "INGRESS" }
 
   network_security_group_id = oci_core_network_security_group.security_group[each.value.group].id
@@ -55,21 +55,21 @@ resource "oci_core_network_security_group_security_rule" "ingress_rule" {
   source_type               = "CIDR_BLOCK"
 
   dynamic "tcp_options" {
-    for_each = each.value.protocol == "tcp" ? [each.value.port] : []
+    for_each = each.value.protocol == "tcp" ? [each.value.ports] : []
     content {
       destination_port_range {
-        max = tcp_options.value
-        min = tcp_options.value
+        max = tcp_options.value.max
+        min = tcp_options.value.min
       }
     }
   }
 
   dynamic "udp_options" {
-    for_each = each.value.protocol == "udp" ? [each.value.port] : []
+    for_each = each.value.protocol == "udp" ? [each.value.ports] : []
     content {
       destination_port_range {
-        max = udp_options.value
-        min = udp_options.value
+        max = udp_options.value.max
+        min = udp_options.value.min
       }
     }
   }
@@ -78,7 +78,7 @@ resource "oci_core_network_security_group_security_rule" "ingress_rule" {
 // Create EGRESS rules
 resource "oci_core_network_security_group_security_rule" "egress_rule" {
   for_each = { for rule in local.flatten_rules :
-    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.port}" => rule
+    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports.min}:${rule.ports.max}" => rule
   if rule.direction == "EGRESS" }
 
   network_security_group_id = oci_core_network_security_group.security_group[each.value.group].id
@@ -90,21 +90,21 @@ resource "oci_core_network_security_group_security_rule" "egress_rule" {
   destination_type          = "CIDR_BLOCK"
 
   dynamic "tcp_options" {
-    for_each = each.value.protocol == "tcp" ? [each.value.port] : []
+    for_each = each.value.protocol == "tcp" ? [each.value.ports] : []
     content {
       destination_port_range {
-        max = tcp_options.value
-        min = tcp_options.value
+        max = tcp_options.value.max
+        min = tcp_options.value.min
       }
     }
   }
 
   dynamic "udp_options" {
-    for_each = each.value.protocol == "udp" ? [each.value.port] : []
+    for_each = each.value.protocol == "udp" ? [each.value.ports] : []
     content {
       destination_port_range {
-        max = udp_options.value
-        min = udp_options.value
+        max = udp_options.value.max
+        min = udp_options.value.min
       }
     }
   }
