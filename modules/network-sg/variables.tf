@@ -14,6 +14,8 @@ variable "network_security_groups" {
     protocol  = string
     port      = number
     ips       = set(string)
+    nsg_id    = string
+    use_nsg_as_source = false
   })))
 
   default = {}
