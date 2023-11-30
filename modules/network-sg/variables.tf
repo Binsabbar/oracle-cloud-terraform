@@ -15,7 +15,7 @@ variable "network_security_groups" {
     port      = number
     ips       = set(string)
     nsg_id    = string
-    use_nsg   = false
+    use_nsg   = bool
   })))
 
   default = {}
