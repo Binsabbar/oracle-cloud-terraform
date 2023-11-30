@@ -24,7 +24,7 @@ variable "network_security_groups" {
     map of network security groups, where the key is used as name of the group, and value is a rule configuration
     Rule Configuration
     direction: INGRESS or EGRESS
-    protocol : tcp or udp
+    protocol : tcp or udp 
     port     : the port for this rule
     ips      : list of IP addresses for the rule
   EOL
