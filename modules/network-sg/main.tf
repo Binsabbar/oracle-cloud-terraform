@@ -51,8 +51,8 @@ resource "oci_core_network_security_group_security_rule" "ingress_rule" {
   protocol                  = lookup(local.protocols, each.value.protocol)
   description               = each.value.rulename
   stateless                 = false
-  source                    = var.use_nsg_as_source ? each.value.nsg_id : each.value.ip
-  source_type               = var.use_nsg_as_source ? "NETWORK_SECURITY_GROUP": "CIDR_BLOCK"
+  source                    = var.use_nsg ? each.value.nsg_id : each.value.ip
+  source_type               = var.use_nsg ? "NETWORK_SECURITY_GROUP" : "CIDR_BLOCK"
 
   dynamic "tcp_options" {
     for_each = each.value.protocol == "tcp" ? [each.value.port] : []
@@ -86,8 +86,8 @@ resource "oci_core_network_security_group_security_rule" "egress_rule" {
   protocol                  = lookup(local.protocols, each.value.protocol)
   description               = each.value.rulename
   stateless                 = false
-  destination               = each.value.ip
-  destination_type          = "CIDR_BLOCK"
+  destination               = var.use_nsg ? each.value.nsg_id : each.value.ip
+  destination_type          = var.use_nsg ? "NETWORK_SECURITY_GROUP" : "CIDR_BLOCK"
 
   dynamic "tcp_options" {
     for_each = each.value.protocol == "tcp" ? [each.value.port] : []
