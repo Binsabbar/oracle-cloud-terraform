@@ -1,3 +1,27 @@
+# v2.10.1:
+## **New**
+* add `ignore_changes` to `oci_core_instance` resource to update landscape config file without recreate the resource 
+```h
+resource "oci_core_instance" "instances" {
+  ...
+  ...
+  metadata = {
+    ssh_authorized_keys = each.value.autherized_keys
+    user_data           = lookup(each.value.optionals, "user_data", null)
+  }
+  lifecycle {
+    ignore_changes = ["metadata"]   <------------------------------ note this 
+  }
+}
+```
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+None
+
+
 # v2.10.0:
 ## **New**
 * `network-sg`: change input type to support ports range in `var.network_security_groups.*.ports` variable.
