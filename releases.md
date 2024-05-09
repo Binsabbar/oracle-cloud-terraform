@@ -4,6 +4,10 @@
 * Update the module's variable definition to handle optional `source_type` and `destination_type`.
 * Modify resource definitions to use these new attributes and provide defaults if they are not specified.
 * add `ignore_changes` to `oci_core_instance` resource to update landscape config file without recreate the resource 
+None
+
+## **Fix**
+* Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 
 ```h
 resource "oci_core_instance" "instances" {
   ...
@@ -19,9 +23,6 @@ resource "oci_core_instance" "instances" {
   }
 }
 ```
-
-## **Fix**
-None
 
 ## _**Breaking Changes**_
 None
