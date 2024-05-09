@@ -63,6 +63,12 @@ resource "oci_core_instance" "instances" {
     recovery_action             = each.value.config.availability_config.recovery_action
   }
 
+  lifecycle {
+    ignore_changes = [
+      metadata.user_data
+    ]
+  }
+
   create_vnic_details {
     subnet_id                 = each.value.config.subnet.id
     assign_public_ip          = each.value.config.subnet.prohibit_public_ip_on_vnic == false
