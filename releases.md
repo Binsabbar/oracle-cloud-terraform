@@ -59,25 +59,25 @@ network_security_groups = {
   * Add `capabilities` and set its value to `{}`.
 
 from:
->```h
->module "identity" {
->  ...
->  service_accounts = toset(["terraform-cli"])
->  ...
->}
->```
+```h
+module "identity" {
+  ...
+  service_accounts = toset(["terraform-cli"])
+  ...
+}
+```
 to:
->```h
->module "identity" {
->  ...
->  service_accounts = {
->    "terraform-cli" = { 
->      name = "terraform-cli", 
->      capabilities = {}
->    }
->  }
->  ...
->}
+```h
+module "identity" {
+  ...
+  service_accounts = {
+    "terraform-cli" = { 
+      name = "terraform-cli", 
+      capabilities = {}
+    }
+  }
+  ...
+}
 ```
 
 # v2.8.0:
