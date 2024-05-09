@@ -13,7 +13,9 @@ resource "oci_core_instance" "instances" {
     user_data           = lookup(each.value.optionals, "user_data", null)
   }
   lifecycle {
-    ignore_changes = ["metadata"]   <------------------------------ note this 
+    ignore_changes = [
+      metadata.user_data    <------------------------------ note this 
+    ]
   }
 }
 ```
