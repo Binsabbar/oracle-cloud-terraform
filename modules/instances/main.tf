@@ -64,7 +64,9 @@ resource "oci_core_instance" "instances" {
   }
 
   lifecycle {
-    ignore_changes = ["metadata"]
+    ignore_changes = [
+      metadata.user_data
+    ]
   }
 
   create_vnic_details {
