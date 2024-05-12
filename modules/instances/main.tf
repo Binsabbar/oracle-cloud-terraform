@@ -65,7 +65,7 @@ resource "oci_core_instance" "instances" {
 
   lifecycle {
     ignore_changes = [
-      metadata
+      metadata["user_data"]
     ]
   }
 
