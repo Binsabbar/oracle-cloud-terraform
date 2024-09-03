@@ -1,3 +1,8 @@
+# v2.10.1:
+## **New**
+* Update the nsg variables to include `source_type` and `destination_type` in the rule configurations.
+* Update the module's variable definition to handle optional `source_type` and `destination_type`.
+* Modify resource definitions to use these new attributes and provide defaults if they are not specified.
 # v2.10.0:
 ## **New**
 * `network-sg`: change input type to support ports range in `var.network_security_groups.*.ports` variable.
