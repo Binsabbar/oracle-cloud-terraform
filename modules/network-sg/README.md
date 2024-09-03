@@ -10,7 +10,6 @@ Using this module you can configure an NSG and customise rules for each group. H
 
 ## Limitations
 * IP Protocols are limited only to TCP and UDP
-* Destination or Source are limited to type `CIDR_BLOCK` (IP address only)
 * All rules are stateful.
 * No support for setting the source port (Port is limited to destination of packet)
 
