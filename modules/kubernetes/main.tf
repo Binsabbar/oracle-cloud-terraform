@@ -42,7 +42,7 @@ resource "oci_containerengine_node_pool" "node_pool" {
   kubernetes_version = each.value.k8s_version
   name               = "${each.key}-node-pool"
   node_shape         = each.value.shape
-  defined_tags       = each.value.defined_tags
+  defined_tags       = lookup(each.value.defined_tags, "defined_tags", {})
   ssh_public_key     = each.value.ssh_public_key
   node_metadata      = each.value.node_metadata
 
