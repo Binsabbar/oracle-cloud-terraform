@@ -74,7 +74,7 @@ resource "oci_containerengine_node_pool" "node_pool" {
     }
   }
 }
-
+ 
 resource "oci_containerengine_node_pool" "node_pool_ignored_size" {
   for_each = local.autoscale_nodes
 
