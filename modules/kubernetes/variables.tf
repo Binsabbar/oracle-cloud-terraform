@@ -47,6 +47,7 @@ variable "node_pools" {
     ssh_public_key      = string
     availability_domain = string
     shape               = string
+    defined_tags        = defined_tags
     size                = number
     volume_size_in_gbs  = number
     image_id            = string
