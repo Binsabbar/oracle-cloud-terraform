@@ -51,6 +51,7 @@ variable "node_pools" {
     volume_size_in_gbs  = number
     image_id            = string
     labels              = map(string)
+    defined_tags        = map(string)
     subnet_id           = string
     k8s_version         = string
     flex_shape_config   = map(string)
@@ -67,6 +68,7 @@ variable "node_pools" {
     volume_size_in_gbs : Size of Boot volume in GB per node
     image_id           : ocid of the image
     labels             : map of key/string values to be added to the node during creation
+    defined_tags       : Defined tags for this resource. Each key is predefined and scoped to a namespace.
     subnet_id          : ocid of the subnet to create the node in.
     k8s_version        : set the version of the node pool
     flex_shape_config  : customize number of ocpus and memory when using Flex Shape
