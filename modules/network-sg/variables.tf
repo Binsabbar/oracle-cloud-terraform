@@ -14,6 +14,8 @@ variable "network_security_groups" {
     protocol  = string
     ports     = object({ min : number, max : number })
     ips       = set(string)
+    source_type      = optional(string, "CIDR_BLOCK") # Optional, default to CIDR_BLOCK
+    destination_type = optional(string, "CIDR_BLOCK") # Optional, default to CIDR_BLOCK
   })))
 
   default = {}
@@ -39,5 +41,7 @@ variable "network_security_groups" {
         min: lower port bound 
         max: upper port bound
     ips      : list of IP addresses for the rule
+    source_type: optional; defaults to "CIDR_BLOCK" for INGRESS rules
+    destination_type: optional; defaults to "CIDR_BLOCK" for EGRESS rules
   EOL
 }
