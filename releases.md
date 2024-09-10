@@ -3,6 +3,29 @@
 * Update the nsg variables to include `source_type` and `destination_type` in the rule configurations.
 * Update the module's variable definition to handle optional `source_type` and `destination_type`.
 * Modify resource definitions to use these new attributes and provide defaults if they are not specified.
+
+## **Fix**
+* Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 
+```h
+resource "oci_core_instance" "instances" {
+  ...
+  ...
+  metadata = {
+    ssh_authorized_keys = each.value.autherized_keys
+    user_data           = lookup(each.value.optionals, "user_data", null)
+  }
+  lifecycle {
+    ignore_changes = [
+      metadata["user_data"]   <------------------------------ note this 
+    ]
+  }
+}
+```
+
+## _**Breaking Changes**_
+None
+
+
 # v2.10.0:
 ## **New**
 * `network-sg`: change input type to support ports range in `var.network_security_groups.*.ports` variable.
@@ -40,25 +63,25 @@ network_security_groups = {
   * Add `capabilities` and set its value to `{}`.
 
 from:
->```h
->module "identity" {
->  ...
->  service_accounts = toset(["terraform-cli"])
->  ...
->}
->```
+```h
+module "identity" {
+  ...
+  service_accounts = toset(["terraform-cli"])
+  ...
+}
+```
 to:
->```h
->module "identity" {
->  ...
->  service_accounts = {
->    "terraform-cli" = { 
->      name = "terraform-cli", 
->      capabilities = {}
->    }
->  }
->  ...
->}
+```h
+module "identity" {
+  ...
+  service_accounts = {
+    "terraform-cli" = { 
+      name = "terraform-cli", 
+      capabilities = {}
+    }
+  }
+  ...
+}
 ```
 
 # v2.8.0:
