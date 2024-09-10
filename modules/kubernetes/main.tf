@@ -53,7 +53,8 @@ resource "oci_containerengine_node_pool" "node_pool" {
     }
   }
   node_config_details {
-    size = each.value.size
+    size         = each.value.size
+    defined_tags = each.value.defined_tags
     placement_configs {
       availability_domain = each.value.availability_domain
       subnet_id           = each.value.subnet_id
@@ -94,7 +95,8 @@ resource "oci_containerengine_node_pool" "node_pool_ignored_size" {
     }
   }
   node_config_details {
-    size = each.value.size
+    size         = each.value.size
+    defined_tags = each.value.defined_tags
     placement_configs {
       availability_domain = each.value.availability_domain
       subnet_id           = each.value.subnet_id
