@@ -1,3 +1,31 @@
+# v2.10.1:
+## **New**
+* `defined_tags`: Defined tags for this resource. Each key is predefined and scoped to a namespace.
+* `kubernetes`: add new argument `defined_tags` in `var.node_pools` variable.
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+* `defined_tags` modules input for `kubernetes` is updated. The subkey `defined_tags` is added and it is now a map of two objects `max` and `min`. 
+
+* `kubernetes` modules input for `node_pools` is updated. A new key `defined_tags` is now required under `var.node_pools.*`.
+  * Add `defined_tags` and set its value to `{ "Oracle-Tags.CreatedBy" = "oke"}` or any other tags.
+
+```h
+node_pools                  = {
+    "node-pool-a" = {
+      ...
+      defined_tags          = { "Oracle-Tags.CreatedBy" = "oke"}
+      k8s_version           = "v1.18.10"
+      image_id              = "ocixxxxxx.xxxxxx.xxxxx"
+      labels = {
+        "my-label" : "k8s-label"
+      }
+    }
+```
+
+
 # v2.10.0:
 ## **New**
 * `network-sg`: change input type to support ports range in `var.network_security_groups.*.ports` variable.
