@@ -4,7 +4,7 @@
 * `kubernetes`: add new argument `defined_tags` in `var.node_pools` variable.
 
 ## **Fix**
-None
+Adding the defined_tags argument should fix the problem with the new nodes that don't have the right tags.
 
 ## _**Breaking Changes**_
 * `defined_tags` modules input for `kubernetes` is updated. The subkey `defined_tags` is added and it is now a map of two objects `max` and `min`. 
