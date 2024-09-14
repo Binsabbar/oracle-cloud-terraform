@@ -15,6 +15,11 @@ variable "buckets" {
       time               = string
       time_unit          = string
     }))
+    replication_policy = optional(object({
+      name                    = string
+      destination_region      = string
+      destination_bucket_name = string
+    }), null)
     optionals = map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # object_events_enabled = bool - false
