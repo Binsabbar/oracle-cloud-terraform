@@ -1,3 +1,38 @@
+# v2.11.0:
+## **New**
+* `network-sg`: add support for all rule types: ip cidrs, service cidrs and nsg ids.
+  * see the example in the module for how to use the new variable.
+  * the default value is `CIDR_BLOCK` to ensure backward compatibility.
+  * add new variables:
+    * `var.network_security_groups.*.*.type`
+    * `var.network_security_groups.*.*.ips`
+    * `var.network_security_groups.*.*.nsg_ids`
+    * `var.network_security_groups.*.*.service_cidrs`
+  * They are optional based on the type, if type is not set, then `var.network_security_groups.*.*.ips` becomes mandatory.
+* `kubernetes`: Ability to add user defined tags for OKE nodes by using the optional variable `node_pools.*.defined_tags`
+
+## **Fix**
+* `instances`: Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 
+```h
+resource "oci_core_instance" "instances" {
+  ...
+  ...
+  metadata = {
+    ssh_authorized_keys = each.value.autherized_keys
+    user_data           = lookup(each.value.optionals, "user_data", null)
+  }
+  lifecycle {
+    ignore_changes = [
+      metadata["user_data"]   <------------------------------ note this 
+    ]
+  }
+}
+```
+
+## _**Breaking Changes**_
+None
+
+
 # v2.10.0:
 ## **New**
 * `network-sg`: change input type to support ports range in `var.network_security_groups.*.ports` variable.
@@ -35,25 +70,25 @@ network_security_groups = {
   * Add `capabilities` and set its value to `{}`.
 
 from:
->```h
->module "identity" {
->  ...
->  service_accounts = toset(["terraform-cli"])
->  ...
->}
->```
+```h
+module "identity" {
+  ...
+  service_accounts = toset(["terraform-cli"])
+  ...
+}
+```
 to:
->```h
->module "identity" {
->  ...
->  service_accounts = {
->    "terraform-cli" = { 
->      name = "terraform-cli", 
->      capabilities = {}
->    }
->  }
->  ...
->}
+```h
+module "identity" {
+  ...
+  service_accounts = {
+    "terraform-cli" = { 
+      name = "terraform-cli", 
+      capabilities = {}
+    }
+  }
+  ...
+}
 ```
 
 # v2.8.0:

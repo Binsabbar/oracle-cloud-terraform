@@ -18,13 +18,14 @@ locals {
   flatten_rules = flatten([
     for group, rules in var.network_security_groups : [
       for rulename, rule in rules : [
-        for ip in rule.ips : {
+        for id in setunion(rule.ips, rule.service_cidrs, rule.nsg_ids) : {
           group     = group
           rulename  = rulename
           direction = rule.direction
           protocol  = rule.protocol
           ports     = rule.ports
-          ip        = ip
+          type      = rule.type
+          id        = id
         }
       ]
     ]
@@ -43,7 +44,7 @@ resource "oci_core_network_security_group" "security_group" {
 // Create INGRESS rules
 resource "oci_core_network_security_group_security_rule" "ingress_rule" {
   for_each = { for rule in local.flatten_rules :
-    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports.min}:${rule.ports.max}" => rule
+    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.id}:${rule.ports.min}:${rule.ports.max}" => rule
   if rule.direction == "INGRESS" }
 
   network_security_group_id = oci_core_network_security_group.security_group[each.value.group].id
@@ -51,8 +52,8 @@ resource "oci_core_network_security_group_security_rule" "ingress_rule" {
   protocol                  = lookup(local.protocols, each.value.protocol)
   description               = each.value.rulename
   stateless                 = false
-  source                    = each.value.ip
-  source_type               = "CIDR_BLOCK"
+  source                    = each.value.id
+  source_type               = each.value.type
 
   dynamic "tcp_options" {
     for_each = each.value.protocol == "tcp" ? [each.value.ports] : []
@@ -78,7 +79,7 @@ resource "oci_core_network_security_group_security_rule" "ingress_rule" {
 // Create EGRESS rules
 resource "oci_core_network_security_group_security_rule" "egress_rule" {
   for_each = { for rule in local.flatten_rules :
-    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.ip}:${rule.ports.min}:${rule.ports.max}" => rule
+    "${rule.group}:${rule.rulename}:${rule.direction}:${rule.id}:${rule.ports.min}:${rule.ports.max}" => rule
   if rule.direction == "EGRESS" }
 
   network_security_group_id = oci_core_network_security_group.security_group[each.value.group].id
@@ -86,8 +87,8 @@ resource "oci_core_network_security_group_security_rule" "egress_rule" {
   protocol                  = lookup(local.protocols, each.value.protocol)
   description               = each.value.rulename
   stateless                 = false
-  destination               = each.value.ip
-  destination_type          = "CIDR_BLOCK"
+  destination               = each.value.id
+  destination_type          = each.value.type
 
   dynamic "tcp_options" {
     for_each = each.value.protocol == "tcp" ? [each.value.ports] : []

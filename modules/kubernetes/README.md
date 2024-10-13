@@ -42,6 +42,7 @@ module "kubernetes" {
       node_metadata         = {}
       volume_size_in_gbs    = 500
       size                  = 2
+      defined_tags          = { "Oracle-Tags.CreatedBy" = "oke"}
       k8s_version           = "v1.18.10"
       image_id              = "ocixxxxxx.xxxxxx.xxxxx"
       labels = {
@@ -58,6 +59,7 @@ module "kubernetes" {
       node_metadata       = {}                
       volume_size_in_gbs  = 50
       size                = 4
+      defined_tags          = { "Oracle-Tags.CreatedBy" = "oke"}
       k8s_version         = "v1.18.10"
       image_id            = "ocixxxxxx.xxxxxx.xxxxx"
       flex_shape_config = {
@@ -77,6 +79,7 @@ module "kubernetes" {
       node_metadata       = {}                
       volume_size_in_gbs  = 50
       size                = 0   # this will force terraform to ignore changes to the pool size when autoscale kicks in
+      defined_tags          = { "Oracle-Tags.CreatedBy" = "oke"}
       k8s_version         = "v1.18.10"
       image_id            = "ocixxxxxx.xxxxxx.xxxxx"
       flex_shape_config = {
