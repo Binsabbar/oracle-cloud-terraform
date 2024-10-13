@@ -3,6 +3,7 @@
 * Update the nsg variables to include `source_type` and `destination_type` in the rule configurations.
 * Update the module's variable definition to handle optional `source_type` and `destination_type`.
 * Modify resource definitions to use these new attributes and provide defaults if they are not specified.
+* Ability to add user defined tags for OKE nodes by using the optional variable `node_pools.*.defined_tags`
 
 ## **Fix**
 * Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 
