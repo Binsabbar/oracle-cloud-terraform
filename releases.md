@@ -1,12 +1,18 @@
-# v2.10.1:
+# v2.11.0:
 ## **New**
-* Update the nsg variables to include `source_type` and `destination_type` in the rule configurations.
-* Update the module's variable definition to handle optional `source_type` and `destination_type`.
-* Modify resource definitions to use these new attributes and provide defaults if they are not specified.
-* Ability to add user defined tags for OKE nodes by using the optional variable `node_pools.*.defined_tags`
+* `network-sg`: add support for all rule types: ip cidrs, service cidrs and nsg ids.
+  * see the example in the module for how to use the new variable.
+  * the default value is `CIDR_BLOCK` to ensure backward compatibility.
+  * add new variables:
+    * `var.network_security_groups.*.*.type`
+    * `var.network_security_groups.*.*.ips`
+    * `var.network_security_groups.*.*.nsg_ids`
+    * `var.network_security_groups.*.*.service_cidrs`
+  * They are optional based on the type, if type is not set, then `var.network_security_groups.*.*.ips` becomes mandatory.
+* `kubernetes`: Ability to add user defined tags for OKE nodes by using the optional variable `node_pools.*.defined_tags`
 
 ## **Fix**
-* Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 
+* `instances`: Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 
 ```h
 resource "oci_core_instance" "instances" {
   ...
