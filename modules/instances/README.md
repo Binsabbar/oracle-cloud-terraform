@@ -79,6 +79,11 @@ locals {
         boot_volume_id   = "ocid1.bootvolume.oc1.xxxxxxxxxxxxxxxxxxxxxxx"
         user_data        = "BASE64_CLOUD_INIT_SCRIPT_GOES_HERE"
       }
+      agent_plugins = {
+        is_bastion_enabled                         = false
+        is_oracle_java_management_service_enabled  = true
+        is_vulnerability_scanning_enabled          = true
+      }
     }
     
     "dev-jumpbox" = {
