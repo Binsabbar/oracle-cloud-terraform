@@ -102,6 +102,19 @@ variable "instances" {
     # boot_source_type = string
     # user_data        = string
     # reference_to_backup_policy_key_name = string # The name of the key in var.boot_volume_backup_policies
+    # is_bastion_enabled                         = bool
+    # is_block_volume_management_enabled         = bool
+    # is_compute_instance_monitoring_enabled     = bool
+    # is_compute_instance_run_command_enabled    = bool
+    # is_cloud_guard_workload_protection_enabled = bool
+    # is_custom_logs_monitoring_enabled          = bool
+    # is_high_performance_computing_enabled      = bool
+    # is_management_agent_enabled                = bool
+    # is_oracle_autonomous_linux_enabled         = bool
+    # is_oracle_java_management_service_enabled  = bool
+    # is_os_management_hub_agent_enabled         = bool
+    # is_os_management_service_agent_enabled     = bool
+    # is_vulnerability_scanning_enabled          = bool
   }))
 
   description = <<EOF
