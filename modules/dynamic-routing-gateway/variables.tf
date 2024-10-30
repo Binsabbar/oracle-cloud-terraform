@@ -11,8 +11,7 @@ variable "gateways" {
 
             rules = map(object{
                 destination_cidr = string
-                next_hop_attachement_type = string
-                next_hop_attachement = string
+                next_hop_attachement_id = string
             })
         })
 
