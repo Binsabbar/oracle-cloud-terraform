@@ -1,20 +1,7 @@
 # v2.12.0:
 ## **New**
-* `instances`: Add option to enable/disable cloud agent plugins, this setting is optional if not set it will follow default behavior.
-  * new `optionals` settings:
-    * is_bastion_enabled
-    * is_block_volume_management_enabled
-    * is_compute_instance_monitoring_enabled
-    * is_compute_instance_run_command_enabled
-    * is_cloud_guard_workload_protection_enabled
-    * is_custom_logs_monitoring_enabled
-    * is_high_performance_computing_enabled
-    * is_management_agent_enabled
-    * is_oracle_autonomous_linux_enabled
-    * is_oracle_java_management_service_enabled
-    * is_os_management_hub_agent_enabled
-    * is_os_management_service_agent_enabled
-    * is_vulnerability_scanning_enabled
+* `instances`: Add option to enable/disable cloud agent plugins.
+  * new `agent_plugins` setting
 
 ## **Fix**
 None
