@@ -33,22 +33,6 @@ locals {
       ]
     ]
   ])
-
-  plugins_key_to_name_map = {
-    is_bastion_enabled                         = "Bastion"
-    is_block_volume_management_enabled         = "Block Volume Management"
-    is_compute_instance_monitoring_enabled     = "Compute Instance Monitoring"
-    is_compute_instance_run_command_enabled    = "Compute Instance Run Command"
-    is_cloud_guard_workload_protection_enabled = "Cloud Guard Workload Protection"
-    is_custom_logs_monitoring_enabled          = "Custom Logs Monitoring"
-    is_high_performance_computing_enabled      = "High Performance Computing"
-    is_management_agent_enabled                = "Management Agent"
-    is_oracle_autonomous_linux_enabled         = "Oracle Autonomous Linux"
-    is_oracle_java_management_service_enabled  = "Oracle Java Management Service"
-    is_os_management_hub_agent_enabled         = "OS Management Hub Agent"
-    is_os_management_service_agent_enabled     = "OS Management Service Agent"
-    is_vulnerability_scanning_enabled          = "Vulnerability Scanning"
-  }
 }
 
 resource "oci_core_instance" "instances" {
@@ -119,14 +103,11 @@ resource "oci_core_instance" "instances" {
     is_monitoring_disabled   = false
 
     dynamic "plugins_config" {
-      for_each = {
-        for key, val in each.value.optionals :
-        key => val if contains(keys(local.plugins_key_to_name_map), key)
-      }
+      for_each = each.value.agent_plugins
 
       content {
-        desired_state = plugins_config.value ? "ENABLED" : "DISABLED"
-        name          = local.plugins_key_to_name_map[plugins_config.key]
+        desired_state = plugins_config.value.is_enabled ? "ENABLED" : "DISABLED"
+        name          = plugins_config.value.name
       }
     }
   }
