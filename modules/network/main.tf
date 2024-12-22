@@ -208,3 +208,18 @@ resource "oci_core_route_table_attachment" "private_route_table_attachment" {
   subnet_id      = oci_core_subnet.private_subnet[each.key].id
   route_table_id = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table[local.private_route_table_key].id)
 }
+
+// DNS Resolver
+data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
+  vcn_id = oci_core_vcn.vcn.id
+}
+
+resource "oci_dns_resolver" "dns_resolver" {
+  count        = var.dns_resolver.enable ? 1 : 0
+  resolver_id  = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
+  display_name = oci_core_vcn.vcn.display_name
+
+  attached_views {
+    view_id = var.dns_resolver.view
+  }
+}
