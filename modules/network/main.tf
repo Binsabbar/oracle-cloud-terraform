@@ -206,17 +206,44 @@ resource "oci_core_route_table_attachment" "private_route_table_attachment" {
   route_table_id = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table[local.private_route_table_key].id)
 }
 
-// DNS Resolver
+data "oci_identity_tenancy" "tenancy" {
+  tenancy_id = var.tenancy_ocid
+}
+
+data "oci_identity_compartments" "all_compartments" {
+  compartment_id            = data.oci_identity_tenancy.tenancy.id
+  compartment_id_in_subtree = true
+  state                     = "ACTIVE"
+}
+
+data "oci_dns_views" "compartment_views" {
+  for_each = {
+    for compartment in data.oci_identity_compartments.all_compartments.compartments :
+    compartment.id => compartment
+  }
+  compartment_id = each.key
+  scope          = "PRIVATE"
+}
+
 data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-resource "oci_dns_resolver" "dns_resolver" {
-  count        = var.dns_resolver.enable ? 1 : 0
-  resolver_id  = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
-  display_name = oci_core_vcn.vcn.display_name
+locals {
+  all_views = flatten([
+    for compartment_views in data.oci_dns_views.compartment_views :
+    compartment_views.views
+  ])
+}
 
-  attached_views {
-    view_id = var.dns_resolver.view
+resource "oci_dns_resolver" "dns_resolver" {
+  count       = var.dns_resolver.enable ? 1 : 0
+  resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
+
+  dynamic "attached_views" {
+    for_each = local.all_views
+    content {
+      view_id = attached_views.value.id
+    }
   }
 }
