@@ -209,6 +209,7 @@ resource "oci_core_route_table_attachment" "private_route_table_attachment" {
   route_table_id = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table[local.private_route_table_key].id)
 }
 
+// DNS Resolver
 data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
