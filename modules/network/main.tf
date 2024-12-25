@@ -244,14 +244,14 @@ resource "oci_dns_resolver" "dns_resolver" {
   dynamic "attached_views" {
     for_each = flatten([
       for name, compartment in data.oci_identity_compartments.compartments :
-      flatten([
-        for c in compartment.compartments :
-        lookup(data.oci_dns_views.compartment_views, c.id, { "views" : [] }).views
-      ])
+      [
+        for view in data.oci_dns_views.compartment_views[compartment.compartments[0].id].views :
+        view if view != null
+      ]
     ])
 
     content {
-      view_id = attached_views.value != null ? attached_views.value.id : null
+      view_id = attached_views.value.id
     }
   }
 }
