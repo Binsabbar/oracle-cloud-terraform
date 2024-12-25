@@ -23,7 +23,6 @@ output "lpg" {
 output "compartments_and_views" {
   value = {
     for name, compartment in data.oci_identity_compartments.compartments : name => {
-      compartments = compartment.compartments
       views = {
         for compartment_id in [for c in compartment.compartments : c.id] :
         compartment_id => try(

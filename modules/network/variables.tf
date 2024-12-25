@@ -241,7 +241,7 @@ variable "target_compartment_name_attach_views" {
 }
 
 variable "dns_resolver" {
-  description = "Configuration for DNS resolver"
+  description = "update configuration for DNS resolver"
   type = object({
     enable = bool
   })
