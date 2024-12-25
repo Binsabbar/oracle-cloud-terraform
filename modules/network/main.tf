@@ -217,7 +217,7 @@ data "oci_identity_tenancy" "tenancy" {
 data "oci_identity_compartments" "compartments" {
   for_each                  = toset(var.target_compartment_name_attach_views)
   compartment_id            = data.oci_identity_tenancy.tenancy.id
-  compartment_id_in_subtree = true
+  compartment_id_in_subtree = false
   state                     = "ACTIVE"
   name                      = each.value
 }
