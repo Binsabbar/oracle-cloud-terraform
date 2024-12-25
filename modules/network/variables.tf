@@ -234,3 +234,18 @@ variable "local_peering_gateway" {
       default public and private route tables. Leave empty if you intend to configure them manually.
   EOF
 }
+
+variable "target_compartment_name_attach_views" {
+  type        = list(string)
+  description = "List of compartment names to retrieve views from"
+}
+
+variable "dns_resolver" {
+  description = "Configuration for DNS resolver"
+  type = object({
+    enable = bool
+  })
+  default = {
+    enable = true
+  }
+}
