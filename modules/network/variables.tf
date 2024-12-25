@@ -240,12 +240,8 @@ variable "target_compartment_name_attach_views" {
   description = "List of compartment names to retrieve views from"
 }
 
-variable "dns_resolver" {
-  description = "update configuration for DNS resolver"
-  type = object({
-    enable = bool
-  })
-  default = {
-    enable = true
-  }
+variable "update_dns_resolver" {
+  type        = bool
+  default     = false
+  description = "if you need to update configuration for VCN DNS resolver enable this flag"
 }
