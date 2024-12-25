@@ -20,7 +20,7 @@ output "lpg" {
   }
 }
 
-output "compartments_and_views" {
+output "vcn_attached_views" {
   value = {
     for name, compartment in data.oci_identity_compartments.compartments : name => {
       views = {
