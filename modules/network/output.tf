@@ -19,3 +19,14 @@ output "lpg" {
     gateway_name => value
   }
 }
+
+output "vcn_attached_views" {
+  value = {
+    for name, compartment in data.oci_identity_compartments.compartments : name => {
+      views = {
+        for compartment_id in [for c in compartment.compartments : c.id] :
+        compartment_id => data.oci_dns_views.compartment_views[compartment_id].views
+      }
+    }
+  }
+}

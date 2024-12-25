@@ -211,12 +211,47 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-resource "oci_dns_resolver" "dns_resolver" {
-  count        = var.dns_resolver.enable ? 1 : 0
-  resolver_id  = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
-  display_name = oci_core_vcn.vcn.display_name
+data "oci_identity_tenancy" "tenancy" {
+  tenancy_id = var.tenancy_ocid
+}
 
-  attached_views {
-    view_id = var.dns_resolver.view
+data "oci_identity_compartments" "compartments" {
+  for_each                  = toset(var.target_compartment_name_attach_views)
+  compartment_id            = data.oci_identity_tenancy.tenancy.id
+  compartment_id_in_subtree = false
+  state                     = "ACTIVE"
+  name                      = each.value
+}
+
+locals {
+  selected_compartments = merge([
+    for compartment_name, compartment_data in data.oci_identity_compartments.compartments : {
+      for c in compartment_data.compartments : c.id => c
+    }
+  ]...)
+}
+
+data "oci_dns_views" "compartment_views" {
+  for_each       = local.selected_compartments
+  compartment_id = each.key
+  scope          = "PRIVATE"
+}
+
+resource "oci_dns_resolver" "dns_resolver" {
+  count       = var.update_dns_resolver ? 1 : 0
+  resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
+
+  dynamic "attached_views" {
+    for_each = flatten([
+      for name, compartment in data.oci_identity_compartments.compartments :
+      flatten([
+        for c in compartment.compartments :
+        lookup(data.oci_dns_views.compartment_views, c.id, { "views" : [] }).views
+      ])
+    ])
+
+    content {
+      view_id = lookup(attached_views.value, "id", null)
+    }
   }
 }

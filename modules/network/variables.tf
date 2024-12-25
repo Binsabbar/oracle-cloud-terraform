@@ -1,3 +1,4 @@
+variable "tenancy_ocid" { type = string }
 variable "compartment_id" { type = string }
 variable "name" {
   type        = string
@@ -213,4 +214,15 @@ variable "local_peering_gateway" {
       destination_cidrs : list of other subnets/vcns cidrs to route trafic to from via this gateway. This will create route table rules in both
       default public and private route tables. Leave empty if you intend to configure them manually.
   EOF
+}
+
+variable "target_compartment_name_attach_views" {
+  type        = list(string)
+  description = "List of compartment names to retrieve views from"
+}
+
+variable "update_dns_resolver" {
+  type        = bool
+  default     = false
+  description = "if you need to update configuration for VCN DNS resolver enable this flag"
 }
