@@ -206,27 +206,34 @@ resource "oci_core_route_table_attachment" "private_route_table_attachment" {
   route_table_id = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table[local.private_route_table_key].id)
 }
 
+data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
+  vcn_id = oci_core_vcn.vcn.id
+}
+
 data "oci_identity_tenancy" "tenancy" {
   tenancy_id = var.tenancy_ocid
 }
 
-data "oci_identity_compartments" "all_compartments" {
+data "oci_identity_compartments" "compartments" {
+  for_each                  = toset(var.target_compartment_name_attach_views)
   compartment_id            = data.oci_identity_tenancy.tenancy.id
   compartment_id_in_subtree = true
   state                     = "ACTIVE"
+  name                      = each.value
+}
+
+locals {
+  all_compartments = merge([
+    for compartment_name, compartment_data in data.oci_identity_compartments.compartments : {
+      for c in compartment_data.compartments : c.id => c
+    }
+  ]...)
 }
 
 data "oci_dns_views" "compartment_views" {
-  for_each = {
-    for compartment in data.oci_identity_compartments.all_compartments.compartments :
-    compartment.id => compartment
-  }
+  for_each       = local.all_compartments
   compartment_id = each.key
   scope          = "PRIVATE"
-}
-
-data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
-  vcn_id = oci_core_vcn.vcn.id
 }
 
 locals {
@@ -241,9 +248,19 @@ resource "oci_dns_resolver" "dns_resolver" {
   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
 
   dynamic "attached_views" {
-    for_each = local.all_views
+    for_each = flatten([
+      for name, compartment in data.oci_identity_compartments.compartments :
+      flatten([
+        for c in compartment.compartments :
+        coalesce(
+          try(data.oci_dns_views.compartment_views[c.id].views, []),
+          []
+        )
+      ])
+    ])
+
     content {
-      view_id = attached_views.value.id
+      view_id = try(attached_views.value.id, null)
     }
   }
 }
