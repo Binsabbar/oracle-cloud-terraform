@@ -268,12 +268,8 @@ resource "oci_dns_resolver" "dns_resolver" {
 
   dynamic "attached_views" {
     for_each = distinct(flatten([
-      for name, compartment in data.oci_identity_compartments.compartments :
-      [
-        for view in data.oci_dns_views.compartment_views[compartment.compartments[0].id].views : {
-          id = view.id
-        }
-      ]
+      for compartment_views in data.oci_dns_views.compartment_views : 
+      compartment_views.views
     ]))
 
     content {
