@@ -254,7 +254,7 @@ resource "oci_dns_resolver" "dns_resolver" {
     ])
 
     content {
-      view_id = lookup(attached_views.value, "id", null)
+      view_id = attached_views.value != null ? attached_views.value.id : null
     }
   }
 }
