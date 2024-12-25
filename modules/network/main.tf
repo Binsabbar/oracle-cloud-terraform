@@ -223,7 +223,7 @@ data "oci_identity_compartments" "compartments" {
 }
 
 locals {
-  all_compartments = merge([
+  selected_compartments = merge([
     for compartment_name, compartment_data in data.oci_identity_compartments.compartments : {
       for c in compartment_data.compartments : c.id => c
     }
@@ -231,16 +231,9 @@ locals {
 }
 
 data "oci_dns_views" "compartment_views" {
-  for_each       = local.all_compartments
+  for_each       = local.selected_compartments
   compartment_id = each.key
   scope          = "PRIVATE"
-}
-
-locals {
-  all_views = flatten([
-    for compartment_views in data.oci_dns_views.compartment_views :
-    compartment_views.views
-  ])
 }
 
 resource "oci_dns_resolver" "dns_resolver" {
