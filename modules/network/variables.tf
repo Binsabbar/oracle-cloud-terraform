@@ -1,4 +1,7 @@
-variable "tenancy_ocid" { type = string }
+variable "tenancy_ocid" { 
+  type = string
+  default = null 
+  }
 variable "compartment_id" { type = string }
 variable "name" {
   type        = string
@@ -219,6 +222,7 @@ variable "local_peering_gateway" {
 variable "attach_views_compartments" {
   type        = list(string)
   description = "List of compartment names to retrieve views from"
+  default = []
 }
 
 variable "update_dns_resolver" {
