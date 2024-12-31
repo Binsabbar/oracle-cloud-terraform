@@ -237,28 +237,6 @@ data "oci_dns_views" "compartment_views" {
   scope          = "PRIVATE"
 }
 
-# resource "oci_dns_resolver" "dns_resolver" {
-#   count       = var.update_dns_resolver ? 1 : 0
-#   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
-
-#   dynamic "attached_views" {
-#     for_each = flatten([
-#       for name, compartment in data.oci_identity_compartments.compartments :
-#       [
-#         for view in coalesce(
-#           try(data.oci_dns_views.compartment_views[compartment.compartments[0].id].views, []),
-#           []
-#         ) :
-#         view if view != null
-#       ]
-#     ])
-
-#     content {
-#       view_id = attached_views.value.id
-#     }
-#   }
-# }
-
 resource "oci_dns_resolver" "dns_resolver" {
   count       = var.update_dns_resolver ? 1 : 0
   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
