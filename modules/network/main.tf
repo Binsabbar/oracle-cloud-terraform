@@ -216,7 +216,7 @@ data "oci_identity_tenancy" "tenancy" {
 }
 
 data "oci_identity_compartments" "compartments" {
-  for_each                  = toset(var.target_compartment_name_attach_views)
+  for_each                  = toset(var.attach_views_compartments)
   compartment_id            = data.oci_identity_tenancy.tenancy.id
   compartment_id_in_subtree = false
   state                     = "ACTIVE"
@@ -242,16 +242,13 @@ resource "oci_dns_resolver" "dns_resolver" {
   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
 
   dynamic "attached_views" {
-    for_each = flatten([
-      for name, compartment in data.oci_identity_compartments.compartments :
-      flatten([
-        for c in compartment.compartments :
-        lookup(data.oci_dns_views.compartment_views, c.id, { "views" : [] }).views
-      ])
-    ])
+    for_each = distinct(flatten([
+      for compartment_views in data.oci_dns_views.compartment_views :
+      compartment_views.views
+    ]))
 
     content {
-      view_id = lookup(attached_views.value, "id", null)
+      view_id = attached_views.value.id
     }
   }
 }
