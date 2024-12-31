@@ -216,7 +216,7 @@ variable "local_peering_gateway" {
   EOF
 }
 
-variable "target_compartment_name_attach_views" {
+variable "attach_views_compartments" {
   type        = list(string)
   description = "List of compartment names to retrieve views from"
 }
