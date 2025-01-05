@@ -96,15 +96,15 @@ source = PATH_TO_MODULE
   public_subnets        = {}
 ```
 
-VCN with two private subnets and one public subnet that has its own routing table. the VCN also will has DNS Resolver with attached Private Views that retrived from list of selected compartments.
+VCN with two private subnets and one public subnet that has its own routing table, the VCN will also configure the DNS Resolver with attached Private Views that is retrieved from a list of selected compartments.
 ```h
 module "network" {
   source = PATH_TO_MODULE
 
-  tenancy_ocid          = "ocid1.tenancy.oc1.xxxxxxx"
-  compartment_id        = "ocixxxxxx.xxxxxx.xxxxx"
-  name                  = "vcn"
-  cidr_block            = "192.168.0.0/20"
+  tenancy_ocid              = "ocid1.tenancy.oc1.xxxxxxx"
+  compartment_id            = "ocixxxxxx.xxxxxx.xxxxx"
+  name                      = "vcn"
+  cidr_block                = "192.168.0.0/20"
   attach_views_compartments = ["devops", "uat", "production", "stage"]
   update_dns_resolver       = true
 
