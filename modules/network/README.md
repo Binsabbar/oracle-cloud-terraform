@@ -20,6 +20,7 @@ When the VCN is created, the following objects are created by default:
 * Private Route Table (defaultPrivateRouteTable): if no route table id is passed for a private subnet, this route table is used for the private subnet. The private default route table is configurable using `private_route_table_rules` variable.
 * Default Public Security List: This list is attached to EVERY public subnet created.
 * Default Private Security List: This list is attached to EVERY private subnet created.
+* DNS Resolver: By default each VCN has DNS resolver once created and it has empty list of private views.
   
 ## Note About Default Security Lists:
 * **Public security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for ingress and egress traffic for tcp and udp to the world. Also you can enable icpm from and to the world as well.
@@ -42,6 +43,8 @@ When the VCN is created, the following objects are created by default:
   * `nat_gateway.optionals.route_table_id`
   * `service_gateway.optionals.route_table_id`
 
+## Note About Default Security Lists:
+* **DNS Resolver**: By default has no associated private views, you can enable attaching private views to DNS Resolver by set `update_dns_resolver` to true. after that you need to pass `tenancy_ocid` value to be used to retrive compartments private views and attach it to the created DNS Resolver for the VCN. also you need to pass `attach_views_compartments` which is list of compartment names that you need to retrive Private Views from to attach to the DNS Resolver.
 
 ## Local Peering Gateway
 ***WARNING: you can't create two difference gateways then peer them at once. Changing the peering ID will destroy the gateway, then re-create it. So at least in the 2nd gateway you need the ID of the other getway***
@@ -90,14 +93,17 @@ source = PATH_TO_MODULE
   public_subnets        = {}
 ```
 
-VCN with two private subnets and one public subnet that has its own routing table.
+VCN with two private subnets and one public subnet that has its own routing table. the VCN also will has DNS Resolver with attached Private Views that retrived from list of selected compartments.
 ```h
 module "network" {
   source = PATH_TO_MODULE
 
+  tenancy_ocid          = "ocid1.tenancy.oc1.xxxxxxx"
   compartment_id        = "ocixxxxxx.xxxxxx.xxxxx"
   name                  = "vcn"
   cidr_block            = "192.168.0.0/20"
+  attach_views_compartments = ["devops", "uat", "production", "stage"]
+  update_dns_resolver       = true
 
   private_subnets = {
     "private-a" = {
