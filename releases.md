@@ -2,6 +2,10 @@
 ## **New**
 * `instances`: Add option to enable/disable cloud agent plugins.
   * new `agent_plugins` setting
+* `network`: Configure VCN DNS Resolver with attaching Private Views that is retrieved from a list of selected compartments.
+  * new `tenancy_ocid` setting
+  * new `update_dns_resolver` setting
+  * new `attach_views_compartments` setting
 
 ## **Fix**
 None
