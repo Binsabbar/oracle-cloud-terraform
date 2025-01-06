@@ -214,10 +214,6 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-# locals {
-#   tenancy_required = var.tenancy_ocid != null && var.tenancy_ocid != ""
-# }
-
 data "oci_identity_tenancy" "tenancy" {
   count      = var.tenancy_ocid != null && var.tenancy_ocid != "" ? 1 : 0
   tenancy_id = var.tenancy_ocid
