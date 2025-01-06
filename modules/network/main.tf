@@ -214,18 +214,18 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-locals {
-  tenancy_required = var.tenancy_ocid != null && var.tenancy_ocid != ""
-}
+# locals {
+#   tenancy_required = var.tenancy_ocid != null && var.tenancy_ocid != ""
+# }
 
 data "oci_identity_tenancy" "tenancy" {
-  count      = local.tenancy_required ? 1 : 0
+  count      = var.tenancy_ocid ? 1 : 0
   tenancy_id = var.tenancy_ocid
 }
 
 data "oci_identity_compartments" "compartments" {
-  for_each                  = local.tenancy_required ? toset(var.attach_views_compartments) : toset([])
-  compartment_id            = local.tenancy_required ? data.oci_identity_tenancy.tenancy[0].id : null
+  for_each                  = var.tenancy_ocid ? toset(var.attach_views_compartments) : toset([])
+  compartment_id            = var.tenancy_ocid ? data.oci_identity_tenancy.tenancy[0].id : null
   compartment_id_in_subtree = false
   state                     = "ACTIVE"
   name                      = each.value
