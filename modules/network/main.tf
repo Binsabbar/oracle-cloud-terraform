@@ -216,7 +216,7 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
 # }
 
 data "oci_identity_tenancy" "tenancy" {
-  count      = var.tenancy_ocid ? 1 : 0
+  count      = var.tenancy_ocid != null && var.tenancy_ocid != "" ? 1 : 0
   tenancy_id = var.tenancy_ocid
 }
 
