@@ -221,8 +221,8 @@ data "oci_identity_tenancy" "tenancy" {
 }
 
 data "oci_identity_compartments" "compartments" {
-  for_each                  = var.tenancy_ocid ? toset(var.attach_views_compartments) : toset([])
-  compartment_id            = var.tenancy_ocid ? data.oci_identity_tenancy.tenancy[0].id : null
+  for_each                  = var.tenancy_ocid != null && var.tenancy_ocid != "" ? toset(var.attach_views_compartments) : toset([])
+  compartment_id            = data.oci_identity_tenancy.tenancy[0].id
   compartment_id_in_subtree = false
   state                     = "ACTIVE"
   name                      = each.value
