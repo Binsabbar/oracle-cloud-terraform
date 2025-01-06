@@ -217,6 +217,7 @@ data "oci_identity_tenancy" "tenancy" {
 }
 
 data "oci_identity_compartments" "compartments" {
+  count                     = var.tenancy_ocid != null ? 1 : 0
   for_each                  = toset(var.attach_views_compartments)
   compartment_id            = data.oci_identity_tenancy.tenancy.id
   compartment_id_in_subtree = false
