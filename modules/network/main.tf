@@ -214,14 +214,18 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
+locals {
+  create_tenancy = var.tenancy_ocid != null && var.tenancy_ocid != ""
+}
+
 data "oci_identity_tenancy" "tenancy" {
-  count      = var.tenancy_ocid != null ? 1 : 0
+  count      = local.create_tenancy ? 1 : 0
   tenancy_id = var.tenancy_ocid
 }
 
 data "oci_identity_compartments" "compartments" {
-  for_each                  = var.tenancy_ocid != null ? toset(var.attach_views_compartments) : toset([])
-  compartment_id            = data.oci_identity_tenancy.tenancy[0].id
+  for_each                  = local.create_tenancy ? toset(var.attach_views_compartments) : toset([])
+  compartment_id            = local.create_tenancy ? data.oci_identity_tenancy.tenancy[0].id : null
   compartment_id_in_subtree = false
   state                     = "ACTIVE"
   name                      = each.value
