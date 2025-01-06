@@ -1,6 +1,6 @@
 variable "tenancy_ocid" {
   type    = string
-  default = null
+  default = ""
 }
 variable "compartment_id" { type = string }
 variable "name" {
