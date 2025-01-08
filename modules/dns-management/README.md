@@ -17,34 +17,32 @@ module "dns" {
   view_id        = VIEW_OCID // Optional if scope is PUBLIC
   
   zones          = {
-    // ZONE 1
-    "test" = {
-      name = "test.com"
-    }
-    // ZONE 2
-    "test-2" = {
-      name = "test-2.com"
-    }
-  }
-  
-  records       = {
-    // RECORD 1
-    "test" = {
-      domain_name = "*.test.com"
-      rtype       = "A"
-      zone_name   = "test.com"
-      rdata       = "xxx.xxx.xxx.xxx"
-      ttl         = 300
-    }
-    // RECORD 2
-    "test-2" = {
-      domain_name = "something.test-2.com"
-      rtype       = "A"
-      zone_name   = "test-2.com"
-      rdata       = "xxx.xxx.xxx.xxx"
-      ttl         = 300
+
+  // ZONE 1
+  "test.com" = {
+  // ZONE 1 RECORDS
+    records = {
+      "web.test.com" = {
+        domain_name  = "web.test.com"
+        rdata        = "20.xxx.xxx.xxx"
+        rtype        = "A"
+        ttl          = 300
+      }
     }
   }
+  // ZONE 2
+  "test-2.com" = {
+  // ZONE 2 RECORDS
+    records = {
+      "web.test-2.com" = {
+        domain_name    = "web.test-2.com"
+        rdata          = "192.xxx.xxx.xxx"
+        rtype          = "A"
+        ttl            = 300
+      }
+    }
+  }
+}
 }
 
 ```
