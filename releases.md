@@ -7,6 +7,10 @@
   * new `update_dns_resolver` setting
   * new `attach_views_compartments` setting
 
+## _**Breaking Changes**_
+* `dns-management` modules input for `zones` is updated to be map object of records.
+  * remove `records` var and add it under zones map of object.
+
 ## **Fix**
 None
 
