@@ -219,14 +219,8 @@ variable "local_peering_gateway" {
   EOF
 }
 
-variable "attach_views_compartments" {
+variable "dns_private_views" {
   type        = list(string)
-  description = "List of compartment names to retrieve views from"
+  description = "List of private custom views"
   default     = []
-}
-
-variable "update_dns_resolver" {
-  type        = bool
-  default     = false
-  description = "if you need to update configuration for VCN DNS resolver enable this flag"
 }
