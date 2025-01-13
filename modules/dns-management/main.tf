@@ -1,17 +1,17 @@
 ### Private Custom Views Zones
 locals {
-  private_dns_zones = flatten([
+  private_dns_zones_custom_views = flatten([
     for v_key, view in var.private_dns.custom_views : [
       for z_key, zone in view.zones : {
-        view_key       = v_key
         item_key       = "${v_key}-${z_key}"
+        view_key       = v_key
         zone_name      = zone.zone_name
         compartment_id = view.compartment_id
       }
     ]
   ])
 
-  private_dns_records = flatten([
+  private_dns_records_custom_views = flatten([
     for v_key, view in var.private_dns.custom_views : [
       for z_key, zone in view.zones : [
         for r_key, record in zone.records : {
@@ -27,7 +27,7 @@ locals {
   ])
 }
 
-resource "oci_dns_view" "private_veiw" {
+resource "oci_dns_view" "custom_view" {
   for_each = var.private_dns.custom_views
 
   display_name   = each.value.view_name
@@ -35,22 +35,22 @@ resource "oci_dns_view" "private_veiw" {
   scope          = "PRIVATE"
 }
 
-resource "oci_dns_zone" "private_dns_zone" {
-  for_each = { for _, item in local.private_dns_zones : "${item.item_key}" => item }
+resource "oci_dns_zone" "private_dns_zone_custom_view" {
+  for_each = { for _, item in local.private_dns_zones_custom_views : "${item.item_key}" => item }
 
   name           = each.value.zone_name
   compartment_id = each.value.compartment_id
   zone_type      = "PRIMARY"
-  view_id        = oci_dns_view.private_veiw[each.value.view_key].id
+  view_id        = oci_dns_view.custom_view[each.value.view_key].id
   scope          = "PRIVATE"
 }
 
-resource "oci_dns_rrset" "private_dns_rrset" {
-  for_each = { for _, item in local.private_dns_records : "${item.item_key}" => item }
+resource "oci_dns_rrset" "dns_rrset_custom_view" {
+  for_each = { for _, item in local.private_dns_records_custom_views : "${item.item_key}" => item }
 
   domain          = each.value.domain_name
   rtype           = each.value.rtype
-  zone_name_or_id = oci_dns_zone.private_dns_zone[each.value.zone_key].id
+  zone_name_or_id = oci_dns_zone.private_dns_zone_custom_view[each.value.zone_key].id
 
   items {
     domain = each.value.domain_name
