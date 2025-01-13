@@ -215,7 +215,7 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
 }
 
 resource "oci_dns_resolver" "dns_resolver" {
-  for_each    = set(attached_views.value.id)
+  for_each    = toset(var.dns_private_views)
   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
-  view_id     = each.value.id
+  view_id     = each.value
 }
