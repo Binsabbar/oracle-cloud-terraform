@@ -214,11 +214,11 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-resource "oci_dns_resolver" "dns_resolver" {
-  for_each    = toset(var.dns_private_views)
-  resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
-  view_id     = each.value
-}
+# resource "oci_dns_resolver" "dns_resolver" {
+#   for_each    = toset(var.dns_private_views)
+#   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
+#   view_id     = each.value
+# }
 
 resource "oci_dns_resolver" "dns_resolver" {
   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
