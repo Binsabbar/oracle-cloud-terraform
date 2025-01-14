@@ -156,3 +156,4 @@ Thanks to the following folks for providing suggestions and improvments to this 
 * Remaz Altuwaim [remaz2250](https://github.com/remaz2250) (v2.8.0 and v2.10.0 instance/network-sg module)
 * Dawid Rogowicz [dawidrogowicz](https://github.com/dawidrogowicz/) (v2.12.0 instance)
 * Mohamed Essam [mohamed-esam](https://github.com/mohamed-esam) (v2.12.0 dns-management)
+* Mohamed Essam [mohamed-esam](https://github.com/mohamed-esam) (v2.12.0 network)
