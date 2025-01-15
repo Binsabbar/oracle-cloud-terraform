@@ -224,3 +224,36 @@ resource "oci_dns_resolver" "dns_resolver" {
     }
   }
 }
+
+locals {
+  # Create array of objects and sort it
+  views_array = [
+    for k, v in var.dns_private_views : {
+      key      = k
+      view_id  = v.view_id
+      priority = v.priority
+    }
+  ]
+
+  # Sort the array based on priority
+  sorted_array = sort(local.views_array[*].priority)
+
+  # Create final map with ordered view_ids
+  sorted_views = {
+    for idx, priority in local.sorted_array : idx => [
+      for view in local.views_array : view.view_id
+      if view.priority == priority
+    ][0]
+  }
+}
+
+resource "oci_dns_resolver" "dns_resolver" {
+  resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
+
+  dynamic "attached_views" {
+    for_each = local.sorted_views
+    content {
+      view_id = attached_views.value
+    }
+  }
+}
