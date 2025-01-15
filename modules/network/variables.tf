@@ -220,7 +220,29 @@ variable "local_peering_gateway" {
 }
 
 variable "dns_private_views" {
-  type        = list(string)
-  description = "List of private custom views"
-  default     = []
+  type = map(object({
+    view_id  = string
+    priority = number
+  }))
+  description = "Map of private custom views with their priorities. Lower priority number indicates higher precedence in resolution order."
+  default     = {}
+
+  validation {
+    # Check for duplicate priorities
+    condition     = length(distinct(values(var.dns_private_views)[*].priority)) == length(var.dns_private_views)
+    error_message = "Each view must have a unique priority number."
+  }
+
+  validation {
+    # Check for negative priorities
+    condition     = alltrue([for v in var.dns_private_views : v.priority >= 0])
+    error_message = "Priority numbers must be non-negative."
+  }
+
+  validation {
+    # Check for empty OCIDs
+    condition     = alltrue([for v in var.dns_private_views : length(v.view_id) > 0])
+    error_message = "View IDs cannot be empty."
+  }
+
 }
