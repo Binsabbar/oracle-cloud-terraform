@@ -214,35 +214,20 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-locals {
-  # Create array of objects
-  views_array = [
-    for k, v in var.dns_private_views : {
-      name     = k
-      view_id  = v.view_id
-      priority = v.priority
-    }
-  ]
-
-  # Sort array by priorities
-  sorted_priorities = sort([for v in local.views_array : v.priority])
-
-  # Create final sorted map
-  sorted_views = {
-    for i, p in local.sorted_priorities : i => [
-      for v in local.views_array : v.view_id
-      if v.priority == p
-    ][0]
-  }
-}
-
 resource "oci_dns_resolver" "dns_resolver" {
   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
 
   dynamic "attached_views" {
-    for_each = local.sorted_views
+    for_each = {
+      for k, v in var.dns_private_views : k => v.view_id...
+      if v != null
+    }
+    iterator = sorted_view
     content {
-      view_id = attached_views.value
+      view_id = [
+        for k, v in var.dns_private_views : v.view_id
+        if v != null
+      ][index(sort([for v in var.dns_private_views : v.priority]), var.dns_private_views[sorted_view.key].priority)]
     }
   }
 }
