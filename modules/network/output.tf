@@ -24,11 +24,14 @@ output "attached_views_order" {
   description = "The order in which views are attached to the resolver (from highest to lowest priority)"
   value = [
     for priority in local.sorted_priorities : {
-      for view in local.views_array : view.key => {
-        "view_id"  = view.view_id
-        "priority" = view.priority
-      }
-      if view.priority == priority
+      priority = priority
+      view_id  = local.priority_map[priority][0]
+      name     = [for view in local.views_array : view.key if view.priority == priority][0]
     }
   ]
+}
+
+output "attached_views" {
+  description = "views attached to the resolver"
+  value       = local.sorted_views
 }
