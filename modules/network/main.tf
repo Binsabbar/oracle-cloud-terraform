@@ -215,7 +215,7 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
 }
 
 locals {
-  # Create array of objects and sort it
+  # Create array of objects
   views_array = [
     for k, v in var.dns_private_views : {
       key      = k
@@ -224,15 +224,17 @@ locals {
     }
   ]
 
-  # Sort the array based on priority
-  sorted_array = sort(local.views_array[*].priority)
+  # Create a simpler map with priority as key
+  priority_map = {
+    for view in local.views_array : view.priority => view.view_id...
+  }
 
-  # Create final map with ordered view_ids
+  # Get sorted priorities
+  sorted_priorities = sort([for view in local.views_array : view.priority])
+
+  # Create final sorted map
   sorted_views = {
-    for idx, priority in local.sorted_array : idx => [
-      for view in local.views_array : view.view_id
-      if view.priority == priority
-    ][0]
+    for idx, priority in local.sorted_priorities : idx => local.priority_map[priority][0]
   }
 }
 
