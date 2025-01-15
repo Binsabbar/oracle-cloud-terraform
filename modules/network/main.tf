@@ -226,7 +226,7 @@ locals {
 
   # Create final sorted map
   sorted_views = {
-    for i, p in sorted_priorities : i => [
+    for i, p in local.sorted_priorities : i => [
       for v in local.views_array : v.view_id
       if v.priority == p
     ][0]
