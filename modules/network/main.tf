@@ -211,17 +211,6 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-resource "oci_dns_resolver" "dns_resolver" {
-  resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
-
-  dynamic "attached_views" {
-    for_each = toset(var.dns_private_views)
-    content {
-      view_id = attached_views.value
-    }
-  }
-}
-
 locals {
   # Create array of objects and sort it
   views_array = [
