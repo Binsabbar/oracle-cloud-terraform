@@ -23,7 +23,7 @@ output "lpg" {
 output "attached_views_order" {
   description = "The order in which views are attached to the resolver (from highest to lowest priority)"
   value = [
-    for priority in local.sorted_array : {
+    for priority in local.sorted_priorities : {
       for view in local.views_array : view.key => {
         "view_id"  = view.view_id
         "priority" = view.priority
