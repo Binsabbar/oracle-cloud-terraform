@@ -258,10 +258,4 @@ variable "dns_private_views" {
     error_message = "Priority numbers must be non-negative."
   }
 
-  validation {
-    # Check for empty OCIDs
-    condition     = alltrue([for v in var.dns_private_views : length(v.view_id) > 0])
-    error_message = "View IDs cannot be empty."
-  }
-
 }
