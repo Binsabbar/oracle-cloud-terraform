@@ -215,23 +215,21 @@ locals {
   # Create array of objects
   views_array = [
     for k, v in var.dns_private_views : {
-      key      = k
+      name     = k
       view_id  = v.view_id
       priority = v.priority
     }
   ]
 
-  # Create a simpler map with priority as key
-  priority_map = {
-    for view in local.views_array : view.priority => view.view_id...
-  }
-
-  # Get sorted priorities
-  sorted_priorities = sort([for view in local.views_array : view.priority])
+  # Sort array by priorities
+  sorted_priorities = sort([for v in local.views_array : v.priority])
 
   # Create final sorted map
   sorted_views = {
-    for idx, priority in local.sorted_priorities : idx => local.priority_map[priority][0]
+    for i, p in sorted_priorities : i => [
+      for v in local.views_array : v.view_id
+      if v.priority == p
+    ][0]
   }
 }
 
