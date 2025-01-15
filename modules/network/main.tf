@@ -211,32 +211,11 @@ data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
   vcn_id = oci_core_vcn.vcn.id
 }
 
-locals {
-  # First create a list of objects from the map
-  views_list = [
-    for k, v in var.dns_private_views : {
-      key      = k
-      view_id  = v.view_id
-      priority = v.priority
-    }
-  ]
-  
-  # Sort the list based on priority
-  sorted_views = sort(local.views_list[*].priority)
-  
-  # Create the final map in priority order
-  views_map = {
-    for priority in local.sorted_views :
-      local.views_list[index(local.views_list[*].priority, priority)].key =>
-      local.views_list[index(local.views_list[*].priority, priority)]
-  }
-}
-
 resource "oci_dns_resolver" "dns_resolver" {
   resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
 
   dynamic "attached_views" {
-    for_each = local.views_map
+    for_each = var.dns_private_views
     content {
       view_id = attached_views.value.view_id
     }
