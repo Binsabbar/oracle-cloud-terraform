@@ -19,16 +19,3 @@ output "lpg" {
     gateway_name => value
   }
 }
-
-output "attached_views_order" {
-  description = "The order in which views are attached to the resolver (from highest to lowest priority)"
-  value = [
-    for priority in local.sorted_array : {
-      for view in local.views_array : view.key => {
-        "view_id"  = view.view_id
-        "priority" = view.priority
-      }
-      if view.priority == priority
-    }
-  ]
-}
