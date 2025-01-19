@@ -2,7 +2,7 @@
 ## **New**
 * `instances`: Add option to enable/disable cloud agent plugins.
   * new `agent_plugins` setting
-* `network`: Configure VCN DNS Resolver with attaching Private custom map of views each has it priority in resolution order.
+* `network`: Configure VCN DNS Resolver with attaching Private custom list of object of views, earlier views in the list have higher priority in resolution.
   * new `dns_private_views` setting
 
 ## **Fix**
