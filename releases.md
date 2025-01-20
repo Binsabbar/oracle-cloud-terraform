@@ -81,23 +81,7 @@ module "dns" {
         }
       }
     }
-    custom_views = {
-      "dev_vcn_custom_view" = {
-        view_name      = "development_view"
-        compartment_id = "ocid1.compartment.oc1..example2"
-        zones = {
-          "dev-zone" = {
-            zone_name = "dev.example.com"
-            records = {
-              "test-app" = {
-                domain_name = "test-app.dev.example.com"
-                rdata      = "10.0.3.10"
-              }
-            }
-          }
-        }
-      }
-    }
+    custom_views = {}
   }
 }
 ```
