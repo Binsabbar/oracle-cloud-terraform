@@ -3,7 +3,7 @@ locals {
   private_dns_zones_custom_views = flatten([
     for v_key, view in var.private_dns.custom_views : [
       for z_key, zone in view.zones : {
-        item_key       = "${v_key}-${z_key}"
+        zone_key       = z_key
         view_key       = v_key
         zone_name      = zone.zone_name
         compartment_id = view.compartment_id
@@ -15,8 +15,8 @@ locals {
     for v_key, view in var.private_dns.custom_views : [
       for z_key, zone in view.zones : [
         for r_key, record in zone.records : {
-          item_key    = "${v_key}-${z_key}-${r_key}"
-          zone_key    = "${v_key}-${z_key}"
+          record_key  = r_key
+          zone_key    = z_key
           domain_name = record.domain_name
           rdata       = record.rdata
           rtype       = record.rtype
@@ -36,7 +36,7 @@ resource "oci_dns_view" "custom_view" {
 }
 
 resource "oci_dns_zone" "private_dns_zone_custom_view" {
-  for_each = { for _, item in local.private_dns_zones_custom_views : "${item.item_key}" => item }
+  for_each = { for _, item in local.private_dns_zones_custom_views : "${item.zone_key}" => item }
 
   name           = each.value.zone_name
   compartment_id = each.value.compartment_id
@@ -46,7 +46,7 @@ resource "oci_dns_zone" "private_dns_zone_custom_view" {
 }
 
 resource "oci_dns_rrset" "dns_rrset_custom_view" {
-  for_each = { for _, item in local.private_dns_records_custom_views : "${item.item_key}" => item }
+  for_each = { for _, item in local.private_dns_records_custom_views : "${item.record_key}" => item }
 
   domain          = each.value.domain_name
   rtype           = each.value.rtype
@@ -62,23 +62,23 @@ resource "oci_dns_rrset" "dns_rrset_custom_view" {
 
 ### Private Protected Views Zones
 locals {
-  private_dns_zones_protected_veiws = flatten([
+  private_dns_zones_protected_views = flatten([
     for v_key, view in var.private_dns.protected_views : [
       for z_key, zone in view.zones : {
-        item_key       = "${v_key}-${z_key}"
-        view_id        = view.view_id
+        zone_key       = z_key
+        view_id        = v_key
         zone_name      = zone.zone_name
         compartment_id = view.compartment_id
       }
     ]
   ])
 
-  private_dns_records_protected_veiws = flatten([
+  private_dns_records_protected_views = flatten([
     for v_key, view in var.private_dns.protected_views : [
       for z_key, zone in view.zones : [
         for r_key, record in zone.records : {
-          item_key    = "${v_key}-${z_key}-${r_key}"
-          zone_key    = "${v_key}-${z_key}"
+          record_key  = r_key
+          zone_key    = z_key
           domain_name = record.domain_name
           rdata       = record.rdata
           rtype       = record.rtype
@@ -98,7 +98,7 @@ data "oci_dns_view" "protected_view" {
 }
 
 resource "oci_dns_zone" "private_dns_zone_protected_view" {
-  for_each = { for _, item in local.private_dns_zones_protected_veiws : "${item.item_key}" => item }
+  for_each = { for _, item in local.private_dns_zones_protected_views : "${item.zone_key}" => item }
 
   name           = each.value.zone_name
   compartment_id = each.value.compartment_id
@@ -116,7 +116,7 @@ resource "oci_dns_zone" "private_dns_zone_protected_view" {
 }
 
 resource "oci_dns_rrset" "dns_rrset_protected_view" {
-  for_each = { for _, item in local.private_dns_records_protected_veiws : "${item.item_key}" => item }
+  for_each = { for _, item in local.private_dns_records_protected_views : "${item.record_key}" => item }
 
   domain          = each.value.domain_name
   rtype           = each.value.rtype
