@@ -7,12 +7,12 @@ output "custom_views_info" {
       compartment_id = view.compartment_id
       id             = view.id
       zones = {
-        for z_key, zone in oci_dns_zone.private_dns_zone_custom_view["${v_key}-${z_key}"] : z_key => {
+        for z_key, zone in oci_dns_zone.private_dns_zone_custom_view : z_key => {
           name           = zone.name
           compartment_id = zone.compartment_id
           id             = zone.id
           records = {
-            for r_key, record in oci_dns_rrset.dns_rrset_custom_view["${v_key}-${z_key}-${r_key}"] : r_key => record
+            for r_key, record in oci_dns_rrset.dns_rrset_custom_view : r_key => record
           }
         }
       }
