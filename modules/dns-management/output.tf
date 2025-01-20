@@ -1,25 +1,18 @@
 output "custom_views_info" {
   value = {
-    for v_key, view in oci_dns_view.custom_view : v_key => {
-      view_name = view.display_name
+    for v_key, view in oci_dns_view.custom_view : "${view.display_name}" => {
+      name           = view.display_name
+      compartment_id = view.compartment_id
+      id             = view.id
       zones = {
-        for _, z in oci_dns_zone.private_dns_zone_custom_view : z.name => {
-          zone_name = z.name
+        for z_key, zone in oci_dns_zone.private_dns_zone_custom_view : "${zone.name}" => {
+          name           = zone.name
+          compartment_id = zone.compartment_id
+          id             = zone.id
           records = {
-            for _, r in oci_dns_rrset.dns_rrset_custom_view : r.domain => {
-              domain = r.domain
-              rtype  = r.rtype
-              items = [
-                for item in r.items : {
-                  domain       = item.domain
-                  rdata        = item.rdata
-                  rtype        = item.rtype
-                  is_protected = false
-                }
-              ]
-            } if split("-", r.domain)[0] == v_key && split("-", r.domain)[1] == split("-", z.name)[1]
+            for r_key, record in oci_dns_rrset.dns_rrset_custom_view : "${record.domain_name}" => record if record.zone_id == zone.id
           }
-        } if split("-", z.name)[0] == v_key
+        } if zone.view_id == view_id
       }
     }
   }
