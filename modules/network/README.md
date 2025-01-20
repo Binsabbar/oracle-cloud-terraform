@@ -43,8 +43,8 @@ When the VCN is created, the following objects are created by default:
   * `nat_gateway.optionals.route_table_id`
   * `service_gateway.optionals.route_table_id`
 
-## Note About Default Security Lists:
-* **DNS Resolver**: By default has no associated private views, you can enable attaching private views to DNS Resolver by set `update_dns_resolver` to true. after that you need to pass `tenancy_ocid` value to be used to retrive compartments private views and attach it to the created DNS Resolver for the VCN. also you need to pass `attach_views_compartments` which is list of compartment names that you need to retrive Private Views from to attach to the DNS Resolver.
+## Note About DNS Resolver:
+* **DNS Resolver**: By default has no associated private views, you can enable attaching private views to DNS Resolver by passing the list of object of views, earlier views in the list have higher priority in resolution.
 
 ## Local Peering Gateway
 ***WARNING: you can't create two difference gateways then peer them at once. Changing the peering ID will destroy the gateway, then re-create it. So at least in the 2nd gateway you need the ID of the other getway***
@@ -93,17 +93,22 @@ source = PATH_TO_MODULE
   public_subnets        = {}
 ```
 
-VCN with two private subnets and one public subnet that has its own routing table, the VCN will also configure the DNS Resolver with attached Private Views that is retrieved from a list of selected compartments.
+VCN with two private subnets and one public subnet that has its own routing table, the VCN will also configure the DNS Resolver with list of attached Private Views objects, earlier views in the list have higher priority in resolution.
 ```h
 module "network" {
   source = PATH_TO_MODULE
 
-  tenancy_ocid              = "ocid1.tenancy.oc1.xxxxxxx"
   compartment_id            = "ocixxxxxx.xxxxxx.xxxxx"
   name                      = "vcn"
   cidr_block                = "192.168.0.0/20"
-  attach_views_compartments = ["devops", "uat", "production", "stage"]
-  update_dns_resolver       = true
+  dns_private_views         = [
+    {
+      view_id  = "ocid1.dnsview.oc1..."
+    },
+    {
+      view_id  = "ocid1.dnsview.oc1..."
+    }
+  ]
 
   private_subnets = {
     "private-a" = {
