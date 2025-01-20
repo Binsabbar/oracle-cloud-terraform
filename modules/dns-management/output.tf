@@ -1,25 +1,29 @@
 output "custom_views_info" {
   value = {
     for v_key, view in oci_dns_view.custom_view : v_key => {
-      view_key  = v_key
       view_name = view.display_name
       zones = {
-        for z_key, zone in oci_dns_zone.private_dns_zone_custom_view : z_key => {
-          z_key     = z_key
-          zone_name = zone.name
+        for _, z in oci_dns_zone.private_dns_zone_custom_view : z.name => {
+          zone_name = z.name
           records = {
-            for r_key, record in oci_dns_rrset.dns_rrset_custom_view : r_key => {
-              r_key  = r_key
-              domain = record.domain
-              rtype  = record.rtype
-              items  = record.items
-            } if split("-", r_key)[0] == v_key && split("-", r_key)[1] == split("-", z_key)[1]
+            for _, r in oci_dns_rrset.dns_rrset_custom_view : r.domain => {
+              domain = r.domain
+              rtype  = r.rtype
+              items = [
+                for item in r.items : {
+                  domain       = item.domain
+                  rdata        = item.rdata
+                  rtype        = item.rtype
+                  is_protected = false
+                }
+              ]
+            } if split("-", r.domain)[0] == v_key && split("-", r.domain)[1] == split("-", z.name)[1]
           }
-        } if split("-", z_key)[0] == v_key
+        } if split("-", z.name)[0] == v_key
       }
     }
   }
-  description = "Structured output of DNS configuration with transformed keys"
+  description = "Structured output of DNS configuration with simplified keys"
 }
 # # Output for Protected Views
 # output "protected_views_info" {
