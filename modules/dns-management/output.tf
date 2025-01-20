@@ -9,21 +9,19 @@ output "dns_configuration" {
           id             = view_key
         }
         zones = {
-          for zone_key, zone in oci_dns_zone.private_dns_zone_protected_view : zone_key =>
-          zone.view_id == view_key ? {
+          for zone_key, zone in oci_dns_zone.private_dns_zone_protected_view : zone_key => {
             zone_details = {
               name           = zone.name
               compartment_id = zone.compartment_id
             }
             records = {
-              for record_key, record in oci_dns_rrset.dns_rrset_protected_view : record_key =>
-              record.zone_name_or_id == zone.name ? {
+              for record_key, record in oci_dns_rrset.dns_rrset_protected_view : record_key => {
                 domain = record.domain
                 rtype  = record.rtype
                 items  = record.items
-              } : null if record.zone_name_or_id == zone.name
+              } if record.zone_name_or_id == zone.id
             }
-          } : null if zone.view_id == view_key
+          } if zone.view_id == view_key
         }
       }
     }
@@ -36,21 +34,19 @@ output "dns_configuration" {
           id             = view.id
         }
         zones = {
-          for zone_key, zone in oci_dns_zone.private_dns_zone_custom_view : zone_key =>
-          zone.view_id == view.id ? {
+          for zone_key, zone in oci_dns_zone.private_dns_zone_custom_view : zone_key => {
             zone_details = {
               name           = zone.name
               compartment_id = zone.compartment_id
             }
             records = {
-              for record_key, record in oci_dns_rrset.dns_rrset_custom_view : record_key =>
-              record.zone_name_or_id == zone.name ? {
+              for record_key, record in oci_dns_rrset.dns_rrset_custom_view : record_key => {
                 domain = record.domain
                 rtype  = record.rtype
                 items  = record.items
-              } : null if record.zone_name_or_id == zone.name
+              } if record.zone_name_or_id == zone.id
             }
-          } : null if zone.view_id == view.id
+          } if zone.view_id == view.id
         }
       }
     }
