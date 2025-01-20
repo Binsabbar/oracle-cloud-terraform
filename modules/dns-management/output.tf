@@ -46,7 +46,7 @@ output "dns_configuration" {
                 items  = record.items
               } if record.zone_name_or_id == zone.id
             }
-          } if zone.view_id == view.display_name
+          } if zone.view_id == view.id
         }
       }
     }
