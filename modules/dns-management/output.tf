@@ -18,7 +18,7 @@ output "dns_configuration" {
               for record_key, record in oci_dns_rrset.dns_rrset_protected_view : record_key => {
                 domain = record.domain
                 rtype  = record.rtype
-                items  = record.items
+                items = record.items
               } if record.zone_name_or_id == zone.id
             }
           } if zone.view_id == view_key
@@ -43,10 +43,10 @@ output "dns_configuration" {
               for record_key, record in oci_dns_rrset.dns_rrset_custom_view : record_key => {
                 domain = record.domain
                 rtype  = record.rtype
-                items  = record.items
+                items = record.items
               } if record.zone_name_or_id == zone.id
             }
-          } if zone.view_id == view.id
+          } if zone.view_id == view.name
         }
       }
     }
