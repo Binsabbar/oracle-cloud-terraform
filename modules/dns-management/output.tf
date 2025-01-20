@@ -20,13 +20,10 @@ output "dns_configuration" {
               record.zone_name_or_id == zone.name ? {
                 domain = record.domain
                 rtype  = record.rtype
-                items = [for item in record.items : {
-                  rdata = item.rdata
-                  ttl   = item.ttl
-                }]
-              } : null
+                items  = record.items
+              } : null if record.zone_name_or_id == zone.name
             }
-          } : null
+          } : null if zone.view_id == view_key
         }
       }
     }
@@ -50,13 +47,10 @@ output "dns_configuration" {
               record.zone_name_or_id == zone.name ? {
                 domain = record.domain
                 rtype  = record.rtype
-                items = [for item in record.items : {
-                  rdata = item.rdata
-                  ttl   = item.ttl
-                }]
-              } : null
+                items  = record.items
+              } : null if record.zone_name_or_id == zone.name
             }
-          } : null
+          } : null if zone.view_id == view.id
         }
       }
     }
