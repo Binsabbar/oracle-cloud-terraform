@@ -12,7 +12,7 @@ output "custom_views_info" {
           records = {
             for r_key, record in oci_dns_rrset.dns_rrset_custom_view : "${record.domain_name}" => record if record.zone_id == zone.id
           }
-        } if zone.view_id == view.view_id
+        } if zone.view_id == view.id
       }
     }
   }
