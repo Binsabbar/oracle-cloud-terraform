@@ -10,7 +10,7 @@ output "custom_views_info" {
           compartment_id = zone.compartment_id
           id             = zone.id
           records = {
-            for r_key, record in oci_dns_rrset.dns_rrset_custom_view : "${record.domain_name}" => record if record.zone_name_or_id == zone.id
+            for r_key, record in oci_dns_rrset.dns_rrset_custom_view : "${record.domain}" => record if record.zone_name_or_id == zone.id
           }
         } if zone.view_id == view.id
       }
