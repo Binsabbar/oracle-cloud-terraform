@@ -2,7 +2,7 @@
 output "custom_views_info" {
   description = "Info about created custom DNS views"
   value = {
-    for v_key, view in oci_dns_view.custom_view : "${v_key}" => {
+    for v_key, view in oci_dns_view.custom_view : v_key => {
       name           = view.display_name
       compartment_id = view.compartment_id
       id             = view.id
