@@ -10,6 +10,7 @@ None
 
 ## _**Breaking Changes**_
 * `dns-management` Add suuport to create private custom view or edit existing protected views, also module input is changed completely it now requires two objects `protected_views` or `custom_views` under each map of object of views, under each you define map of object of zones and under each zone you define map of object of records.
+
 from:
 ```h
 module "dns" {
