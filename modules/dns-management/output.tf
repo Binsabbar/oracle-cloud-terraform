@@ -9,13 +9,13 @@ output "dns_configuration" {
           id             = view_key
         }
         zones = {
-          for zone_key, zone in oci_dns_zone.private_dns_zone_protected_view : zone_key => {
+          for zone_key, zone in oci_dns_zone.private_dns_zone_protected_view : zone.id => {
             zone_details = {
               name           = zone.name
               compartment_id = zone.compartment_id
             }
             records = {
-              for record_key, record in oci_dns_rrset.dns_rrset_protected_view : record_key => {
+              for record_key, record in oci_dns_rrset.dns_rrset_protected_view : record.domain => {
                 domain = record.domain
                 rtype  = record.rtype
                 items  = record.items
