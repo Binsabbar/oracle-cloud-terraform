@@ -3,18 +3,14 @@ output "dns_configuration" {
   value = {
     protected_views = {
       for view_key, view in data.oci_dns_view.protected_view : "${view.display_name}" => {
-        view_details = {
-          name           = view.display_name
-          compartment_id = view.compartment_id
-          id             = view_key
-        }
+        name           = view.display_name
+        compartment_id = view.compartment_id
+        id             = view_key
         zones = {
           for zone_key, zone in oci_dns_zone.private_dns_zone_protected_view : "${zone.name}" => {
-            zone_details = {
-              name           = zone.name
-              compartment_id = zone.compartment_id
-              id             = zone.id
-            }
+            name           = zone.name
+            compartment_id = zone.compartment_id
+            id             = zone.id
             records = {
               for record_key, record in oci_dns_rrset.dns_rrset_protected_view : "${record.domain}" => {
                 items = record.items
@@ -27,18 +23,14 @@ output "dns_configuration" {
 
     custom_views = {
       for view_key, view in oci_dns_view.custom_view : "${view.display_name}" => {
-        view_details = {
-          name           = view.display_name
-          compartment_id = view.compartment_id
-          id             = view.id
-        }
+        name           = view.display_name
+        compartment_id = view.compartment_id
+        id             = view.id
         zones = {
           for zone_key, zone in oci_dns_zone.private_dns_zone_custom_view : "${zone.name}" => {
-            zone_details = {
-              name           = zone.name
-              compartment_id = zone.compartment_id
-              id             = zone.id
-            }
+            name           = zone.name
+            compartment_id = zone.compartment_id
+            id             = zone.id
             records = {
               for record_key, record in oci_dns_rrset.dns_rrset_custom_view : "${record.domain}" => {
                 items = record.items
