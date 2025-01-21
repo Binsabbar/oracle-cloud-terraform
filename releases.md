@@ -9,7 +9,82 @@
 None
 
 ## _**Breaking Changes**_
-* `dns-management` modules input is updated to be map object of views of zones of records.
+* `dns-management` Add support to create private custom view or edit existing protected views, also module input is changed completely it now requires two objects `protected_views` or `custom_views` under each map of object of views, under each you define map of object of zones and under each zone you define map of object of records.
+* This change will destroy and recreate all the DNS resources and will cause connection issue untill new resources created.
+
+from:
+```h
+module "dns" {
+  ...
+  compartment_id = "ocid1.compartment.oc1..example1"
+  view_id        = "ocid1.dnsview.oc1..example1"
+  zones          = {
+    // ZONE 1
+    "test" = {
+      name = "test.com"
+    }
+    // ZONE 2
+    "test-2" = {
+      name = "test-2.com"
+    }
+  }
+  
+  records       = {
+    // RECORD 1
+    "test" = {
+      domain_name = "*.test.com"
+      rtype       = "A"
+      zone_name   = "test.com"
+      rdata       = "xxx.xxx.xxx.xxx"
+      ttl         = 300
+    }
+    // RECORD 2
+    "test-2" = {
+      domain_name = "something.test-2.com"
+      rtype       = "A"
+      zone_name   = "test-2.com"
+      rdata       = "xxx.xxx.xxx.xxx"
+      ttl         = 300
+    }
+  }
+}
+```
+to:
+```h
+module "dns" {
+  ...
+  private_dns = {
+    protected_views = {
+      "stage_protected_views" = {
+        view_id        = "ocid1.dnsview.oc1..example1"
+        compartment_id = "ocid1.compartment.oc1..example1"
+        zones = {
+          "test-com" = {
+            zone_name = "test.com"
+            records = {
+              "test" = {
+                domain_name = "*.test.com"
+                rdata      = "xxx.xxx.xxx.xxx"
+                # rtype and ttl will use defaults (A and 300)
+              }
+            }
+          }
+          "test-2-com" = {
+            zone_name = "test-2.com"
+            records = {
+              "test-2" = {
+                domain_name = "something.test-2.com"
+                rdata      = "xxx.xxx.xxx.xxx"
+              }
+            }
+          }
+        }
+      }
+    }
+    custom_views = {}
+  }
+}
+```
 
 # v2.11.0:
 ## **New**
