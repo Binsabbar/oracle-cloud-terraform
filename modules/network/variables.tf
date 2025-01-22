@@ -214,3 +214,11 @@ variable "local_peering_gateway" {
       default public and private route tables. Leave empty if you intend to configure them manually.
   EOF
 }
+
+variable "dns_private_views" {
+  type = list(object({
+    view_id = string
+  }))
+  description = "List of private custom views. The order in the list determines the precedence in resolution order (earlier items have higher precedence)."
+  default     = []
+}

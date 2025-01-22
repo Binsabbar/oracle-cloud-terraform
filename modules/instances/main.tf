@@ -96,6 +96,21 @@ resource "oci_core_instance" "instances" {
       boot_volume_size_in_gbs = each.value.volume_size
     }
   }
+
+  agent_config {
+    are_all_plugins_disabled = false
+    is_management_disabled   = false
+    is_monitoring_disabled   = false
+
+    dynamic "plugins_config" {
+      for_each = each.value.agent_plugins
+
+      content {
+        desired_state = plugins_config.value.is_enabled ? "ENABLED" : "DISABLED"
+        name          = plugins_config.value.name
+      }
+    }
+  }
 }
 
 # Getting Primary Initial Private IP for an instance

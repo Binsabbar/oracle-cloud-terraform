@@ -96,6 +96,13 @@ variable "instances" {
         ip_address = string
       }))
     }))
+    agent_plugins = optional(
+      map(object({
+        name       = string
+        is_enabled = bool
+      })),
+      {}
+    )
     optionals = map(any)
     # preserve_boot_volume =  bool (true)
     # boot_volume_id = string

@@ -74,6 +74,12 @@ locals {
         }
       }
       secondary_vnics = {}
+      agent_plugins = {
+        vulnerability_scanning = {
+          name : "Vulnerability Scanning"
+          is_enabled : true
+        }
+      }
       optionals = {
         boot_source_type = "bootVolume"
         boot_volume_id   = "ocid1.bootvolume.oc1.xxxxxxxxxxxxxxxxxxxxxxx"
