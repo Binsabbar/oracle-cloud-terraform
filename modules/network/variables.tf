@@ -1,7 +1,3 @@
-variable "tenancy_ocid" {
-  type    = string
-  default = ""
-}
 variable "compartment_id" { type = string }
 variable "name" {
   type        = string
