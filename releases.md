@@ -6,7 +6,6 @@
     * `ipv6.oci_allocation`
     * `ipv6.cidr_block`
 
-
 ## **Fix**
 None
 
