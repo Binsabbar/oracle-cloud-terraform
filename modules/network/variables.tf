@@ -15,12 +15,12 @@ variable "ipv6" {
   type = object({
     enabled        = bool
     oci_allocation = bool
-    cidr_block     = string
+    cidr_block     = list(string)
   })
   default = {
     enabled        = false
     oci_allocation = true
-    cidr_block     = ""
+    cidr_block     = []
   }
 
   description = <<EOF
