@@ -12,14 +12,14 @@ variable "cidr_block" {
 }
 
 variable "ipv6" {
-  type = optional(object({
+  type = object({
     enabled        = bool
-    oci_allocation = optional(bool, true)
+    oci_allocation = optional(bool, false)
     cidr_block     = optional(list(string), [])
-  }), null)
+  })
   default = {
     enabled        = false
-    oci_allocation = true
+    oci_allocation = false
     cidr_block     = []
   }
 
