@@ -25,7 +25,7 @@ variable "ipv6" {
 
   description = <<EOF
     map of object to configure IPv6
-      enabled        : set to true to enable IPv6 support for the VCN
+      enabled       : set to true to enable IPv6 support for the VCN
       oci_allocation: set to false to disable automatic allocation of IPv6 CIDR on the VCN
       cidr_block    : The IPv6 CIDR block for the VCN
   EOF
