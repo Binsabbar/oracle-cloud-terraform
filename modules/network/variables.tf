@@ -15,7 +15,7 @@ variable "ipv6" {
   type = object({
     enabled        = bool
     oci_allocation = optional(bool, true)
-    cidr_block     = optional(list(string),[])
+    cidr_block     = optional(list(string), [])
   })
   default = {
     enabled        = false
