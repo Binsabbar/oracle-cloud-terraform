@@ -20,10 +20,13 @@ locals {
 }
 
 resource "oci_core_vcn" "vcn" {
-  cidr_block     = var.cidr_block
-  compartment_id = var.compartment_id
-  display_name   = var.name
-  dns_label      = var.name
+  cidr_block                       = var.cidr_block
+  compartment_id                   = var.compartment_id
+  display_name                     = var.name
+  dns_label                        = var.name
+  is_ipv6enabled                   = var.ipv6.enabled
+  is_oracle_gua_allocation_enabled = var.ipv6.oci_allocation
+  ipv6private_cidr_blocks          = var.ipv6.cidr_block
 }
 
 resource "oci_core_default_dhcp_options" "dhcp_options" {

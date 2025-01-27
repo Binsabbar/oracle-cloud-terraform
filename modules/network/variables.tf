@@ -11,6 +11,25 @@ variable "cidr_block" {
   description = "The CIDR block for the VCN"
 }
 
+variable "ipv6" {
+  type = object({
+    enabled        = bool
+    oci_allocation = bool
+    cidr_block     = string
+  })
+  default = {
+    enabled        = false
+    oci_allocation = true
+    cidr_block     = ""
+  }
+
+  description = <<EOF
+    map of object to configure IPv6
+      enabled        : set to true to enable IPv6 support for the VCN
+      oci_allocation: set to false to disable automatic allocation of IPv6 CIDR on the VCN
+      cidr_block    : The IPv6 CIDR block for the VCN
+  EOF
+}
 # Gateways
 variable "nat_gateway" {
   type = object({
