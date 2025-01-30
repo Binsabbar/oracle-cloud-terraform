@@ -37,6 +37,11 @@ module "buckets" {
           inclusion_prefixes = []
         }
       }
+      replication_policy = {
+        name                    = "replicate_my_website_images_to_riyadh"
+        destination_region      = "me-riyadh-1"
+        destination_bucket_name = "my-website-images"
+      }
       optionals      = {
         object_events_enabled = false 
         versioning_enabled = true
