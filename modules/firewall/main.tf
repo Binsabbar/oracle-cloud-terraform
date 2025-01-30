@@ -26,112 +26,197 @@ resource "oci_network_firewall_network_firewall_policy" "network_firewall_policy
 locals {
   flattened_rules = flatten([
     for k, v in var.policies : [
-      for _, r in v.rules :
+      for i, r in v.rules :
       merge(r, {
         policy_name = "${k}"
-        key         = "${k}-${r.name}"
+        key         = "${i}-${k}-${r.name}"
+        position    = i
       })
     ]
   ])
+
   flattened_address_lists = flatten([
     for k, v in var.policies : [
-      for kr, a in v.address_list :
+      for kr, a in v.address_lists :
       {
         policy_name = "${k}"
-        addresses   = a
-        list_name   = kr
+        addresses   = [for _, i in a : i if i != ""]
+        name        = kr
         key         = "${k}-${kr}"
       }
     ]
   ])
 
+  flattened_url_lists = flatten([
+    for k, v in var.policies : [
+      for kr, u in v.url_lists :
+      {
+        policy_name = "${k}"
+        urls        = [for _, i in u : i if i != ""]
+        name        = kr
+        key         = "${k}-${kr}"
+      }
+    ]
+  ])
+
+  flattened_service_lists = flatten([
+    for k, v in var.policies : [
+      for ks, s in v.services.lists :
+      {
+        policy_name = "${k}"
+        services    = [for _, i in s : i if i != ""]
+        name        = ks
+        key         = "${k}-${ks}"
+      }
+    ]
+  ])
+
+  flattened_services = flatten([
+    for k, v in var.policies : [
+      for ks, s in v.services.definitions :
+      merge(s, { policy_name = "${k}", key = "${k}-${ks}", name = ks })
+    ]
+  ])
+
+  flattened_applications = flatten([
+    for k, v in var.policies : [
+      for ks, s in v.applications.definitions :
+      merge(s, { policy_name = "${k}", key = "${k}-${ks}", name = ks })
+    ]
+  ])
+
+  flattened_application_lists = flatten([
+    for k, v in var.policies : [
+      for ks, s in v.applications.lists :
+      {
+        policy_name  = "${k}"
+        applications = [for _, i in s : i if i != ""]
+        name         = ks
+        key          = "${k}-${ks}"
+      }
+    ]
+  ])
+
+  service_type_map = {
+    "TCP"         = "TCP_SERVICE"
+    "TCP_SERVICE" = "TCP_SERVICE"
+    "UDP"         = "UDP_SERVICE"
+    "UDP_SERVICE" = "UDP_SERVICE"
+  }
+  icmp_type_map = {
+    "ICMP"    = "ICMP"
+    "ICMP_V6" = "ICMP_V6"
+  }
+
+}
+
+
+resource "oci_network_firewall_network_firewall_policy" "network_firewall_policy" {
+  for_each = var.policies
+
+  compartment_id = data.oci_identity_compartments.get_compartments["devops"].compartments[0].id
+  display_name   = each.value.name
 }
 
 resource "oci_network_firewall_network_firewall_policy_security_rule" "security_rule" {
-  for_each = { for i, v in local.flattened_rules : "${v.key}" => merge({ position = i }, v) }
+  for_each = { for i, v in local.flattened_rules : "${v.key}" => v }
 
   action                     = each.value.action
   name                       = each.value.name
   network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
 
   condition {
-    destination_address = [for _, v in each.value.destination_addresses :
+    destination_address = [for _, v in try(each.value.destination_addresses, []) :
       oci_network_firewall_network_firewall_policy_address_list.address_list["${each.value.policy_name}-${v}"].name
     ]
-    source_address = [for _, v in each.value.source_addresses :
+    source_address = [for _, v in try(each.value.source_addresses, []) :
       oci_network_firewall_network_firewall_policy_address_list.address_list["${each.value.policy_name}-${v}"].name
     ]
-    # application         = var.network_firewall_policy_security_rule_condition_application
-    # service             = var.network_firewall_policy_security_rule_condition_service
-    # url                 = var.network_firewall_policy_security_rule_condition_url
+    service = [for _, v in try(each.value.service_lists, []) :
+      oci_network_firewall_network_firewall_policy_service_list.service_list["${each.value.policy_name}-${v}"].name
+    ]
+    url = [for _, v in try(each.value.url_lists, []) :
+      oci_network_firewall_network_firewall_policy_url_list.url_list["${each.value.policy_name}-${v}"].name
+    ]
+    application = [for _, v in try(each.value.application_lists, []) :
+      oci_network_firewall_network_firewall_policy_application_group.application_group["${each.value.policy_name}-${v}"].name
+    ]
   }
 
   position {
-    after_rule = each.value.position == 0 ? null : local.policies[each.value.policy_name].rules[each.value.position - 1].name
+    after_rule = each.value.position == 0 ? null : var.policies[each.value.policy_name].rules[each.value.position - 1].name
   }
 }
 
+
+# Address List
 resource "oci_network_firewall_network_firewall_policy_address_list" "address_list" {
   for_each                   = { for _, v in local.flattened_address_lists : "${v.key}" => v }
-  name                       = each.value.list_name
+  name                       = each.value.name
   type                       = "IP"
   network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
   addresses                  = each.value.addresses
 }
 
-# Application
-resource "oci_network_firewall_network_firewall_policy_application" "application" {
-  #Required
-  icmp_type                  = var.network_firewall_policy_application_icmp_type
-  name                       = var.network_firewall_policy_application_name
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy.id
-  type                       = var.network_firewall_policy_application_type
-
-  #Optional
-  icmp_code = var.network_firewall_policy_application_icmp_code
-}
-
-
-resource "oci_network_firewall_network_firewall_policy_application_group" "application_group" {
-  #Required
-  apps                       = var.network_firewall_policy_application_group_apps
-  name                       = var.network_firewall_policy_application_group_name
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy.id
-}
-
-
-
-# Services
+# Service and Service List
 resource "oci_network_firewall_network_firewall_policy_service" "service" {
-  #Required
-  name                       = var.network_firewall_policy_service_name
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy.id
-  port_ranges {
-    #Required
-    minimum_port = var.network_firewall_policy_service_port_ranges_minimum_port
+  for_each = { for _, v in local.flattened_services : "${v.key}" => v }
 
-    #Optional
-    maximum_port = var.network_firewall_policy_service_port_ranges_maximum_port
+  name                       = each.value.name
+  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
+  dynamic "port_ranges" {
+    for_each = each.value.port_ranges
+    content {
+      minimum_port = port_ranges.value.min_port
+      maximum_port = port_ranges.value.max_port
+    }
   }
-  type = var.network_firewall_policy_service_type
+  type = local.service_type_map[upper(each.value.type)]
 }
 
 resource "oci_network_firewall_network_firewall_policy_service_list" "service_list" {
-  #Required
-  name                       = var.network_firewall_policy_service_list_name
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy.id
-  services                   = var.network_firewall_policy_service_list_services
+  for_each = { for _, v in local.flattened_service_lists : "${v.key}" => v }
+
+  name                       = each.value.name
+  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
+  services = [for _, item in each.value.services :
+    oci_network_firewall_network_firewall_policy_service.service["${each.value.policy_name}-${item}"].name
+  ]
 }
 
+# Application and Application List
+resource "oci_network_firewall_network_firewall_policy_application" "application" {
+  for_each = { for _, v in local.flattened_applications : "${v.key}" => v }
 
-# URL
+  name                       = each.value.name
+  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
+  type                       = local.icmp_type_map[upper(each.value.protocol)]
+  icmp_type                  = each.value.type
+  icmp_code                  = try(each.value.icmp_code, null)
+}
+
+resource "oci_network_firewall_network_firewall_policy_application_group" "application_group" {
+  for_each = { for _, v in local.flattened_application_lists : "${v.key}" => v }
+
+  name                       = each.value.name
+  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
+  apps = [for _, item in each.value.applications :
+    oci_network_firewall_network_firewall_policy_application.application["${each.value.policy_name}-${item}"].name
+  ]
+
+}
+
+# URL List
 resource "oci_network_firewall_network_firewall_policy_url_list" "url_list" {
-  #Required
-  name                       = var.network_firewall_policy_url_list_name
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy.id
-  urls {
-    #Required
-    pattern = var.network_firewall_policy_url_list_urls_pattern
-    type    = var.network_firewall_policy_url_list_urls_type
+  for_each                   = { for _, v in local.flattened_url_lists : "${v.key}" => v }
+  name                       = each.value.name
+  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
+
+  dynamic "urls" {
+    for_each = each.value.urls
+    content {
+      pattern = urls.value
+      type    = "SIMPLE"
+    }
   }
 }
