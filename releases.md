@@ -6,7 +6,8 @@
     * `ipv6.oci_allocation`
     * `ipv6.cidr_block`
   * Add Remote Peering Connections (RPC) option
-  * Update object storage module to support bucket replication. There is only one policy can be added to the oci bucket
+* `object-storage` 
+  * Support bucket replication.
 
 ## **Fix**
 None
