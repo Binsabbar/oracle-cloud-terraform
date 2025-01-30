@@ -1,6 +1,7 @@
 # Object Storage
 
 Create Object Storage buckets and output list of urls for all buckets. This module is self documented, check `variables.tf`. The example below uses object lifecycle rules for `DELETE`, `INFREQUENT_ACCESS`, `ARCHIVE` and `ABORT`.
+This module supports bucket replication between oci regions. 
 
 # Example
 ```h
@@ -37,14 +38,14 @@ module "buckets" {
           inclusion_prefixes = []
         }
       }
-      replication_policy = {
-        name                    = "replicate_my_website_images_to_riyadh"
-        destination_region      = "me-riyadh-1"
-        destination_bucket_name = "my-website-images"
-      }
       optionals      = {
         object_events_enabled = false 
         versioning_enabled = true
+        replication_policy = {
+          name                    = "replicate_my_website_images_to_riyadh"
+          destination_region      = "me-riyadh-1"
+          destination_bucket_name = "my-website-images"
+        }
       }
     }
 
