@@ -247,10 +247,7 @@ variable "remote_peering_connection" {
     drg_id    = string
     optionals = optional(map(string), {})
   }))
-  default = {
-    drg_id    = ""
-    optionals = {}
-  }
+  default     = {}
   description = <<EOF
     list of object to configure Remote Peering Connection
       drg_id            : The OCID of the DRG the RPC belongs to
