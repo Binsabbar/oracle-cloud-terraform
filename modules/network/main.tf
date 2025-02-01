@@ -226,10 +226,11 @@ resource "oci_dns_resolver" "dns_resolver" {
 }
 // Remote Peering Connection
 resource "oci_core_remote_peering_connection" "remote_peering_connection" {
-  count            = var.remote_peering_connection.enabled ? 1 : 0
+  for_each         = { for k, v in var.remote_peering_connection : k => v if v != null }
   compartment_id   = var.compartment_id
-  drg_id           = var.remote_peering_connection.drg_id
-  display_name     = var.remote_peering_connection.name
-  peer_id          = lookup(var.remote_peering_connection.optionals, "peer_id", "")
-  peer_region_name = lookup(var.remote_peering_connection.optionals, "peer_region_name", "")
+  display_name     = each.key
+  drg_id           = each.value.drg_id
+  defined_tags     = lookup(each.value.optionals, "defined_tags", "")
+  peer_id          = lookup(each.value.optionals, "peer_id", "")
+  peer_region_name = lookup(each.value.optionals, "peer_region_name", "")
 }

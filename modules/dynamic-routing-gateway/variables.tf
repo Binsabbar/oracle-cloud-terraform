@@ -1,34 +1,27 @@
-variable "gateways" {
+variable "drg" {
   type = object({
-    gateways = map(object{
-        compartment_id = string
-        name = string
+    name           = string
+    compartment_id = string
+    drg_route_table = map(object({
+      name                             = string
+      enable_import_route_distribution = optional(bool, false)
+      enable_ecmp                      = optional(bool, false)
 
-        drg_route_tables = map(object{
-            name = string
-            enable_import_route_distribution = optional(bool, false)
-            enable_ecmp = optional(bool, false)
+      rules = map(object({
+        destination_cidr        = string
+        next_hop_attachement_id = string
+      }))
+    }))
+  })
+}
 
-            rules = map(object{
-                destination_cidr = string
-                next_hop_attachement_id = string
-            })
-        })
+variable "drg_attachment" {
+  type = object({
+    name = string
 
-        vcn_attachements = optional(map(object({
-            name = string
-            vcn_compartment_id = string
-            vcn_id = string
-            drg_route_table = 
-        })), {})
-
-        ipsec_attachements = optional(map(object({
-            name = string
-            ipsec_id = string
-        })), {})
-
-        remote_peering_connection = optional(map(any))
-
-    })
+    network_details = optional(map(object({
+      id   = string
+      type = string
+    })), {})
   })
 }

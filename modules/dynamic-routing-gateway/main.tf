@@ -1,55 +1,25 @@
-// create DRG
-resource "oci_core_drg" "test_drg" {
-    #Required
-    compartment_id = var.compartment_id
-
-    #Optional
-    defined_tags = {"Operations.CostCenter"= "42"}
-    display_name = var.drg_display_name
-    freeform_tags = {"Department"= "Finance"}
+// DRG
+resource "oci_core_drg" "drg" {
+  compartment_id = var.compartment_id
+  display_name   = var.drg_display_name
 }
 
 
 // ATTACHMENT
-resource "oci_core_drg_attachment" "test_drg_attachment" {
-    #Required
-    drg_id = oci_core_drg.test_drg.id
+resource "oci_core_drg_attachment" "drg_attachment" {
+  for_each = var.drg_attachment
+
+  drg_id       = oci_core_drg.drg.id
+  display_name = var.drg_attachment.name
+
+  drg_route_table_id = lookup(var.drg_attachment.optionals, "drg_route_table_id", oci_core_drg.drg.default_drg_route_tables.vcn)
+  network_details {
+    id   = oci_core_vcn.vcn.id
+    type = var.drg_attachment.network_details_type
 
     #Optional
-    defined_tags = {"Operations.CostCenter"= "42"}
-    display_name = var.drg_attachment_display_name
-    drg_route_table_id = oci_core_drg_route_table.test_drg_route_table.id
-    freeform_tags = {"Department"= "Finance"}
-    network_details {
-        #Required
-        id = oci_core_vcn.test_vcn.id
-        type = var.drg_attachment_network_details_type
-
-        #Optional
-        id = var.drg_attachment_network_details_id
-        route_table_id = oci_core_route_table.test_route_table.id
-        vcn_route_type = var.drg_attachment_network_details_vcn_route_type
-    }
-}
-
-// Route Table
-resource "oci_core_drg_route_table" "test_drg_route_table" {
-    #Required
-    drg_id = oci_core_drg.test_drg.id
-
-    #Optional
-    defined_tags = {"Operations.CostCenter"= "42"}
-    display_name = var.drg_route_table_display_name
-    freeform_tags = {"Department"= "Finance"}
-    import_drg_route_distribution_id = oci_core_drg_route_distribution.test_drg_route_distribution.id
-    is_ecmp_enabled = var.drg_route_table_is_ecmp_enabled
-}
-
-resource "oci_core_drg_route_table_route_rule" "test_drg_route_table_route_rule" {
-    #Required
-    drg_route_table_id = oci_core_drg_route_table.test_drg_route_table.id
-    destination = var.drg_route_table_route_rule_route_rules_destination
-    destination_type = var.drg_route_table_route_rule_route_rules_destination_type
-    next_hop_drg_attachment_id = oci_core_drg_attachment.test_drg_attachment.id
-
+    ids            = var.drg_attachment_network_details_id
+    route_table_id = oci_core_route_table.route_table.id
+    vcn_route_type = var.drg_attachment_network_details_vcn_route_type
+  }
 }
