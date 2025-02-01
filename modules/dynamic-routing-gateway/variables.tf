@@ -5,7 +5,7 @@ variable "drg" {
   })
 }
 
-variable "drg_attachment" {
+variable "drg_attachments" {
   type = object({
     name = string
     network_details = optional(map(object({
