@@ -10,7 +10,7 @@ resource "oci_core_drg_attachment" "drg_attachments" {
   for_each           = var.drg_attachments
   drg_id             = oci_core_drg.drg.id
   display_name       = each.value
-  drg_route_table_id = lookup(each.value.optionals, "drg_route_table_id", oci_core_drg.drg.default_drg_route_tables.vcn)
+  drg_route_table_id = lookup(each.value.optionals, "drg_route_table_id", oci_core_drg.drg.default_drg_route_tables[0].vcn)
   network_details {
     id             = each.value.network_details.id
     type           = each.value.network_details_type
