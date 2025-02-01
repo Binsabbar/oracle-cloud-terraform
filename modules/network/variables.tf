@@ -245,14 +245,13 @@ variable "dns_private_views" {
 variable "remote_peering_connection" {
   type = map(object({
     drg_id    = string
-    optionals = optional(map(any), null)
+    optionals = optional(map(string), {})
   }))
   default     = {}
   description = <<EOF
     list of object to configure Remote Peering Connection
       drg_id            : The OCID of the DRG the RPC belongs to
       optionals         : map of optional values
-        defined_tags    : List of tags for the RPC
         peer_id         : The OCID of the RPC to be peer with
         peer_region_name: The name of the region that contains the remote peering connection to be peer with 
   EOF
