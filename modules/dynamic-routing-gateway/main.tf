@@ -6,8 +6,8 @@ resource "oci_core_drg" "drg" {
 
 
 // ATTACHMENT
-resource "oci_core_drg_attachment" "drg_attachment" {
-  for_each           = var.drg_attachment
+resource "oci_core_drg_attachment" "drg_attachments" {
+  for_each           = var.drg_attachments
   drg_id             = oci_core_drg.drg.id
   display_name       = each.value.name
   drg_route_table_id = lookup(each.value.optionals, "drg_route_table_id", oci_core_drg.drg.default_drg_route_tables.vcn)
