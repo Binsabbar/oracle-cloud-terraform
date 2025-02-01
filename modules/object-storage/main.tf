@@ -46,3 +46,13 @@ resource "oci_objectstorage_object_lifecycle_policy" "lifecycle_policy" {
     }
   }
 }
+resource "oci_objectstorage_replication_policy" "bucket_replication" {
+  for_each = {
+    for k, v in var.buckets : k => v.optionals.replication_policy if v.optionals.replication_policy != null
+  }
+  name                    = each.value.name
+  bucket                  = oci_objectstorage_bucket.bucket[each.key].name
+  namespace               = data.oci_objectstorage_namespace.namespace.namespace
+  destination_bucket_name = lookup(each.optionals.value, "destination_bucket_name", oci_objectstorage_bucket.bucket[each.key].name)
+  destination_region_name = each.value.optionals.destination_region
+}

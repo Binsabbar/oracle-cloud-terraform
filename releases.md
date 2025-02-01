@@ -5,6 +5,9 @@
     * `ipv6.enabled`
     * `ipv6.oci_allocation`
     * `ipv6.cidr_block`
+  * Add Remote Peering Connections (RPC) option
+* `object-storage` 
+  * Support bucket replication.
 
 ## **Fix**
 None
