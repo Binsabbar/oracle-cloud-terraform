@@ -245,7 +245,7 @@ variable "dns_private_views" {
 variable "remote_peering_connection" {
   type = map(object({
     drg_id    = string
-    optionals = optional(map(string), {})
+    optionals = optional(map(any), null)
   }))
   default     = {}
   description = <<EOF
