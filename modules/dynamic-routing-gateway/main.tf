@@ -9,7 +9,7 @@ resource "oci_core_drg" "drg" {
 resource "oci_core_drg_attachment" "drg_attachments" {
   for_each           = var.drg_attachments
   drg_id             = oci_core_drg.drg.id
-  display_name       = each.value.name
+  display_name       = each.value
   drg_route_table_id = lookup(each.value.optionals, "drg_route_table_id", oci_core_drg.drg.default_drg_route_tables.vcn)
   network_details {
     id             = each.value.network_details.id
