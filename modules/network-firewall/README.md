@@ -6,6 +6,10 @@ You can manage the entire firewall policies and rules as code. Currently the onl
 
 Using this module you can create multiple firewalls at once.
 
+## Regions and Availability Domains Deployment
+To deploy a regional firewall, then do not set `var.firewalls.*.availability_domain`. Read more about [Regions and Availability Domains Deployment](https://docs.oracle.com/en-us/iaas/Content/network-firewall/overview.htm#enter-topic-id)
+
+
 ## Policy Rules
 Due to some limitations with how `for_each` works in Terraform, the rule ordering is disabled by default. However, you can enable the ordering by setting `var.policies.*.order_rules` to `true`. Ensure you only set it to `true`, only if the rules have already been created in the policy, otherwise, the `apply` might fail. The ordering in the `var.policies.*.rules` is important, since it reflects the order of the rules in the policy.
 

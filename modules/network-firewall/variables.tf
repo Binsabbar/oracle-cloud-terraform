@@ -2,7 +2,7 @@ variable "firewalls" {
   type = map(object({
     name                = string
     compartment_id      = string
-    availability_domain = string
+    availability_domain = optional(string, "")
     policy_name         = string
     networking = object({
       subnet_id          = string
