@@ -1,11 +1,7 @@
-output "compartments" {
-  value = oci_identity_compartment.compartments
+output "firewall" {
+  value = oci_network_firewall_network_firewall.network_firewall
 }
 
-output "groups" {
-  value = oci_identity_group.groups
-}
-
-output "service_accounts_groups" {
-  value = oci_identity_group.service_accounts_groups
+output "policies" {
+  value = oci_network_firewall_network_firewall_policy.network_firewall_policy
 }
