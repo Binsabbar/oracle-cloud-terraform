@@ -3,9 +3,26 @@ variable "compartment_id" { type = string }
 variable "drg" {
   type = object({
     name = string
-    attachments = optional(map(object({
-      vcn_id    = string
-      optionals = optional(map(string), {})
+    vcn_attachments = optional(map(object({
+      vcn_id              = string
+      name                = string
+      drg_route_table_key = optional(string, "")
+      route_table_id      = optional(string, "")
+      vcn_route_type      = optional(string, "SUBNET_CIDRS")
+    })), {})
+    none_vcn_attachments_managements = optional(map(object({
+      name                = string
+      type                = string
+      network_id          = string
+      compartment_id      = optional(string, "")
+      drg_route_table_key = optional(string, "")
+    })), {})
+    route_tables = optional(map(object({
+      name = string
+      rules = optional(map(object({
+        destination                 = string
+        next_hop_drg_attachment_key = string
+      })), {})
     })), {})
   })
   description = <<EOF
