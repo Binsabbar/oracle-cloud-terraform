@@ -68,3 +68,31 @@ resource "oci_core_drg_route_table_route_rule" "drg_route_table_route_rule" {
   destination_type           = "CIDR_BLOCK"
   next_hop_drg_attachment_id = local.attachements_ids[each.value.next_hop_drg_attachment_key].id
 }
+
+// REMOTE_PEERING_CONNECTION
+resource "oci_core_remote_peering_connection" "remote_peering_connection" {
+  for_each = var.drg.remote_peering_connections
+
+  compartment_id   = var.compartment_id
+  drg_id           = oci_core_drg.drg.id
+  display_name     = each.value.name
+  peer_id          = try(each.value.peer_connection.peer_id, null)
+  peer_region_name = try(each.value.peer_connection.peer_region_name, null)
+}
+
+resource "oci_core_drg_attachment_management" "rpc_drg_attachment" {
+  for_each = var.drg.remote_peering_connections
+
+  drg_id          = oci_core_drg.drg.id
+  compartment_id  = var.compartment_id
+  attachment_type = "REMOTE_PEERING_CONNECTION"
+
+  display_name       = each.value.name
+  network_id         = oci_core_remote_peering_connection.remote_peering_connection[each.key].id
+  drg_route_table_id = each.value.drg_route_table_key != "" ? oci_core_drg_route_table.drg_route_table[each.value.drg_route_table_key].id : local.default_drg_route_table_ids["REMOTE_PEERING_CONNECTION"]
+
+  lifecycle {
+    replace_triggered_by = [oci_core_remote_peering_connection.remote_peering_connection[each.key].id]
+  }
+}
+

@@ -241,18 +241,3 @@ variable "dns_private_views" {
   description = "List of private custom views. The order in the list determines the precedence in resolution order (earlier items have higher precedence)."
   default     = []
 }
-# Remote Peering Connection
-variable "remote_peering_connection" {
-  type = map(object({
-    drg_id    = string
-    optionals = optional(map(string), {})
-  }))
-  default     = {}
-  description = <<EOF
-    list of object to configure Remote Peering Connection
-      drg_id            : The OCID of the DRG the RPC belongs to
-      optionals         : map of optional values
-        peer_id         : The OCID of the RPC to be peer with
-        peer_region_name: The name of the region that contains the remote peering connection to be peer with 
-  EOF
-}

@@ -3,20 +3,6 @@ variable "compartment_id" { type = string }
 variable "drg" {
   type = object({
     name = string
-    vcn_attachments = optional(map(object({
-      vcn_id              = string
-      name                = string
-      drg_route_table_key = optional(string, "")
-      route_table_id      = optional(string, "")
-      vcn_route_type      = optional(string, "SUBNET_CIDRS")
-    })), {})
-    none_vcn_attachments_managements = optional(map(object({
-      name                = string
-      type                = string
-      network_id          = string
-      compartment_id      = optional(string, "")
-      drg_route_table_key = optional(string, "")
-    })), {})
     route_tables = optional(map(object({
       name = string
       rules = optional(map(object({
@@ -24,7 +10,33 @@ variable "drg" {
         next_hop_drg_attachment_key = string
       })), {})
     })), {})
+
+    vcn_attachments = optional(map(object({
+      vcn_id              = string
+      name                = string
+      drg_route_table_key = optional(string, "")
+      route_table_id      = optional(string, "")
+      vcn_route_type      = optional(string, "SUBNET_CIDRS")
+    })), {})
+
+    none_vcn_attachments_managements = optional(map(object({
+      name                = string
+      type                = string
+      network_id          = string
+      compartment_id      = optional(string, "")
+      drg_route_table_key = optional(string, "")
+    })), {})
+
+    remote_peering_connections = optional(map(object({
+      name                = string
+      drg_route_table_key = optional(string, "")
+      peer_connection = optional(object({
+        peer_id          = string
+        peer_region_name = string
+      }), null)
+    })), {}),
   })
+
   description = <<EOF
     object to configure DRG and its attachments
       name                  : name of the DRG

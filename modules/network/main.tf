@@ -224,12 +224,3 @@ resource "oci_dns_resolver" "dns_resolver" {
     }
   }
 }
-// Remote Peering Connection
-resource "oci_core_remote_peering_connection" "remote_peering_connection" {
-  for_each         = { for k, v in var.remote_peering_connection : k => v if v != null }
-  compartment_id   = var.compartment_id
-  display_name     = each.key
-  drg_id           = each.value.drg_id
-  peer_id          = lookup(each.value.optionals, "peer_id", null)
-  peer_region_name = lookup(each.value.optionals, "peer_region_name", null)
-}
