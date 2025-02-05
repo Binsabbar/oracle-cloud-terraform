@@ -136,6 +136,7 @@ resource "oci_network_firewall_network_firewall_policy_security_rule" "security_
   }
 
   position {
+    before_rule = !each.value.order_rule ? null : (each.value.position == length(var.policies[each.value.policy_name].rules)-1 ? null : var.policies[each.value.policy_name].rules[each.value.position + 1].name)
     after_rule = !each.value.order_rule ? null : (each.value.position == 0 ? null : var.policies[each.value.policy_name].rules[each.value.position - 1].name)
   }
 }
