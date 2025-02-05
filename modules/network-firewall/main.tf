@@ -109,7 +109,7 @@ resource "oci_network_firewall_network_firewall_policy" "network_firewall_policy
 }
 
 resource "oci_network_firewall_network_firewall_policy_security_rule" "security_rule" {
-  for_each = { for i, v in local.flattened_rules : "${v.key}" => v }
+  for_each = { for i, v in local.flattened_rules : "${v.position}-${v.key}" => v }
 
   action                     = each.value.action
   name                       = each.value.name
