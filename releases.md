@@ -1,13 +1,12 @@
 # v2.13.0:
 ## **New**
 * Introduce `network-firewall` module to manage network firewalls and network firewall policies.
-* Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG) and its attachments.
+* Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
 * `network`: Add support for IPv6 via optional `ipv6` variable. 
   * Add new variables for IPv6 configuration:
     * `ipv6.enabled`
     * `ipv6.oci_allocation`
     * `ipv6.cidr_block`
-  * Add Remote Peering Connections (RPC) option
 * `object-storage` 
   * Support bucket replication.
 

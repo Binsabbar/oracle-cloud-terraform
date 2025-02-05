@@ -5,9 +5,9 @@ locals {
     }
   ]...)
 
-  vcn_attachements_keys      = { for key, value in oci_core_drg_attachment.drg_attachments : key => { id = value.id } }
-  none_vcn_attachements_keys = { for key, value in oci_core_drg_attachment_management.none_vcn_drg_attachment : key => { id = value.id } }
-  attachements_ids           = merge(local.vcn_attachements_keys, local.none_vcn_attachements_keys)
+  vcn_attachments_keys      = { for key, value in oci_core_drg_attachment.drg_attachments : key => { id = value.id } }
+  none_vcn_attachments_keys = { for key, value in oci_core_drg_attachment_management.none_vcn_drg_attachment : key => { id = value.id } }
+  attachments_ids           = merge(local.vcn_attachments_keys, local.none_vcn_attachments_keys)
 
   default_drg_route_table_ids = {
     "VCN"                       = oci_core_drg.drg.default_drg_route_tables[0].vcn
@@ -66,10 +66,10 @@ resource "oci_core_drg_route_table_route_rule" "drg_route_table_route_rule" {
   drg_route_table_id         = oci_core_drg_route_table.drg_route_table[each.value.route_table_key].id
   destination                = each.value.destination
   destination_type           = "CIDR_BLOCK"
-  next_hop_drg_attachment_id = local.attachements_ids[each.value.next_hop_drg_attachment_key].id
+  next_hop_drg_attachment_id = local.attachments_ids[each.value.next_hop_drg_attachment_key].id
 }
 
-// REMOTE_PEERING_CONNECTION
+// REMOTE PEERING CONNECTION
 resource "oci_core_remote_peering_connection" "remote_peering_connection" {
   for_each = var.drg.remote_peering_connections
 
