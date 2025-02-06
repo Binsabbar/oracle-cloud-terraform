@@ -156,9 +156,7 @@ resource "null_resource" "write_json_files" {
   triggers = {
     always_run = "${timestamp()}"
   }
-  lifecycle {
-    ignore_changes = [id]
-  }
+
   depends_on = [time_sleep.wait_5s]
 }
 
@@ -177,9 +175,6 @@ resource "null_resource" "run_order_security_rules" {
     always_run = "${timestamp()}"
   }
 
-  lifecycle {
-    ignore_changes = [id]
-  }
   depends_on = [ null_resource.write_json_files ]
 }
 
