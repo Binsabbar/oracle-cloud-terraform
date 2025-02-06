@@ -11,7 +11,7 @@ To deploy a regional firewall, then do not set `var.firewalls.*.availability_dom
 
 
 ## Policy Rules
-Due to some limitations with how `for_each` works in Terraform, the rule ordering is disabled by default. However, you can enable the ordering by setting `var.policies.*.order_rules` to `true`. Ensure you only set it to `true`, only if the rules have already been created in the policy, otherwise, the `apply` might fail. The ordering in the `var.policies.*.rules` is important, since it reflects the order of the rules in the policy.
+Due to some limitations with how `for_each` works in Terraform, the rule ordering is disabled by default. However, you can enable the ordering by setting `var.policies.*.order_rules` to `true`. The ordering in the `var.policies.*.rules` is important, since it reflects the order of the rules in the policy.
 
 For example, if the rules is defined as following:
 ```h
@@ -39,9 +39,20 @@ then the rules will be ordered as following:
 3. `rule-2`
 
 
-It is recommended that you define your rules in `var.policies.*.rules` and set `var.policies.*.order_rules` to `false`. Once the rules are created, set `var.policies.*.order_rules` to `true` to apply the ordering
+### Order Security Rules Executable Binary
+Since there is limitations with `for_each`, the ordering does not happen in Terraform, hence, not tracked by Terraform. There is a binary executable, which is executed after all rules are created to order them. Check `./order-security-rules/main.go` for more details. To use the ordering, you need to configure `var.go_binary_os_arch` to one of the following:
+* linux_amd64
+* linux_arm64
+* darwin_arm64
+* darwin_amd64
 
-## Assign Policy to 
+set `var.path_to_oci_config` to the oci configuration file. If not set, the default locations will be used.
+
+The executable will run everytime an apply occurs to ensure that security rules are always ordered.
+
+To disable the binary execution, set `var.policies.*.order_rules` to `false`.
+
+## Assign Active Policy to Firewall
 Since you can define multiple policies, you can use the policy `KEY` in the variable input defeinition `var.policies[KEY]` as a reference to the active policy. Note that, you MUST assign a policy to firewall, even if the policy is empty
 ```h
 policies = {
@@ -93,7 +104,7 @@ Example of `input.tf` for this module:
 ```h
 module "firewall" {
   source              = PATH_TO_MODULE
-
+  go_binary_os_arch   = "linux_amd64"
   firewalls = {
     "firewall-1" = {
       compartment         = "ocixxxxxx.xxxxxx.xxxxx"

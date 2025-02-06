@@ -109,7 +109,7 @@ resource "oci_network_firewall_network_firewall_policy" "network_firewall_policy
 }
 
 resource "oci_network_firewall_network_firewall_policy_security_rule" "security_rule" {
-  for_each = { for i, v in local.flattened_rules : "${v.position}-${v.key}" => v }
+  for_each = { for i, v in local.flattened_rules : "${v.key}" => v }
 
   action                     = each.value.action
   name                       = each.value.name
@@ -135,12 +135,53 @@ resource "oci_network_firewall_network_firewall_policy_security_rule" "security_
     ]
   }
 
-  position {
-    before_rule = !each.value.order_rule ? null : (each.value.position == length(var.policies[each.value.policy_name].rules)-1 ? null : var.policies[each.value.policy_name].rules[each.value.position + 1].name)
-    after_rule = !each.value.order_rule ? null : (each.value.position == 0 ? null : var.policies[each.value.policy_name].rules[each.value.position - 1].name)
+  lifecycle {
+    ignore_changes = [position]
   }
 }
 
+// order security rules using external binary
+resource "time_sleep" "wait_5s" {
+  create_duration = "5s"
+  depends_on      = [oci_network_firewall_network_firewall_policy_security_rule.security_rule]
+}
+
+resource "null_resource" "write_json_files" {
+  for_each = { for k, v in var.policies : k => v if v.order_rules }
+
+  provisioner "local-exec" {
+    command = format("echo '%s' > %s", jsonencode({ rules = each.value.rules }), "${path.module}/security-rules-${each.key}.json")
+    quiet = true
+  }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  lifecycle {
+    ignore_changes = [id]
+  }
+  depends_on = [time_sleep.wait_5s]
+}
+
+resource "null_resource" "run_order_security_rules" {
+  for_each = { for k, v in var.policies : k => v if v.order_rules }
+
+  provisioner "local-exec" {
+    command = "${path.module}/order-security-rules/order-security-rules_${var.go_binary_os_arch} -i ${path.module}/security-rules-${each.key}.json  -p ${oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id} ${var.path_to_oci_config == "" ? "" : format("-c %s",var.path_to_oci_config)}"
+  }
+  
+  provisioner "local-exec" {
+    command = "rm -fr ${path.module}/security-rules-${each.key}.json"
+  }
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  lifecycle {
+    ignore_changes = [id]
+  }
+  depends_on = [ null_resource.write_json_files ]
+}
 
 # Address List
 resource "oci_network_firewall_network_firewall_policy_address_list" "address_list" {
