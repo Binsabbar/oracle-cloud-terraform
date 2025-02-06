@@ -195,19 +195,6 @@ module "network" {
       destination_cidrs = []
     }
   }
-  remote_peering_connection = {
-    "rpc1" = {
-      drg_id         = "ocid1.drg.oc1.xxxxxxx"
-      compartment_id = "ocid1.compartment.oc1.xxxxxxx"
-    },
-    "rpc2" = {
-      drg_id         = "ocid1.drg.oc1.xxxxxxx"
-      compartment_id = "ocid1.compartment.oc1.xxxxxxx"
-      defined_tags   = { "Oracle-Tags.CreatedBy" : "oci" }
-      peer_id          = "ocid1.remotepeeringconnection.xxx"
-      peer_region_name = "me-riyadh-1".
-    }
-  }
 }
 ```
 
