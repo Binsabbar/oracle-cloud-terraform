@@ -99,6 +99,7 @@ resource "oci_network_firewall_network_firewall" "network_firewall" {
   network_security_group_ids = each.value.networking.security_group_ids
 
   network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.value.policy_name].id
+  depends_on                 = [null_resource.run_order_security_rules]
 }
 
 resource "oci_network_firewall_network_firewall_policy" "network_firewall_policy" {
