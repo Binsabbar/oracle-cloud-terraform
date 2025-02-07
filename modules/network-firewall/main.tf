@@ -151,7 +151,7 @@ resource "null_resource" "write_json_files" {
 
   provisioner "local-exec" {
     command = format("echo '%s' > %s", jsonencode({ rules = each.value.rules }), "${path.module}/security-rules-${each.key}.json")
-    quiet = true
+    quiet   = true
   }
   triggers = {
     always_run = "${timestamp()}"
@@ -164,9 +164,9 @@ resource "null_resource" "run_order_security_rules" {
   for_each = { for k, v in var.policies : k => v if v.order_rules }
 
   provisioner "local-exec" {
-    command = "${path.module}/order-security-rules/order-security-rules_${var.go_binary_os_arch} -i ${path.module}/security-rules-${each.key}.json  -p ${oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id} ${var.path_to_oci_config == "" ? "" : format("-c %s",var.path_to_oci_config)}"
+    command = "${path.module}/order-security-rules/order-security-rules_${var.go_binary_os_arch} -i ${path.module}/security-rules-${each.key}.json  -p ${oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id} ${var.path_to_oci_config == "" ? "" : format("-o %s", var.path_to_oci_config)}"
   }
-  
+
   provisioner "local-exec" {
     command = "rm -fr ${path.module}/security-rules-${each.key}.json"
   }
@@ -175,7 +175,7 @@ resource "null_resource" "run_order_security_rules" {
     always_run = "${timestamp()}"
   }
 
-  depends_on = [ null_resource.write_json_files ]
+  depends_on = [null_resource.write_json_files]
 }
 
 # Address List

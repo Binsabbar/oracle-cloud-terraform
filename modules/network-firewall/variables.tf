@@ -1,14 +1,14 @@
 variable "go_binary_os_arch" {
-  type = string
+  type        = string
   description = "the arch of the os"
   validation {
-    condition = var.go_binary_os_arch == "linux_amd64" || var.go_binary_os_arch == "linux_arm64" || var.go_binary_os_arch == "darwin_amd64" || var.go_binary_os_arch == "darwin_arm64"
+    condition     = var.go_binary_os_arch == "linux_amd64" || var.go_binary_os_arch == "linux_arm64" || var.go_binary_os_arch == "darwin_amd64" || var.go_binary_os_arch == "darwin_arm64"
     error_message = "only linux_amd64, linux_arm64, darwin_arm64 and darwin_amd64 are supported"
   }
 }
 
 variable "path_to_oci_config" {
-  type = string
+  type    = string
   default = ""
 }
 
