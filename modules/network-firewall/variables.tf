@@ -34,11 +34,12 @@ variable "policies" {
     compartment_id = string
     address_lists  = optional(map(list(string)), {})
     url_lists      = optional(map(list(string)), {})
+    updatable      = bool
     services = optional(object({
       definitions = map(object({
         port_ranges = list(object({
-          min_port = number,
-          max_port = number
+          minimum_port = number,
+          maximum_port = number
         })),
       type = string }))
       lists = map(list(string))
