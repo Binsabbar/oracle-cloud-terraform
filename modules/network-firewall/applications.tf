@@ -14,10 +14,10 @@ locals {
     for k, p in var.policies : p.updatable ? [
       for ka, application_group in try(p.applications.lists, []) :
       {
-        policy_name  = k
-        applications = [for _, i in application_group : i if i != ""]
-        name         = ka
-        key          = "${k}-${ka}"
+        policy_name      = k
+        applications     = [for _, i in application_group : i if i != ""]
+        name             = ka
+        key              = "${k}-${ka}"
         updatable_policy = p.updatable
       }
       ] : [
@@ -65,8 +65,9 @@ locals {
 }
 
 data "oci_network_firewall_network_firewall_policy_application_groups" "all_application_groups" {
-  for_each                   = var.policies
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id
+  for_each = data.oci_network_firewall_network_firewall_policy.network_firewall_policy
+
+  network_firewall_policy_id = each.value.network_firewall_policy_id
 }
 
 data "oci_network_firewall_network_firewall_policy_application_group" "application_group" {

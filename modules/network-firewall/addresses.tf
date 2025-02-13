@@ -32,17 +32,17 @@ locals {
   ])
 }
 
+data "oci_network_firewall_network_firewall_policy_address_lists" "address_lists" {
+  for_each = data.oci_network_firewall_network_firewall_policy.network_firewall_policy
+
+  network_firewall_policy_id = each.value.network_firewall_policy_id
+}
+
 data "oci_network_firewall_network_firewall_policy_address_list" "address_list" {
   for_each = { for _, v in local.addresses_to_fetch : "${v.key}" => v }
 
   name                       = each.value.name
   network_firewall_policy_id = each.value.network_firewall_policy_id
-}
-
-data "oci_network_firewall_network_firewall_policy_address_lists" "address_lists" {
-  for_each = var.policies
-
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id
 }
 
 resource "oci_network_firewall_network_firewall_policy_address_list" "address_list" {
