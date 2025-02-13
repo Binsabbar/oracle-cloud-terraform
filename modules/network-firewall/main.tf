@@ -64,12 +64,6 @@ resource "oci_network_firewall_network_firewall_policy" "network_firewall_policy
   display_name   = each.value.name
   compartment_id = each.value.compartment_id
 
-  lifecycle {
-    precondition {
-      condition     = !contains(local.active_policies, each.key)
-      error_message = "You can't make changes to active policy. ${each.value.name} is attached to a firewall"
-    }
-  }
   freeform_tags = {
     terraform_resource_name = each.key
   }
