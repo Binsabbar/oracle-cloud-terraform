@@ -52,6 +52,7 @@ variable "policies" {
       lists = map(list(string))
     }), null)
     order_rules = optional(bool, false)
+    force_order = optional(bool, false)
     rules = optional(list(object({
       name                  = string
       action                = string

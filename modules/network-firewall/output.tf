@@ -7,5 +7,5 @@ output "policies" {
 }
 
 output "test" {
-  value = data.oci_network_firewall_network_firewall_policy_address_lists.address_lists
+  value = data.oci_network_firewall_network_firewall_policy_security_rules.security_rules
 }
