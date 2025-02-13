@@ -61,9 +61,9 @@ locals {
 }
 
 data "oci_network_firewall_network_firewall_policy_security_rules" "security_rules" {
-  for_each = var.policies
+  for_each = data.oci_network_firewall_network_firewall_policy.network_firewall_policy
 
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id
+  network_firewall_policy_id = each.value.network_firewall_policy_id
 }
 
 data "oci_network_firewall_network_firewall_policy_security_rule" "security_rule" {
@@ -106,22 +106,22 @@ resource "time_sleep" "wait_5s" {
 }
 
 resource "null_resource" "write_json_files" {
-  for_each = { for k, v in var.policies : k => v if v.order_rules && v.updatable}
+  for_each = { for k, v in var.policies : k => v if v.order_rules && v.updatable }
 
   provisioner "local-exec" {
     command = format("echo '%s' > %s", jsonencode({ rules = each.value.rules }), "${path.module}/security-rules-${each.key}.json")
     quiet   = true
   }
   triggers = {
-    ordered_updatable = "order=[${join(",", [for _, item in each.value.rules: item.name])}]"
-    force_order = "${each.value.force_order ? timestamp():0}"
+    ordered_updatable = "order=[${join(",", [for _, item in each.value.rules : item.name])}]"
+    force_order       = "${each.value.force_order ? timestamp() : 0}"
   }
 
   depends_on = [time_sleep.wait_5s]
 }
 
 resource "null_resource" "run_order_security_rules" {
-  for_each = { for k, v in var.policies : k => v if v.order_rules && v.updatable}
+  for_each = { for k, v in var.policies : k => v if v.order_rules && v.updatable }
 
   provisioner "local-exec" {
     command = "${path.module}/order-security-rules/order-security-rules_${var.go_binary_os_arch} -i ${path.module}/security-rules-${each.key}.json  -p ${oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id} ${var.path_to_oci_config == "" ? "" : format("-o %s", var.path_to_oci_config)}"

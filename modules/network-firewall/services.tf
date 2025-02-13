@@ -67,8 +67,9 @@ locals {
 }
 
 data "oci_network_firewall_network_firewall_policy_service_lists" "all_service_lists" {
-  for_each                   = var.policies
-  network_firewall_policy_id = oci_network_firewall_network_firewall_policy.network_firewall_policy[each.key].id
+  for_each = data.oci_network_firewall_network_firewall_policy.network_firewall_policy
+
+  network_firewall_policy_id = each.value.network_firewall_policy_id
 }
 
 data "oci_network_firewall_network_firewall_policy_service_list" "service_list" {
