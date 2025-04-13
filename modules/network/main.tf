@@ -195,7 +195,7 @@ resource "oci_core_subnet" "private_subnet" {
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.key} subnet"
   security_list_ids          = concat([oci_core_security_list.private_subnet_security_list.id], each.value.security_list_ids)
-  ipv6cidr_blocks            = lookup(each.value, "ipv6cidr_blocks", null)
+  ipv6cidr_blocks            = lookup(each.value.optionals, "ipv6cidr_blocks", null)
 }
 
 // Route Table Association
