@@ -125,6 +125,7 @@ variable "public_subnets" {
     name              = string
     cidr_block        = string
     security_list_ids = list(string)
+    ipv6cidr_blocks   = optional(list(string))
     optionals         = map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # route_table_id = string # id of custom route table
