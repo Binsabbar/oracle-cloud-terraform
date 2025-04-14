@@ -182,8 +182,13 @@ resource "oci_core_subnet" "public_subnet" {
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.value.name} subnet"
   security_list_ids          = concat([oci_core_default_security_list.public_subnet_security_list.id], each.value.security_list_ids)
-  ipv6cidr_blocks            = lookup(each.value, "ipv6cidr_blocks", null)
 
+  dynamic "ipv6cidr_blocks" {
+    for_each = lookup(each.value.optionals, "ipv6cidr_blocks", []) != [] ? [1] : []
+    content {
+      ipv6cidr_blocks = lookup(each.value.optionals, "ipv6cidr_blocks", [])
+    }
+  }
 }
 
 resource "oci_core_subnet" "private_subnet" {
@@ -196,6 +201,13 @@ resource "oci_core_subnet" "private_subnet" {
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.key} subnet"
   security_list_ids          = concat([oci_core_security_list.private_subnet_security_list.id], each.value.security_list_ids)
+
+  dynamic "ipv6cidr_blocks" {
+    for_each = lookup(each.value.optionals, "ipv6cidr_blocks", []) != [] ? [1] : []
+    content {
+      ipv6cidr_blocks = lookup(each.value.optionals, "ipv6cidr_blocks", [])
+    }
+  }
 }
 
 // Route Table Association
