@@ -78,6 +78,7 @@ resource "oci_core_instance" "instances" {
     skip_source_dest_check    = lookup(each.value.optionals, "skip_source_dest_check", false)
     assign_private_dns_record = true
     private_ip                = each.value.config.primary_vnic.primary_ip
+    assign_ipv6ip             = lookup(each.value, "ipv6", false)
   }
 
   dynamic "source_details" {
@@ -190,4 +191,27 @@ resource "oci_core_volume_backup_policy_assignment" "boot_volume_backup_policy_a
 
   asset_id  = oci_core_instance.instances[each.key].boot_volume_id
   policy_id = oci_core_volume_backup_policy.boot_volume_backup_policy[each.value.optionals.reference_to_backup_policy_key_name].id
+}
+
+
+# Ipv6
+
+data "oci_core_vnic_attachments" "ipv6_vnic_attachments" {
+  for_each = {
+    for k, v in var.instances : k => v
+    if lookup(v, "ipv6", false) == true
+  }
+  
+  compartment_id = each.value.compartment_id
+  instance_id    = oci_core_instance.instances[each.key].id
+}
+
+resource "oci_core_ipv6" "instance_ipv6_addresses" {
+  for_each = {
+    for k, v in var.instances : k => v
+    if lookup(v, "ipv6", false) == true
+  }
+  
+  vnic_id      = data.oci_core_vnic_attachments.ipv6_vnic_attachments[each.key].vnic_attachments[0].vnic_id
+  display_name = "${each.key}-ipv6"
 }
