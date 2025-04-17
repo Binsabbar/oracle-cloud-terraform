@@ -20,10 +20,6 @@ output "instances" {
             ip_address = oci_core_private_ip.primary_vnic_additional_ips["${ip.instance_key}:primary_vnic:${ip.secondary_ip_key}"].ip_address
           } if ip.instance_key == k
         }
-        ipv6_address = lookup(var.instances[k], "ipv6", false) ? {
-          id         = oci_core_ipv6.instance_ipv6[k].id
-          ip_address = oci_core_ipv6.instance_ipv6[k].ip_address
-        } : null
       }
       secondary_vnics = {
         for vnic in local.flattened_secondary_vnics :
