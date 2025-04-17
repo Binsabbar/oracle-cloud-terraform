@@ -157,4 +157,4 @@ Thanks to the following folks for providing suggestions and improvments to this 
 * Dawid Rogowicz [dawidrogowicz](https://github.com/dawidrogowicz/) (v2.12.0 instance)
 * Mohamed Essam [mohamed-esam](https://github.com/mohamed-esam) (v2.12.0 dns-management)
 * Mohamed Essam [mohamed-esam](https://github.com/mohamed-esam) (v2.12.0 network)
-* Ahmed Fathi [masbirooo] (https://github.com/mohamed-esam) (v2.12.0 instance ipv6)
+* Ahmed Fathi [masbirooo](https://github.com/masbirooo) (v2.12.0 instance ipv6)
