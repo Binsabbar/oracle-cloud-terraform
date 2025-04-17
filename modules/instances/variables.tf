@@ -103,8 +103,8 @@ variable "instances" {
       })),
       {}
     )
-    optionals = map(any)
     ipv6 = optional(bool, false)
+    optionals = map(any)
     # preserve_boot_volume =  bool (true)
     # boot_volume_id = string
     # boot_source_type = string

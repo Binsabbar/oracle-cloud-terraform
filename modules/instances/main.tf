@@ -78,7 +78,7 @@ resource "oci_core_instance" "instances" {
     skip_source_dest_check    = lookup(each.value.optionals, "skip_source_dest_check", false)
     assign_private_dns_record = true
     private_ip                = each.value.config.primary_vnic.primary_ip
-    assign_ipv6ip             = lookup(each.value, "ipv6", false)
+    # assign_ipv6ip             = lookup(each.value, "ipv6", false)
   }
 
   dynamic "source_details" {
