@@ -63,6 +63,7 @@ variable "instances" {
     volume_size              = number
     state                    = string
     autherized_keys          = string
+    ipv6                     = optional(bool, false)
     config = object({
       shape             = string
       flex_shape_config = map(string)
