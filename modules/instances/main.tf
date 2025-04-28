@@ -79,6 +79,7 @@ resource "oci_core_instance" "instances" {
     assign_private_dns_record = true
     private_ip                = each.value.config.primary_vnic.primary_ip
     assign_ipv6ip             = each.value.ipv6
+    freeform_tags             = each.value.freeform_tags
   }
 
   dynamic "source_details" {
