@@ -182,7 +182,7 @@ resource "oci_core_subnet" "public_subnet" {
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.value.name} subnet"
   security_list_ids          = concat([oci_core_default_security_list.public_subnet_security_list.id], each.value.security_list_ids)
-  ipv6cidr_block             = each.value.ipv6cidr_block
+  ipv6cidr_block            = each.value.ipv6cidr_block
 }
 
 resource "oci_core_subnet" "private_subnet" {
