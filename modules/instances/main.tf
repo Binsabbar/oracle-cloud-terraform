@@ -45,6 +45,7 @@ resource "oci_core_instance" "instances" {
   display_name         = each.value.name
   preserve_boot_volume = lookup(each.value.optionals, "preserve_boot_volume", true)
   state                = each.value.state
+  freeform_tags        = lookup(each.value.freeform_tags, "freeform_tags", null)
   metadata = {
     ssh_authorized_keys = each.value.autherized_keys
     user_data           = lookup(each.value.optionals, "user_data", null)
@@ -79,7 +80,6 @@ resource "oci_core_instance" "instances" {
     assign_private_dns_record = true
     private_ip                = each.value.config.primary_vnic.primary_ip
     assign_ipv6ip             = each.value.ipv6
-    freeform_tags             = each.value.freeform_tags
   }
 
   dynamic "source_details" {
