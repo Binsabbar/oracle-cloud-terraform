@@ -142,6 +142,7 @@ resource "oci_core_vnic_attachment" "secondary_vnic_attachment" {
     subnet_id                 = each.value.vnic.subnet_id
     hostname_label            = each.value.vnic.hostname_label
     skip_source_dest_check    = each.value.vnic.skip_source_dest_check
+    assign_ipv6ip             = lookup(each.value.vnic, "ipv6", false)
   }
 
   instance_id = oci_core_instance.instances[each.value.instance_key].id

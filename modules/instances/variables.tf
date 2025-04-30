@@ -93,6 +93,7 @@ variable "instances" {
       nsg_ids                = list(string)
       skip_source_dest_check = bool
       hostname_label         = string
+      ipv6                   = optional(bool, false)
       secondary_ips = map(object({
         name       = string
         ip_address = string
