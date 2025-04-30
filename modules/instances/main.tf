@@ -78,7 +78,7 @@ resource "oci_core_instance" "instances" {
     skip_source_dest_check    = lookup(each.value.optionals, "skip_source_dest_check", false)
     assign_private_dns_record = true
     private_ip                = each.value.config.primary_vnic.primary_ip
-    assign_ipv6ip             = each.value.ipv6
+    assign_ipv6ip             = lookup(each.value, "ipv6", false)
   }
 
   dynamic "source_details" {
@@ -141,6 +141,7 @@ resource "oci_core_vnic_attachment" "secondary_vnic_attachment" {
     subnet_id                 = each.value.vnic.subnet_id
     hostname_label            = each.value.vnic.hostname_label
     skip_source_dest_check    = each.value.vnic.skip_source_dest_check
+    assign_ipv6ip = each.value.vnic.ipv6 # Add this line
   }
 
   instance_id = oci_core_instance.instances[each.value.instance_key].id
