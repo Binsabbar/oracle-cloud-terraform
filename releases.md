@@ -4,6 +4,7 @@
 * Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
 * Update `instance` module to accept ipv6 assignment on instances.
 * `instances`: Add support for ipv6 via optional `ipv6` Boolean.
+* `instances.secondery_vnics`: Add support for ipv6 via optional `ipv6` Boolean.
 * `network`: Add support for IPv6 via optional `ipv6` variable. 
   * Add new variables for IPv6 configuration:
     * `ipv6.enabled`
