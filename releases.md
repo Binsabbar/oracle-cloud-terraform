@@ -17,7 +17,43 @@
 None
 
 ## _**Breaking Changes**_
-None
+* `identity` Change compartment policies property from list of string statements to accept a map of list of string statements representing policy. This allows to split statements into multiple policies for each compartment.
+
+from:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = [
+        "allow group xxx to manage virtual-network-family in compartment compartment-a",
+      ]
+    }
+  }
+}
+```
+to:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = {
+        "policy-a" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
+    }
+  }
+}
+```
+
 # v2.12.0:
 ## **New**
 * `instances`: Add option to enable/disable cloud agent plugins.
