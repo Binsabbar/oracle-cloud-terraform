@@ -133,11 +133,11 @@ resource "oci_identity_policy" "tenancy_policies" {
 
 # Other policies cab be applied directly to the compartment
 resource "oci_identity_policy" "policies" {
-  for_each = { for val in local.flattened_compartment_policies : "${val.compartment}.${val.name}" => val }
+  for_each = { for val in local.flattened_compartment_policies : val.name => val }
 
   compartment_id = oci_identity_compartment.compartments[each.value.compartment].id
   description    = "Policy for ${each.value.compartment}"
-  name           = "${each.value.name}-policy"
+  name           = "${each.key}-policy"
   statements     = each.value.statements
 
   depends_on = [local.depends_on]
