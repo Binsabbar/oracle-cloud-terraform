@@ -16,6 +16,15 @@ locals {
       }
     ]
   ])
+  flattened_compartment_policies = flatten([
+    for compartment_name, compartment_data in var.compartments : [
+      for policy, statements in compartment_data.policies : {
+        name        = policy
+        compartment = compartment_name
+        statements  = statements
+      } if length(statements) > 0
+    ] if length(compartment_data.policies) > 0
+  ])
 
   groups                  = [for group in keys(var.memberships) : oci_identity_group.groups[group]]
   service_accounts_groups = [for key, sa in var.service_accounts : oci_identity_group.service_accounts_groups[sa.name]]
@@ -124,12 +133,12 @@ resource "oci_identity_policy" "tenancy_policies" {
 
 # Other policies cab be applied directly to the compartment
 resource "oci_identity_policy" "policies" {
-  for_each = { for compartment, config in var.compartments : compartment => config if length(config.policies) > 0 }
+  for_each = { for val in local.flattened_compartment_policies : "${val.compartment}.${val.name}" => val }
 
-  compartment_id = oci_identity_compartment.compartments[each.key].id
-  description    = "Polciy for ${each.key}"
-  name           = "${each.key}-policy"
-  statements     = each.value.policies
+  compartment_id = oci_identity_compartment.compartments[each.value.compartment].id
+  description    = "Policy for ${each.value.compartment}"
+  name           = "${each.value.name}-policy"
+  statements     = each.value.statements
 
   depends_on = [local.depends_on]
 }

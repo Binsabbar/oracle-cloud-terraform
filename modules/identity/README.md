@@ -208,16 +208,20 @@ module "top_level_compartments" {
   compartments = {
     "compartment-a" = {
       parent = local.tenant_id
-      policies = [
-        "allow group xxx to manage virtual-network-family in compartment compartment-a",
-      ]
+      policies = {
+        "policy-a" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
     }
 
     "compartment-b" = {
       parent = local.tenant_id
-      policies = [
-        "allow group xxx to manage virtual-network-family in compartment compartment-b",
-      ]
+      policies = {
+        "policy-b" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-b",
+        ]
+      }
     }
   }
 }
@@ -230,12 +234,12 @@ module "child_compartments" {
   compartments = {
     "compartment-1" = {
       parent = module.top_level_compartments.compartments["compartment-a"].id
-      policies = []
+      policies = {}
     }
 
     "compartment-2" = {
       parent = module.top_level_compartments.compartments["compartment-b"].id
-      policies = []
+      policies = {}
     }
   }
 }
@@ -316,16 +320,20 @@ module "main_iam" {
   compartments     = {
     "compartment-a" = {
       parent = local.tenant_id
-      policies = [
-        "allow group portfolio-a, terraform-cicd to manage virtual-network-family in compartment compartment-a",
-      ]
+      policies = {
+        "policy-a" = [
+          "allow group portfolio-a, terraform-cicd to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
     }
 
     "compartment-b" = {
       parent = local.tenant_id
-      policies = [
-        "allow group portfolio-b, terraform-cicd to manage virtual-network-family in compartment compartment-b",
-      ]
+      policies = {
+        "policy-b" = [
+          "allow group portfolio-b, terraform-cicd to manage virtual-network-family in compartment compartment-b",
+        ]
+      }
     }
   }
 
@@ -345,12 +353,12 @@ module "child_compartments" {
   compartments = {
     "compartment-1" = {
       parent = module.main_iam.compartments["compartment-a"].id
-      policies = []
+      policies = {}
     }
 
     "compartment-2" = {
       parent = module.main_iam.compartments["compartment-b"].id
-      policies = []
+      policies = {}
     }
   }
 }
