@@ -1,3 +1,8 @@
+# v2.13.0:
+
+## **Fix**
+* `identity`: Changed the data type of `tenancy_policies.policies` from set(string) to list(string) to preserve the order of policies.
+
 # v2.11.0:
 ## **New**
 * `network-sg`: add support for all rule types: ip cidrs, service cidrs and nsg ids.
