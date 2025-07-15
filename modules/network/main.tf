@@ -20,10 +20,13 @@ locals {
 }
 
 resource "oci_core_vcn" "vcn" {
-  cidr_block     = var.cidr_block
-  compartment_id = var.compartment_id
-  display_name   = var.name
-  dns_label      = var.name
+  cidr_block                       = var.cidr_block
+  compartment_id                   = var.compartment_id
+  display_name                     = var.name
+  dns_label                        = var.name
+  is_ipv6enabled                   = var.ipv6.enabled
+  is_oracle_gua_allocation_enabled = var.ipv6.oci_allocation
+  ipv6private_cidr_blocks          = var.ipv6.cidr_block
 }
 
 resource "oci_core_default_dhcp_options" "dhcp_options" {
@@ -179,6 +182,7 @@ resource "oci_core_subnet" "public_subnet" {
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.value.name} subnet"
   security_list_ids          = concat([oci_core_default_security_list.public_subnet_security_list.id], each.value.security_list_ids)
+  ipv6cidr_block            = each.value.ipv6cidr_block
 }
 
 resource "oci_core_subnet" "private_subnet" {
@@ -191,6 +195,7 @@ resource "oci_core_subnet" "private_subnet" {
   dns_label                  = replace(replace(each.key, "-", ""), "_", "")
   display_name               = "${each.key} subnet"
   security_list_ids          = concat([oci_core_security_list.private_subnet_security_list.id], each.value.security_list_ids)
+  ipv6cidr_block             = each.value.ipv6cidr_block
 }
 
 // Route Table Association
@@ -204,4 +209,20 @@ resource "oci_core_route_table_attachment" "private_route_table_attachment" {
   for_each       = var.private_subnets
   subnet_id      = oci_core_subnet.private_subnet[each.key].id
   route_table_id = lookup(each.value.optionals, "route_table_id", oci_core_route_table.private_route_table[local.private_route_table_key].id)
+}
+
+// DNS Resolver
+data "oci_core_vcn_dns_resolver_association" "vcn_dns_resolver_association" {
+  vcn_id = oci_core_vcn.vcn.id
+}
+
+resource "oci_dns_resolver" "dns_resolver" {
+  resolver_id = data.oci_core_vcn_dns_resolver_association.vcn_dns_resolver_association.dns_resolver_id
+
+  dynamic "attached_views" {
+    for_each = var.dns_private_views
+    content {
+      view_id = attached_views.value.view_id
+    }
+  }
 }

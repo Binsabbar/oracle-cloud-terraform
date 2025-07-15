@@ -15,11 +15,12 @@ The module will create a single virtual cloud network, with no subnet by default
 When the VCN is created, the following objects are created by default:
 * DHCP: Used by default for both public and private subnets
 * Internet Gateway (defaultInternetGateway): it is attached to any created public subnet (configurable via variable `internet_gateway`)
-* NAT GAteway (defaultNatGateway): It is attached to any created private subnet (configurable via variable `nat_gateway`)
+* NAT Gateway (defaultNatGateway): It is attached to any created private subnet (configurable via variable `nat_gateway`)
 * Route Table (defaultRouteTable): if no route table id is passed for a public subnet, this route table is used for the public subnet. The public default route table is configurable using `public_route_table_rules` variable.
 * Private Route Table (defaultPrivateRouteTable): if no route table id is passed for a private subnet, this route table is used for the private subnet. The private default route table is configurable using `private_route_table_rules` variable.
 * Default Public Security List: This list is attached to EVERY public subnet created.
 * Default Private Security List: This list is attached to EVERY private subnet created.
+* DNS Resolver: By default each VCN has DNS resolver once created and it has empty list of private views.
   
 ## Note About Default Security Lists:
 * **Public security list**: By default empty, however, you can use `default_security_list_rules` variable to pass list of ports for ingress and egress traffic for tcp and udp to the world. Also you can enable icpm from and to the world as well.
@@ -42,6 +43,8 @@ When the VCN is created, the following objects are created by default:
   * `nat_gateway.optionals.route_table_id`
   * `service_gateway.optionals.route_table_id`
 
+## Note About DNS Resolver:
+* **DNS Resolver**: By default has no associated private views, you can enable attaching private views to DNS Resolver by passing the list of object of views, earlier views in the list have higher priority in resolution.
 
 ## Local Peering Gateway
 ***WARNING: you can't create two difference gateways then peer them at once. Changing the peering ID will destroy the gateway, then re-create it. So at least in the 2nd gateway you need the ID of the other getway***
@@ -50,6 +53,9 @@ To peer an instance with another, you will need to follow certain steps in order
 1. Create a gateway using this module without supplying the peering id.
 2. Get the OCID of the newly created Gateway.
 3. In the other VCN's peering gateway, paste the OCID of the gateway.
+
+## Note about IPv6
+IPv6 is configurable via `ipv6` variable, and can be disabled as well. By default Oracle assigns a IPv6 /56 IP CIDR, to add your own CIDR the `ipv6.oci_allocation` variable can be set to false and the CIDR blocks can be set via `ipv6.cidr_blocks`.
 
 Example:
 
@@ -90,14 +96,22 @@ source = PATH_TO_MODULE
   public_subnets        = {}
 ```
 
-VCN with two private subnets and one public subnet that has its own routing table.
+VCN with two private subnets and one public subnet that has its own routing table, the VCN will also configure the DNS Resolver with list of attached Private Views objects, earlier views in the list have higher priority in resolution.
 ```h
 module "network" {
   source = PATH_TO_MODULE
 
-  compartment_id        = "ocixxxxxx.xxxxxx.xxxxx"
-  name                  = "vcn"
-  cidr_block            = "192.168.0.0/20"
+  compartment_id            = "ocixxxxxx.xxxxxx.xxxxx"
+  name                      = "vcn"
+  cidr_block                = "192.168.0.0/20"
+  dns_private_views         = [
+    {
+      view_id  = "ocid1.dnsview.oc1..."
+    },
+    {
+      view_id  = "ocid1.dnsview.oc1..."
+    }
+  ]
 
   private_subnets = {
     "private-a" = {
@@ -182,4 +196,19 @@ module "network" {
     }
   }
 }
+```
+
+VCN without any subnet and IPv6 enabled:
+```h
+source = PATH_TO_MODULE
+
+  compartment_id        = "ocixxxxxx.xxxxxx.xxxxx"
+  name                  = "vcn-no-subnet"
+  cidr_block            = "192.168.0.0/16"
+  ipv6 = {
+    enabled        = true
+    oci_allocation = true
+  }
+  private_subnets       = {}
+  public_subnets        = {}
 ```

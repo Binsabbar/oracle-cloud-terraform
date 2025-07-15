@@ -1,4 +1,150 @@
 # v2.13.0:
+## **New**
+* Introduce `network-firewall` module to manage network firewalls and network firewall policies.
+* Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
+* Update `instance` module to accept ipv6 assignment on instances.
+* `instances`: Add support for ipv6 via optional `ipv6` Boolean.
+* `instances.secondery_vnics`: Add support for ipv6 via optional `ipv6` Boolean.
+* `network`: Add support for IPv6 via optional `ipv6` variable. 
+  * Add new variables for IPv6 configuration:
+    * `ipv6.enabled`
+    * `ipv6.oci_allocation`
+    * `ipv6.cidr_block`
+* `object-storage` 
+  * Support bucket replication.
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+* `identity` Change compartment policies property from list of string statements to accept a map of list of string statements representing policy. This allows to split statements into multiple policies for each compartment.
+
+from:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = [
+        "allow group xxx to manage virtual-network-family in compartment compartment-a",
+      ]
+    }
+  }
+}
+```
+to:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = {
+        "policy-a" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
+    }
+  }
+}
+```
+
+# v2.12.0:
+## **New**
+* `instances`: Add option to enable/disable cloud agent plugins.
+  * new `agent_plugins` setting
+* `network`: Configure VCN DNS Resolver with attaching Private custom list of object of views, earlier views in the list have higher priority in resolution.
+  * new `dns_private_views` setting
+* `dns-management`: support to create custom dns views and edit existing protected views
+
+
+## **Fix**
+None
+
+## _**Breaking Changes**_
+* `dns-management` Add support to create private custom view or edit existing protected views, also module input is changed completely it now requires two objects `protected_views` or `custom_views` under each map of object of views, under each you define map of object of zones and under each zone you define map of object of records.
+* *WARNING*: This change will destroy and recreate all the DNS resources and will cause connection issue untill new resources created.
+
+from:
+```h
+module "dns" {
+  ...
+  compartment_id = "ocid1.compartment.oc1..example1"
+  view_id        = "ocid1.dnsview.oc1..example1"
+  zones          = {
+    // ZONE 1
+    "test" = {
+      name = "test.com"
+    }
+    // ZONE 2
+    "test-2" = {
+      name = "test-2.com"
+    }
+  }
+  
+  records       = {
+    // RECORD 1
+    "test" = {
+      domain_name = "*.test.com"
+      rtype       = "A"
+      zone_name   = "test.com"
+      rdata       = "xxx.xxx.xxx.xxx"
+      ttl         = 300
+    }
+    // RECORD 2
+    "test-2" = {
+      domain_name = "something.test-2.com"
+      rtype       = "A"
+      zone_name   = "test-2.com"
+      rdata       = "xxx.xxx.xxx.xxx"
+      ttl         = 300
+    }
+  }
+}
+```
+to:
+```h
+module "dns" {
+  ...
+  private_dns = {
+    protected_views = {
+      "stage_protected_views" = {
+        view_id        = "ocid1.dnsview.oc1..example1"
+        compartment_id = "ocid1.compartment.oc1..example1"
+        zones = {
+          "test-com" = {
+            zone_name = "test.com"
+            records = {
+              "test" = {
+                domain_name = "*.test.com"
+                rdata      = "xxx.xxx.xxx.xxx"
+                # rtype and ttl will use defaults (A and 300)
+              }
+            }
+          }
+          "test-2-com" = {
+            zone_name = "test-2.com"
+            records = {
+              "test-2" = {
+                domain_name = "something.test-2.com"
+                rdata      = "xxx.xxx.xxx.xxx"
+              }
+            }
+          }
+        }
+      }
+    }
+    custom_views = {}
+  }
+}
+```
+
+# v2.13.0:
 
 ## **Fix**
 * `identity`: Changed the data type of `tenancy_policies.policies` from set(string) to list(string) to preserve the order of policies.

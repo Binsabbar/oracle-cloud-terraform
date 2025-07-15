@@ -19,6 +19,11 @@ variable "buckets" {
     # The followings are the keys for the optionals with defaults in brackets
     # object_events_enabled = bool - false
     # versioning_enabled    = bool - false
+    # replication_policy = object({
+    #   name                    = string
+    #   destination_region      = string
+    #   destination_bucket_name = string
+    # })
   }))
 
   description = <<EOL

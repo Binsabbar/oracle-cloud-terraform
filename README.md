@@ -113,6 +113,8 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 |         [security-list](modules/security-list/README.md)         | Creates network security lists                                                                                          |
 |                   [waf](modules/waf/README.md)                   | Creates a WAF.                                                                                                          |
 |                   [dns](modules/dns-management/README.md)        | Creates a DNS management system.                                                                                        |
+|                   [network-firewall](modules/network-firewall/README.md)        | Creates network firewalls and network firewall policies.                                                                                        |
+|                   [dynamic-routing-gateway](modules/dynamic-routing-gateway/README.md)        | Creates a dynamic routing gateway (DRG) and DRG attachments.                                                                                        |
 
 # Releases
 
@@ -152,5 +154,11 @@ Thanks to the following folks for providing suggestions and improvments to this 
 * Abeer Alotaibi [octopus20](https://github.com/octopus20) (network-load-balancer module)
 * Grzegorz M [grzesjam](https://github.com/grzesjam) (v1.0 public-ip module)
 * Mateusz Kozakiewicz [mateuszkozakiewicz](https://github.com/mateuszkozakiewicz) (v1.0 public-ip module)
-* Abdullah Bin Rasheed [Twirlyz](https://github.com/Twirlyz) (dns module)
+* Abdullah Bin Rasheed [Twirlyz](https://github.com/Twirlyz) (dns/network/dynamic-routing-gateway modules)
 * Remaz Altuwaim [remaz2250](https://github.com/remaz2250) (v2.8.0 and v2.10.0 instance/network-sg module)
+* Dawid Rogowicz [dawidrogowicz](https://github.com/dawidrogowicz/) (v2.12.0 instance)
+* Mohamed Essam [mohamed-esam](https://github.com/mohamed-esam) (v2.12.0 dns-management)
+* Mohamed Essam [mohamed-esam](https://github.com/mohamed-esam) (v2.12.0 network)
+* Bashayr Altanam [BYAT](https://github.com/BYAT) (v2.13.0 object-storage/network/dynamic-routing-gateway modules)
+* Ahmed Fathy [masbirooo](https://github.com/masbirooo) (v2.13.0 network module)
+* Ahmed Fathy [masbirooo](https://github.com/masbirooo) (v2.13.0 instance module)

@@ -45,6 +45,7 @@ resource "oci_core_instance" "instances" {
   display_name         = each.value.name
   preserve_boot_volume = lookup(each.value.optionals, "preserve_boot_volume", true)
   state                = each.value.state
+  defined_tags         = lookup(each.value, "defined_tags ", null)
   metadata = {
     ssh_authorized_keys = each.value.autherized_keys
     user_data           = lookup(each.value.optionals, "user_data", null)
@@ -78,6 +79,7 @@ resource "oci_core_instance" "instances" {
     skip_source_dest_check    = lookup(each.value.optionals, "skip_source_dest_check", false)
     assign_private_dns_record = true
     private_ip                = each.value.config.primary_vnic.primary_ip
+    assign_ipv6ip             = each.value.ipv6
   }
 
   dynamic "source_details" {
@@ -94,6 +96,21 @@ resource "oci_core_instance" "instances" {
       source_type             = "image"
       source_id               = each.value.config.image_id
       boot_volume_size_in_gbs = each.value.volume_size
+    }
+  }
+
+  agent_config {
+    are_all_plugins_disabled = false
+    is_management_disabled   = false
+    is_monitoring_disabled   = false
+
+    dynamic "plugins_config" {
+      for_each = each.value.agent_plugins
+
+      content {
+        desired_state = plugins_config.value.is_enabled ? "ENABLED" : "DISABLED"
+        name          = plugins_config.value.name
+      }
     }
   }
 }
@@ -125,6 +142,7 @@ resource "oci_core_vnic_attachment" "secondary_vnic_attachment" {
     subnet_id                 = each.value.vnic.subnet_id
     hostname_label            = each.value.vnic.hostname_label
     skip_source_dest_check    = each.value.vnic.skip_source_dest_check
+    assign_ipv6ip             = lookup(each.value.vnic, "ipv6", false)
   }
 
   instance_id = oci_core_instance.instances[each.value.instance_key].id
