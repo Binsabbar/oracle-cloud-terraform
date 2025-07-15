@@ -14,7 +14,7 @@
   * Support bucket replication.
 
 ## **Fix**
-None
+* `identity`: Changed the data type of `tenancy_policies.policies` from set(string) to list(string) to preserve the order of policies.
 
 ## _**Breaking Changes**_
 * `identity` Change compartment policies property from list of string statements to accept a map of list of string statements representing policy. This allows to split statements into multiple policies for each compartment.
