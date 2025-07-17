@@ -12,6 +12,8 @@
     * `ipv6.cidr_block`
 * `object-storage` 
   * Support bucket replication.
+* `Bastion`
+  * introduce Bastion
 
 ## **Fix**
 * `identity`: Changed the data type of `tenancy_policies.policies` from set(string) to list(string) to preserve the order of policies.
