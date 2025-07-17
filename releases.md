@@ -9,6 +9,9 @@
     * `ipv6.cidr_block`
 * `object-storage` 
   * Support bucket replication.
+* `Bastion`
+  * introduce Bastion module the simplify access to Compute instances and OKE nodes.
+
 
 ## **Fix**
 None
