@@ -7,7 +7,7 @@ resource "oci_core_public_ip" "ip" {
 
   lifecycle {
     # it is going to be assigned after creation so lets ignore its change
-    ignore_changes = [private_ip_id, defined_tags]
+    ignore_changes = [private_ip_id, freeform_tags]
   }
 }
 
