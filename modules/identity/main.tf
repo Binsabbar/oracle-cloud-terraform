@@ -28,7 +28,7 @@ resource "oci_identity_compartment" "compartments" {
   name           = each.key
   description    = "${each.key} compartment"
   compartment_id = each.value.root_compartment
-  freeform_tags = {
+  defined_tags = {
     "type"      = "identity"
     "managedby" = "terraform"
   }
@@ -43,7 +43,7 @@ resource "oci_identity_group" "groups" {
   description    = each.key
   name           = each.key
 
-  freeform_tags = {
+  defined_tags = {
     "type"      = "identity groups"
     "managedby" = "terraform"
   }
@@ -58,7 +58,7 @@ resource "oci_identity_user" "users" {
   name           = each.key
   email          = each.key
 
-  freeform_tags = {
+  defined_tags = {
     "type"      = "identity users"
     "managedby" = "terraform"
   }

@@ -118,7 +118,7 @@ module "dns" {
     * `var.network_security_groups.*.*.nsg_ids`
     * `var.network_security_groups.*.*.service_cidrs`
   * They are optional based on the type, if type is not set, then `var.network_security_groups.*.*.ips` becomes mandatory.
-* `kubernetes`: Ability to add user defined tags for OKE nodes by using the optional variable `node_pools.*.freeform_tags`
+* `kubernetes`: Ability to add user defined tags for OKE nodes by using the optional variable `node_pools.*.defined_tags`
 
 ## **Fix**
 * `instances`: Ignore changes made to `metadata.user_data` in any instance, since changing the value will destroy and recreate the instance. 

@@ -20,7 +20,7 @@ resource "oci_file_storage_mount_target" "mount_target" {
   hostname_label      = var.mount_target.hostname_label
   nsg_ids             = var.mount_target.nsg_ids
 
-  freeform_tags = { "managedBy" = "Terraform" }
+  defined_tags = { "managedBy" = "Terraform" }
 }
 
 resource "oci_file_storage_export_set" "export_set" {
@@ -34,7 +34,7 @@ resource "oci_file_storage_file_system" "file_system" {
   availability_domain = each.value.availability_domain
   compartment_id      = each.value.compartment_id
 
-  freeform_tags = { "managedBy" = "Terraform" }
+  defined_tags = { "managedBy" = "Terraform" }
 }
 
 resource "oci_file_storage_export" "export" {
