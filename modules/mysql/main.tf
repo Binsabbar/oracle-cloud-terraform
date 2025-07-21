@@ -44,5 +44,4 @@ resource "oci_mysql_mysql_db_system" "mysql_db_system" {
     window_start_time = lookup(each.value.optionals, "maintenance_window_start_time", "sat 22:00")
   }
 
-  freeform_tags = { "managedby" = "terraform" }
-}
+    freeform_tags     = { "managedby" = "terraform" }}
