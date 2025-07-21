@@ -45,7 +45,7 @@ resource "oci_core_instance" "instances" {
   display_name         = each.value.name
   preserve_boot_volume = lookup(each.value.optionals, "preserve_boot_volume", true)
   state                = each.value.state
-  defined_tags         = lookup(each.value, "defined_tags ", null)
+  freeform_tags        = lookup(each.value, "freeform_tags ", null)
   metadata = {
     ssh_authorized_keys = each.value.autherized_keys
     user_data           = lookup(each.value.optionals, "user_data", null)
