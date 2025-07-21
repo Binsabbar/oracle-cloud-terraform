@@ -31,7 +31,7 @@ resource "oci_mysql_mysql_db_system" "mysql_db_system" {
     is_enabled        = each.value.enable_backup
     retention_in_days = lookup(each.value.optionals, "retention_in_days", 30)
     window_start_time = lookup(each.value.optionals, "backup_window_start_time", "00:00")
-    freeform_tags      = { "managedby" = "terraform" }
+    freeform_tags     = { "managedby" = "terraform" }
   }
 
   data_storage_size_in_gb = lookup(each.value.optionals, "size_in_gb", 100)
@@ -44,4 +44,5 @@ resource "oci_mysql_mysql_db_system" "mysql_db_system" {
     window_start_time = lookup(each.value.optionals, "maintenance_window_start_time", "sat 22:00")
   }
 
-    freeform_tags     = { "managedby" = "terraform" }}
+    freeform_tags     = { "managedby" = "terraform" }
+}
