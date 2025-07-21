@@ -30,8 +30,8 @@ resource "oci_mysql_mysql_db_system" "mysql_db_system" {
   backup_policy {
     is_enabled        = each.value.enable_backup
     retention_in_days = lookup(each.value.optionals, "retention_in_days", 30)
-    defined_tags      = lookup(each.value.optionals, "backup_window_start_time", "00:00")
-    defined_tags     = { "managedby" = "terraform" }
+    window_start_time = lookup(each.value.optionals, "backup_window_start_time", "00:00")
+    freeform_tags     = { "managedby" = "terraform" }
   }
 
   data_storage_size_in_gb = lookup(each.value.optionals, "size_in_gb", 100)
