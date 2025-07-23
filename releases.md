@@ -11,6 +11,7 @@
     * `ipv6.cidr_block`
 * `object-storage` 
   * Support bucket replication.
+* Update `volumes` module to accept device assignment.
 
 ## **Fix**
 None
