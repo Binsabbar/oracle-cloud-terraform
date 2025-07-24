@@ -68,6 +68,7 @@ variable "volumes" {
       # is_pv_encryption_in_transit_enabled = bool
       # encryption_in_transit_type = string
       # use_chap = bool
+      # device = string
     }))
     optionals = map(string)
     # kms_id = string
@@ -84,10 +85,10 @@ variable "volumes" {
     condition = alltrue(flatten([
       for k, v in var.volumes : [
         for i_k, i_v in v.instances_attachment : [
-        for option in keys(i_v.optionals) : contains(["type", "is_read_only", "is_pv_encryption_in_transit_enabled", "encryption_in_transit_type", "use_chap"], option)]
+        for option in keys(i_v.optionals) : contains(["type", "is_read_only", "is_pv_encryption_in_transit_enabled", "encryption_in_transit_type", "use_chap", "device"], option)]
       ]
     ]))
-    error_message = "The volumes.*.instnaces_attachment.*.optionals accepts \"type\", \"is_read_only\", \"is_pv_encryption_in_transit_enabled\", \"encryption_in_transit_type\", \"use_chap\"."
+    error_message = "The volumes.*.instnaces_attachment.*.optionals accepts \"type\", \"is_read_only\", \"is_pv_encryption_in_transit_enabled\", \"encryption_in_transit_type\", \"use_chap\", \"device\"."
   }
 
   validation {
@@ -121,6 +122,7 @@ variable "volumes" {
         is_pv_encryption_in_transit_enabled (Default: `false`) 
         encryption_in_transit_type          (default: `NONE`)
         use_chap                            (Default: `false`)
+        device                              (Default: `NONE`)
     optionals : map of optional values for volumes configuration (leave empty to use default value {})
       kms_id      (Default: '')
       auto_tuned  (Default: `true`)

@@ -15,6 +15,7 @@
   * Support bucket replication.
 * `Bastion`
   * introduce Bastion
+* Update `volumes` module to accept device assignment.
 
 ## **Fix**
 * `identity`: Changed the data type of `tenancy_policies.policies` from set(string) to list(string) to preserve the order of policies.
