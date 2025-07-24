@@ -24,6 +24,10 @@ Leave `flex_shape_config` empty `{}` if it is not needed.
 # Assign Public IP to an instnace
 To attach public IP to any private IP created in this module, you have to do that in `public_ip` module. Refer to `public_ip` module for how to attach private IP to public IP. Using this module output, you can get the private ip OCID and use it in `public_ip` module.
 
+# Assign IPv6 to an instnace's primary and secondery VNICs
+To attach ipv6 to the instance, you have to enable `ipv6` for the instance, it will automatically assign an IP exported from the subnet's Prefix.
+
+
 # Booting from an existing Boot Volume 
 It is possible to boot a new instance from an existing boot volume using the `optionals` key in the `instances` map. If not set, a new boot volume will be created from scratch and used. In order to boot from an existing bootVolume set
 `instances[*].optionals.boot_volume_id` and `instances[*].optionals.boot_source_type = "bootVolume`.
@@ -95,6 +99,7 @@ locals {
       volume_size              = 500
       autherized_keys          = "ssh xxxxxxxxxxxxxxxxxxxxxx"
       state                    = "RUNNING"
+      ipv6                     = true
       config = {
         shape    = "ocixxxxxx.xxxxxx.xxxxx"
         flex_shape_config = {}
@@ -124,6 +129,7 @@ locals {
           nsg_ids    = []
           skip_source_dest_check = true
           hostname_label         = "vnic_2"
+          ipv6      = true
           secondary_ips = {
             "floating_ip" = {
               name       = "Floating IP in Network A"

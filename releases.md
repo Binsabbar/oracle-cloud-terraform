@@ -3,7 +3,9 @@
 * Introduce `network-firewall` module to manage network firewalls and network firewall policies.
 * Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
 * Update `instance` module to accept ipv6 assignment on instances.
+* Update `instance` module to accept freeform-tags assignment on instances.
 * `instances`: Add support for ipv6 via optional `ipv6` Boolean.
+* `instances.secondery_vnics`: Add support for ipv6 via optional `ipv6` Boolean.
 * `network`: Add support for IPv6 via optional `ipv6` variable. 
   * Add new variables for IPv6 configuration:
     * `ipv6.enabled`
@@ -11,13 +13,51 @@
     * `ipv6.cidr_block`
 * `object-storage` 
   * Support bucket replication.
+* `Bastion`
+  * introduce Bastion
 * Update `volumes` module to accept device assignment.
 
 ## **Fix**
-None
+* `identity`: Changed the data type of `tenancy_policies.policies` from set(string) to list(string) to preserve the order of policies.
 
 ## _**Breaking Changes**_
-None
+* `identity` Change compartment policies property from list of string statements to accept a map of list of string statements representing policy. This allows to split statements into multiple policies for each compartment.
+
+from:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = [
+        "allow group xxx to manage virtual-network-family in compartment compartment-a",
+      ]
+    }
+  }
+}
+```
+to:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = {
+        "policy-a" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
+    }
+  }
+}
+```
+
 # v2.12.0:
 ## **New**
 * `instances`: Add option to enable/disable cloud agent plugins.

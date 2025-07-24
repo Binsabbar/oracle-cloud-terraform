@@ -45,6 +45,7 @@ resource "oci_core_instance" "instances" {
   display_name         = each.value.name
   preserve_boot_volume = lookup(each.value.optionals, "preserve_boot_volume", true)
   state                = each.value.state
+  freeform_tags        = lookup(each.value, "freeform_tags ", null)
   metadata = {
     ssh_authorized_keys = each.value.autherized_keys
     user_data           = lookup(each.value.optionals, "user_data", null)
@@ -141,6 +142,7 @@ resource "oci_core_vnic_attachment" "secondary_vnic_attachment" {
     subnet_id                 = each.value.vnic.subnet_id
     hostname_label            = each.value.vnic.hostname_label
     skip_source_dest_check    = each.value.vnic.skip_source_dest_check
+    assign_ipv6ip             = lookup(each.value.vnic, "ipv6", false)
   }
 
   instance_id = oci_core_instance.instances[each.value.instance_key].id
