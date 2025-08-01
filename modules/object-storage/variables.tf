@@ -15,15 +15,15 @@ variable "buckets" {
       time               = string
       time_unit          = string
     }))
-    optionals = map(any)
-    # The followings are the keys for the optionals with defaults in brackets
-    # object_events_enabled = bool - false
-    # versioning_enabled    = bool - false
-    # replication_policy = object({
-    #   name                    = string
-    #   destination_region      = string
-    #   destination_bucket_name = string
-    # })
+    optionals = optional(object({
+      object_events_enabled = optional(bool)
+      versioning_enabled    = optional(string)
+      replication_policy = optional(object({
+        destination_region_name = string
+        source_region_name      = string
+        destination_bucket_name = optional(string)
+      }))
+    }))
   }))
 
   description = <<EOL
@@ -37,3 +37,5 @@ variable "buckets" {
       # versioning_enabled   : enable version of objects
   EOL
 }
+
+variable "region" { type = string }
