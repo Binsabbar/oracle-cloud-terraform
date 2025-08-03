@@ -84,13 +84,13 @@ variable "service_accounts" {
 variable "tenancy_policies" {
   type = object({
     name     = string
-    policies = list(string)
+    policies = set(string)
   })
   default     = null
   description = <<EOF
     Some policies belong to the tenancy and not to a compartment.
     Pass in a single object that contains the name of policy and list of policies
       name: name for the policy
-      policies: ordered list of string of policies to be attached to the tenancy
+      policies: list of string of policies to be attached to the tenancy
   EOF
 }
