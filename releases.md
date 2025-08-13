@@ -9,12 +9,19 @@
   * Add Remote Peering Connections (RPC) option
 * `object-storage` 
   * Support bucket replication.
+* `kubernetes`
+  * Add new variables for IPv6 configuration:
+    * `option.ip_families`
+    * `pods_cidr` and services_cidr variables; these are applied only if set.
 
 ## **Fix**
 None
 
 ## _**Breaking Changes**_
-None
+* `kubernetes`
+  * Cluster recreation: Changing `ip_families` on an existing cluster will force replacement.
+  * Kubernetes version must be ≥1.29.
+
 # v2.12.0:
 ## **New**
 * `instances`: Add option to enable/disable cloud agent plugins.

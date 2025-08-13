@@ -25,6 +25,19 @@ variable "lb_subnet_ids" {
   type        = list(string)
   description = "The Subnet IDs where svc of type LoadBalancers will have their LBs created"
 }
+variable "ip_families" {
+  type    = list(string)
+  default = ["IPv4"]
+  description = "IP family for the cluster, can be IPv4 or DualStack"
+} 
+variable "pods_cidr" {
+  type        = string
+  description = "CIDR for pods network"
+}
+variable "services_cidr" {
+  type        = string
+  description = "CIDR for services network"
+}
 
 variable "endpoint_config" {
   type = object({
