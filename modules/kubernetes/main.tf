@@ -25,10 +25,13 @@ resource "oci_containerengine_cluster" "cluster" {
     }
     service_lb_subnet_ids = var.lb_subnet_ids
     ip_families = var.ip_families
-    kubernetes_network_config {
-      pods_cidr     = var.pods_cidr
-      services_cidr = var.services_cidr
-    }    
+    dynamic "kubernetes_network_config" {
+      for_each = var.kubernetes_network_config
+      content {
+        pods_cidr     = kubernetes_network_config.pods_cidr
+        services_cidr = kubernetes_network_config.services_cidr
+      }
+    }
   }
 
   lifecycle {
