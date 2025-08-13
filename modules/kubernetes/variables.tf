@@ -38,6 +38,13 @@ variable "services_cidr" {
   type        = string
   description = "CIDR for services network"
 }
+variable "kubernetes_network_config" {
+  type = object({
+    pods_cidr     = optional(string)
+    services_cidr = optional(string)
+  })
+  default = null
+}
 
 variable "endpoint_config" {
   type = object({

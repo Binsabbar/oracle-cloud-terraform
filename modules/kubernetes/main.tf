@@ -26,10 +26,10 @@ resource "oci_containerengine_cluster" "cluster" {
     service_lb_subnet_ids = var.lb_subnet_ids
     ip_families = var.ip_families
     dynamic "kubernetes_network_config" {
-      for_each = (var.pods_cidr != null || var.services_cidr != null) ? [1] : []
+      for_each = var.kubernetes_network_config == null ? [] : [var.kubernetes_network_config]
       content {
-        pods_cidr     = var.pods_cidr
-        services_cidr = var.services_cidr
+        pods_cidr     = try(kubernetes_network_config.value.pods_cidr, null)
+        services_cidr = try(kubernetes_network_config.value.services_cidr, null)
       }
     }
   }
