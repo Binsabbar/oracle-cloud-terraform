@@ -15,8 +15,20 @@
   * Support bucket replication.
 * `Bastion`
   * introduce Bastion
+* `kubernetes`
+  * Added new variables to configure the cluster’s IP family, enabling single-stack IPv4, single-stack IPv6, or dual-stack (IPv4 + IPv6) networking.
+    * `ip_families`
+  * Add new variables that allow network CIDRs customiztion
+    * `kubernetes_network_config.pods_cidr`
+    * `kubernetes_network_config.services_cidr`
+
+## **Fix**
+None
 
 ## _**Breaking Changes**_
+* `kubernetes`
+  * Cluster recreation: Changing `ip_families` on an existing cluster will force replacement.
+  * Kubernetes version must be ≥1.29 
 * `identity` Change compartment policies property from list of string statements to accept a map of list of string statements representing policy. This allows to split statements into multiple policies for each compartment.
 
 from:
