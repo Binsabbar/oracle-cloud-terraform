@@ -30,14 +30,6 @@ variable "ip_families" {
   default = ["IPv4"]
   description = "IP family for the cluster, can be IPv4 or DualStack"
 } 
-variable "pods_cidr" {
-  type        = string
-  description = "CIDR for pods network"
-}
-variable "services_cidr" {
-  type        = string
-  description = "CIDR for services network"
-}
 variable "kubernetes_network_config" {
   type = object({
     pods_cidr     = optional(string)
