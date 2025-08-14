@@ -11,8 +11,8 @@
   * Support bucket replication.
 * `kubernetes`
   * Add new variables for IPv6 configuration:
-    * `option.ip_families`
-    * `pods_cidr` and services_cidr variables; these are applied only if set.
+    * `options.ip_families`
+    * `options.kubernetes_network_config`
 
 ## **Fix**
 None
