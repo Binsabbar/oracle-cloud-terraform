@@ -62,6 +62,7 @@ variable "instances" {
     compartment_id           = string
     volume_size              = number
     state                    = string
+    freeform_tags            = map(string)
     autherized_keys          = string
     config = object({
       shape             = string
