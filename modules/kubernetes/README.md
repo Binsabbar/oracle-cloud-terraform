@@ -25,6 +25,14 @@ module "kubernetes" {
   compartment_id              = "ocixxxxxx.xxxxxx.xxxxx"
   cluster_name                = "kubernetes"
   enable_kubernetes_dashboard = false
+  is_tiller_enabled           = false
+  lb_subnet_ids               = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
+  cluster_k8s_version         = "v1.18.10"
+  ip_families                 = ["IPv4", "IPv6"]
+  kubernetes_network_config   = {
+    pods_cidr     = "10.244.0.0/16, fd00:eeee:eeee::/96"
+    services_cidr = "10.96.0.0/16, fd00:eeee:ffff::/112"
+  }
   lb_subnet_ids               = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
   cluster_k8s_version         = "v1.18.10"
   endpoint_config             = {

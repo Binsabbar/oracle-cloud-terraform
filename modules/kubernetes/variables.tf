@@ -26,6 +26,19 @@ variable "lb_subnet_ids" {
   description = "The Subnet IDs where svc of type LoadBalancers will have their LBs created"
 }
 
+variable "ip_families" {
+  type    = list(string)
+  default = ["IPv4"]
+  description = "IP family for the cluster, can be IPv4 or IPv6 or dual-stack"
+} 
+variable "kubernetes_network_config" {
+  type = object({
+    pods_cidr     = optional(string)
+    services_cidr = optional(string)
+  })
+  default = null
+}
+
 variable "endpoint_config" {
   type = object({
     is_public_ip_enabled = bool
