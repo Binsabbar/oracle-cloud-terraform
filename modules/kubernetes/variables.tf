@@ -32,8 +32,8 @@ variable "ip_families" {
 } 
 variable "kubernetes_network_config" {
   type = object({
-    pods_cidr     = optional(string, null)
-    services_cidr = optional(string, null)
+    pods_cidr     = optional(string)
+    services_cidr = optional(string)
   })
   default = null
 }
