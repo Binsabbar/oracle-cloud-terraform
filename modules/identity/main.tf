@@ -30,6 +30,8 @@ locals {
   service_accounts_groups = [for key, sa in var.service_accounts : oci_identity_group.service_accounts_groups[sa.name]]
 
   depends_on = concat(local.groups, local.service_accounts_groups)
+
+  tag_namespace_id = var.create_tag_namespace ? oci_identity_tag_namespace.tag_namespace[0].id : null
 }
 
 resource "oci_identity_compartment" "compartments" {
@@ -151,4 +153,20 @@ resource "oci_identity_idp_group_mapping" "idp_group_mapping" {
   group_id             = each.value.oci_group_id
   identity_provider_id = each.value.idp_ocid
   idp_group_name       = each.value.idp_group_name
+}
+
+resource "oci_identity_tag_namespace" "tag_namespace" {
+  count          = var.create_tag_namespace ? 1 : 0
+  compartment_id = var.tenant_id
+  name           = var.tag_namespace.name
+  description    = var.tag_namespace.description
+  is_retired     = false
+}
+
+resource "oci_identity_tag" "tags" {
+  for_each         = var.tag_keys
+  tag_namespace_id = local.tag_namespace_id
+  name             = each.key
+  description      = each.value.description
+  is_cost_tracking = each.value.is_cost_tracking
 }
