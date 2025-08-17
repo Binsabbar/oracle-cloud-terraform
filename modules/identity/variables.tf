@@ -94,3 +94,24 @@ variable "tenancy_policies" {
       policies: list of string of policies to be attached to the tenancy
   EOF
 }
+
+variable "create_tag_namespace" {
+  type    = bool
+  default = false
+}
+
+variable "tag_namespace" {
+  type = object({
+    id          = optional(string)
+    name        = optional(string, "")
+    description = optional(string, "")
+  })
+}
+
+variable "tag_keys" {
+  description = "Defined tags to create in the namespace"
+  type = map(object({
+    description      = optional(string, "")
+    is_cost_tracking = optional(bool, false)
+  }))
+}
