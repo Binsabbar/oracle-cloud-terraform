@@ -152,3 +152,20 @@ resource "oci_identity_idp_group_mapping" "idp_group_mapping" {
   identity_provider_id = each.value.idp_ocid
   idp_group_name       = each.value.idp_group_name
 }
+
+# Cost-tracking tags
+resource "oci_identity_tag_namespace" "tag_namespace" {
+  for_each       = var.tags == null ? {} : { ns = var.tags }
+  compartment_id = var.tenant_id
+  name           = var.tags.name
+  description    = var.tags.description
+  is_retired     = false
+}
+
+resource "oci_identity_tag" "tags" {
+  for_each         = var.tags.keys
+  tag_namespace_id = oci_identity_tag_namespace.tag_namespace.id
+  name             = each.key
+  description      = each.value.description
+  is_cost_tracking = each.value.is_cost_tracking
+}
