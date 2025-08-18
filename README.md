@@ -99,7 +99,7 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 |         [common-config](modules/common-config/README.md)         | Contains common configuration that can be used between other modules, such as IDs for computing shape, os versions, etc |
 |                 [vault](modules/vault/README.md)                 | Create Vault and manages keys                                                                                           |
 |   [file-storage-systme](modules/file-storage-system/README.md)   | Create a file storage system with exports, export paths and mount targets in a given VCN                                |
-|              [identity](modules/identity/README.md)              | IAM management, compartment and policies for creating users, groups, compartments, and policies                         |
+|              [identity](modules/identity/README.md)              | IAM management, compartment and policies for creating users, groups, compartments, cost-tracking tags and policies                        |
 |             [instances](modules/instances/README.md)             | Create compute instances and attach a network security group id in a given subnets and VCN                              |
 |               [volumes](modules/volumes/README.md)               | Create Volumes, Backup Policy and manages volumes attachments                                                           |
 |            [kuberentes](modules/kubernetes/README.md)            | Creates k8s cluster and node pools in the given VCN                                                                     |
@@ -161,3 +161,4 @@ Thanks to the following folks for providing suggestions and improvments to this 
 * Mohamed Essam [mohamed-esam](https://github.com/mohamed-esam) (v2.12.0 network)
 * Bashayr Altanam [BYAT](https://github.com/BYAT) (v2.13.0 object-storage/network/dynamic-routing-gateway modules)
 * Ahmed Fathi [masbirooo](https://github.com/masbirooo) (v2.13.0 network/instance/bastion modules)
+* Fares Alduhailan [faresdu](https://github.com/faresdu) (v2.13.0 cost tracking tags module)
