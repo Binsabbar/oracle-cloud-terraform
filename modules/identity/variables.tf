@@ -95,23 +95,14 @@ variable "tenancy_policies" {
   EOF
 }
 
-variable "create_tag_namespace" {
-  type    = bool
-  default = false
-}
-
-variable "tag_namespace" {
+variable "tags" {
   type = object({
-    id          = optional(string)
-    name        = optional(string, "")
+    name        = string
     description = optional(string, "")
+    keys = map(object({
+      description      = optional(string, "")
+      is_cost_tracking = optional(bool, false)
+    }))
   })
-}
-
-variable "tag_keys" {
-  description = "Defined tags to create in the namespace"
-  type = map(object({
-    description      = optional(string, "")
-    is_cost_tracking = optional(bool, false)
-  }))
+  default = null
 }

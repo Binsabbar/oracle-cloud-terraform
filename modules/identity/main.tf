@@ -157,16 +157,16 @@ resource "oci_identity_idp_group_mapping" "idp_group_mapping" {
 
 # Cost-tracking tags
 resource "oci_identity_tag_namespace" "tag_namespace" {
-  count          = var.create_tag_namespace ? 1 : 0
+  for_each       = var.tags == null ? {} : { ns = var.tags }
   compartment_id = var.tenant_id
-  name           = var.tag_namespace.name
-  description    = var.tag_namespace.description
+  name           = var.tags.name
+  description    = var.tags.description
   is_retired     = false
 }
 
 resource "oci_identity_tag" "tags" {
-  for_each         = var.tag_keys
-  tag_namespace_id = local.tag_namespace_id
+  for_each         = var.tags.keys
+  tag_namespace_id = oci_identity_tag_namespace.tag_namespace.id
   name             = each.key
   description      = each.value.description
   is_cost_tracking = each.value.is_cost_tracking
