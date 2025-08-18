@@ -94,3 +94,15 @@ variable "tenancy_policies" {
       policies: list of string of policies to be attached to the tenancy
   EOF
 }
+
+variable "tags" {
+  type = object({
+    name        = string
+    description = optional(string, "")
+    keys = map(object({
+      description      = optional(string, "")
+      is_cost_tracking = optional(bool, false)
+    }))
+  })
+  default = null
+}
