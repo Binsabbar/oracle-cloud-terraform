@@ -164,7 +164,7 @@ resource "oci_identity_tag_namespace" "tag_namespace" {
 
 resource "oci_identity_tag" "tags" {
   for_each         = var.tags.keys
-  tag_namespace_id = oci_identity_tag_namespace.tag_namespace.id
+  tag_namespace_id = oci_identity_tag_namespace.tag_namespace[each.key].id
   name             = each.key
   description      = each.value.description
   is_cost_tracking = each.value.is_cost_tracking
