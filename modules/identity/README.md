@@ -374,15 +374,3 @@ Tag keys: create under the resolved namespace from tag_keys map; each key suppor
 - is_cost_tracking (optional, default false)
 
   ### Example usage:
-```h
-create_tag_namespace = true
-tag_namespace = {
-  name        = "finops"
-  description = "Cost & billing metadata"
-}
-tag_keys = {
-  env          = { description = "Environment",        is_cost_tracking = true }
-  cost_product = { description = "Product/Application", is_cost_tracking = true }
-  cost_team    = { description = "Owning team",        is_cost_tracking = true }
-}
-``` 
