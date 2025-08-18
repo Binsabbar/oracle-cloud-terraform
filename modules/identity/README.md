@@ -376,7 +376,7 @@ Tag keys: create under the resolved namespace from tag_keys map; each key suppor
   ```h
   tags = {
     name        = "finops"   Name of the namespace
-    description = "Cost & billing metadata"  Description of the namespace
+    description = "Cost & billing metadata"  Description of the namespace.
     keys = {
       env       = { description = "Environment", is_cost_tracking = true }
       type      = { description = "Application/Tool", is_cost_tracking = true }
