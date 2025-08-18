@@ -31,7 +31,6 @@ locals {
 
   depends_on = concat(local.groups, local.service_accounts_groups)
 
-  tag_namespace_id = var.create_tag_namespace ? oci_identity_tag_namespace.tag_namespace[0].id : null
 }
 
 resource "oci_identity_compartment" "compartments" {
