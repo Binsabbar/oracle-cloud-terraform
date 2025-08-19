@@ -374,13 +374,41 @@ Tag keys: create under the resolved namespace from tag_keys map; each key suppor
 
   ### Example usage:
   ```h
-  tags = {
-    name        = "finops"   Name of the namespace
-    description = "Cost & billing metadata"  Description of the namespace.
-    keys = {
-      env       = { description = "Environment", is_cost_tracking = true }
-      type      = { description = "Application/Tool", is_cost_tracking = true }
-      portfolio = { description = "Product/Portfolio", is_cost_tracking = true }
+  namespaces_tags = {
+    "namespace1" = {
+      description = "Namespace 1 for tags"
+      tags = {
+        tag1 = {
+          description = "Cost & billing metadata"
+          keys = {
+            env1       = { description = "Environment", is_cost_tracking = true }
+            type1      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio1 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+        tag2 = {
+          description = "Cost & billing metadata 2"
+          keys = {
+            env2       = { description = "Environment", is_cost_tracking = true }
+            type2      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio2 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+      }
+    }
+
+    "namespace2" = {
+      description = "Namespace 2 for tags"
+      tags = {
+        tag1 = {
+          description = "Cost & billing metadata 3"
+          keys = {
+            env3       = { description = "Environment", is_cost_tracking = true }
+            type3      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio3 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+      }
     }
   }
   ```
