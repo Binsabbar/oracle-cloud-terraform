@@ -158,7 +158,7 @@ resource "oci_identity_tag_namespace" "tag_namespace" {
   for_each       = var.namespaces_tags
   compartment_id = var.tenant_id
   name           = each.key
-  description    = each.description
+  description    = each.value.description
   is_retired     = false
 }
 

@@ -96,17 +96,15 @@ variable "tenancy_policies" {
 }
 
 variable "namespaces_tags" {
-  description = string
-  type = map( 
-    map(      
-      object({
-        description = optional(string, "")
-        keys = map(object({
-          description      = optional(string, "")
-          is_cost_tracking = optional(bool, false)
-        }))
-      })
-    )
-  )
+  type = map(object({
+    description = optional(string, "")
+    tags = map(object({
+      description = optional(string, "")
+      keys = map(object({
+        description      = optional(string, "")
+        is_cost_tracking = optional(bool, false)
+      }))
+    }))
+  }))
   default = {}
 }
