@@ -175,7 +175,7 @@ resource "oci_identity_tag" "tag" {
     ]) : "${tag.ns_name}.${tag.tag_name}" => tag
   }
 
-  tag_namespace_id = oci_identity_tag_namespace.namespace[each.value.ns_name].id
+  tag_namespace_id = oci_identity_tag_namespace.tag_namespace[each.value.ns_name].id
   name             = each.value.tag_name
   description      = each.value.tag_data.description
   is_cost_tracking = each.value.tag_data.is_cost_tracking
