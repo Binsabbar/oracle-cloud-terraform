@@ -96,9 +96,9 @@ variable "tenancy_policies" {
 }
 
 variable "namespaces_tags" {
-  description = "Namespaces with tags and their keys"
-  type = map(
-    map(
+  description = string
+  type = map( 
+    map(      
       object({
         description = optional(string, "")
         keys = map(object({
