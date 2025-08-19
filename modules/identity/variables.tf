@@ -95,14 +95,18 @@ variable "tenancy_policies" {
   EOF
 }
 
-variable "tags" {
-  type = object({
-    name        = string
-    description = optional(string, "")
-    keys = map(object({
-      description      = optional(string, "")
-      is_cost_tracking = optional(bool, false)
-    }))
-  })
-  default = null
+variable "namespaces_tags" {
+  description = "Namespaces with tags and their keys"
+  type = map(
+    map(
+      object({
+        description = optional(string, "")
+        keys = map(object({
+          description      = optional(string, "")
+          is_cost_tracking = optional(bool, false)
+        }))
+      })
+    )
+  )
+  default = {}
 }

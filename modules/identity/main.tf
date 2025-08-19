@@ -155,16 +155,28 @@ resource "oci_identity_idp_group_mapping" "idp_group_mapping" {
 
 # Cost-tracking tags
 resource "oci_identity_tag_namespace" "tag_namespace" {
+  for_each       = var.namespaces_tags
   compartment_id = var.tenant_id
-  name           = var.tags.name
-  description    = var.tags.description
+  name           = each.key
+  description    = each.value.description
   is_retired     = false
 }
 
-resource "oci_identity_tag" "tags" {
-  for_each         = var.tags.keys
-  tag_namespace_id = oci_identity_tag_namespace.tag_namespace.id
-  name             = each.key
-  description      = each.value.description
-  is_cost_tracking = each.value.is_cost_tracking
+resource "oci_identity_tag" "tag" {
+  for_each = {
+    for idx, tag in flatten([
+      for ns_name, tags in var.namespaces_tags : [
+        for tag_name, tag_data in tags : {
+          ns_name  = ns_name
+          tag_name = tag_name
+          tag_data = tag_data
+        }
+      ]
+    ]) : "${tag.ns_name}.${tag.tag_name}" => tag
+  }
+
+  tag_namespace_id = oci_identity_tag_namespace.namespace[each.value.ns_name].id
+  name             = each.value.tag_name
+  description      = each.value.tag_data.description
+  is_cost_tracking = each.value.tag_data.is_cost_tracking
 }
