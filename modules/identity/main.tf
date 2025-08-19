@@ -166,12 +166,16 @@ resource "oci_identity_tag" "tag" {
   for_each = {
     for pair in flatten([
       for ns_name, ns in var.namespaces_tags : [
-        for tag_name, tag_data in ns.tags : {
-          key       = "${ns_name}.${tag_name}"
-          ns_name   = ns_name
-          tag_name  = tag_name
-          tag_data  = tag_data
-        }
+        for tag_name, tag in ns : (
+          tag_name == "description" ? [] : [
+            for key_name, key_data in tag.keys : {
+              key       = "${ns_name}.${tag_name}.${key_name}"
+              ns_name   = ns_name
+              tag_name  = key_name
+              tag_data  = key_data
+            }
+          ]
+        )
       ]
     ]) : pair.key => pair
   }
@@ -181,4 +185,5 @@ resource "oci_identity_tag" "tag" {
   description      = each.value.tag_data.description
   is_cost_tracking = each.value.tag_data.is_cost_tracking
 }
+
 
