@@ -164,15 +164,13 @@ resource "oci_identity_tag_namespace" "tag_namespace" {
 
 resource "oci_identity_tag" "tag" {
   for_each = {
-    for idx, tag in flatten([
-      for ns_name, tags in var.namespaces_tags : [
-        for tag_name, tag_data in tags : {
-          ns_name  = ns_name
-          tag_name = tag_name
-          tag_data = tag_data
-        }
-      ]
-    ]) : "${tag.ns_name}.${tag.tag_name}" => tag
+    for ns_name, ns in var.namespaces_tags :
+    for tag_name, tag_data in ns.tags :
+    "${ns_name}.${tag_name}" => {
+      ns_name  = ns_name
+      tag_name = tag_name
+      tag_data = tag_data
+    }
   }
 
   tag_namespace_id = oci_identity_tag_namespace.tag_namespace[each.value.ns_name].id
