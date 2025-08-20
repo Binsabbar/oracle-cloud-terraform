@@ -65,6 +65,7 @@ variable "instances" {
     autherized_keys          = string
     ipv6                     = optional(bool, false)
     freeform_tags            = optional(map(string), null)
+    defined_tags             = optional(map(string), null)
     config = object({
       shape             = string
       flex_shape_config = map(string)
