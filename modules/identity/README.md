@@ -363,3 +363,52 @@ module "child_compartments" {
   }
 }
 ```
+
+  ### Creating Cost-tracking Defined tags
+Manage OCI defined tags for FinOps (supports cost-tracking flags).
+Namespace behavior:
+- If tag_namespace doesn't have value (deafult is null) namespace won't be created nor the tags
+Tag keys: create under the resolved namespace from tag_keys map; each key supports:
+- description (optional)
+- is_cost_tracking (optional, default false)
+
+  ### Example usage:
+  ```h
+  namespaces_tags = {
+    "namespace1" = {
+      description = "Namespace 1 for tags"
+      tags = {
+        tag1 = {
+          description = "Cost & billing metadata"
+          keys = {
+            env1       = { description = "Environment", is_cost_tracking = true }
+            type1      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio1 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+        tag2 = {
+          description = "Cost & billing metadata 2"
+          keys = {
+            env2       = { description = "Environment", is_cost_tracking = true }
+            type2      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio2 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+      }
+    }
+
+    "namespace2" = {
+      description = "Namespace 2 for tags"
+      tags = {
+        tag1 = {
+          description = "Cost & billing metadata 3"
+          keys = {
+            env3       = { description = "Environment", is_cost_tracking = true }
+            type3      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio3 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+      }
+    }
+  }
+  ```

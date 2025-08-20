@@ -21,6 +21,7 @@
   * Add new variables that allow network CIDRs customiztion
     * `kubernetes_network_config.pods_cidr`
     * `kubernetes_network_config.services_cidr`
+* Introduce OCI defined tags for FinOps (supports cost-tracking flags).
 
 ## **Fix**
 None
