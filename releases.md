@@ -1,9 +1,8 @@
 # v2.13.0:
 ## **New**
-* Introduce `network-firewall` module to manage network firewalls and network firewall policies.
-* Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
-* Update `instance` module to accept ipv6 assignment on instances.
-* Update `instance` module to accept freeform-tags assignment on instances.
+* `dynamic-routing-gateway`: Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
+* `instance`: Update module to accept ipv6 assignment on instances.
+* `instance`: Update module to accept freeform-tags assignment on instances.
 * `instances`: Add support for ipv6 via optional `ipv6` Boolean.
 * `instances.secondery_vnics`: Add support for ipv6 via optional `ipv6` Boolean.
 * `network`: Add support for IPv6 via optional `ipv6` variable. 
@@ -13,8 +12,7 @@
     * `ipv6.cidr_block`
 * `object-storage` 
   * Support bucket replication.
-* `Bastion`
-  * introduce Bastion
+* `Bastion`: introduce Bastion
 * `kubernetes`
   * Added new variables to configure the cluster’s IP family, enabling single-stack IPv4, single-stack IPv6, or dual-stack (IPv4 + IPv6) networking.
     * `ip_families`

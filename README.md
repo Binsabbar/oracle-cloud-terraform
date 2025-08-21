@@ -113,7 +113,6 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 |           [security-list](modules/security-list/README.md)           | Creates network security lists                                                                                          |
 |                     [waf](modules/waf/README.md)                     | Creates a WAF.                                                                                                          |
 |               [dns](modules/dns-management/README.md)                | Creates a DNS management system.                                                                                        |
-|        [network-firewall](modules/network-firewall/README.md)        | Creates network firewalls and network firewall policies.                                                                |
 | [dynamic-routing-gateway](modules/dynamic-routing-gateway/README.md) | Creates a dynamic routing gateway (DRG) and DRG attachments.                                                            |
 
 # Releases
