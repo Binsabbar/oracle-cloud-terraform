@@ -94,27 +94,27 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 1. if happy run `terraform apply` 
 
 ## Modules
-|                              module                              | Description                                                                                                             |
-| :--------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
-|         [common-config](modules/common-config/README.md)         | Contains common configuration that can be used between other modules, such as IDs for computing shape, os versions, etc |
-|                 [vault](modules/vault/README.md)                 | Create Vault and manages keys                                                                                           |
-|   [file-storage-systme](modules/file-storage-system/README.md)   | Create a file storage system with exports, export paths and mount targets in a given VCN                                |
-|              [identity](modules/identity/README.md)              | IAM management, compartment and policies for creating users, groups, compartments, cost-tracking tags and policies                        |
-|             [instances](modules/instances/README.md)             | Create compute instances and attach a network security group id in a given subnets and VCN                              |
-|               [volumes](modules/volumes/README.md)               | Create Volumes, Backup Policy and manages volumes attachments                                                           |
-|            [kuberentes](modules/kubernetes/README.md)            | Creates k8s cluster and node pools in the given VCN                                                                     |
-|         [load-balancer](modules/load-balancer/README.md)         | WIP - Not ready                                                                                                         |
-|                 [mysql](modules/mysql/README.md)                 | Creates MYSQL Database in a given VCN                                                                                   |
-|               [network](modules/network/README.md)               | Creates a VCN with default routing table, and **default** security list alongside desired subnets                       |
-| [network-load-balancer](modules/network-load-balancer/README.md) | Creates an NLB, with listeners and backends alongside backendset in a given VCN                                         |
-|            [network-sg](modules/network-sg/README.md)            | Creates network security groups                                                                                         |
-|        [object-storage](modules/object-storage/README.md)        | Creates object storage buckets                                                                                          |
-|             [public-ip](modules/public-ip/README.md)             | Creates a reserved public IP that can be attached to instances or load balancers                                        |
-|         [security-list](modules/security-list/README.md)         | Creates network security lists                                                                                          |
-|                   [waf](modules/waf/README.md)                   | Creates a WAF.                                                                                                          |
-|                   [dns](modules/dns-management/README.md)        | Creates a DNS management system.                                                                                        |
-|                   [network-firewall](modules/network-firewall/README.md)        | Creates network firewalls and network firewall policies.                                                                                        |
-|                   [dynamic-routing-gateway](modules/dynamic-routing-gateway/README.md)        | Creates a dynamic routing gateway (DRG) and DRG attachments.                                                                                        |
+|                                module                                | Description                                                                                                             |
+| :------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
+|           [common-config](modules/common-config/README.md)           | Contains common configuration that can be used between other modules, such as IDs for computing shape, os versions, etc |
+|                   [vault](modules/vault/README.md)                   | Create Vault and manages keys                                                                                           |
+|     [file-storage-systme](modules/file-storage-system/README.md)     | Create a file storage system with exports, export paths and mount targets in a given VCN                                |
+|                [identity](modules/identity/README.md)                | IAM management, compartment and policies for creating users, groups, compartments, cost-tracking tags and policies      |
+|               [instances](modules/instances/README.md)               | Create compute instances and attach a network security group id in a given subnets and VCN                              |
+|                 [volumes](modules/volumes/README.md)                 | Create Volumes, Backup Policy and manages volumes attachments                                                           |
+|              [kuberentes](modules/kubernetes/README.md)              | Creates k8s cluster and node pools in the given VCN                                                                     |
+|           [load-balancer](modules/load-balancer/README.md)           | WIP - Not ready                                                                                                         |
+|                   [mysql](modules/mysql/README.md)                   | Creates MYSQL Database in a given VCN                                                                                   |
+|                 [network](modules/network/README.md)                 | Creates a VCN with default routing table, and **default** security list alongside desired subnets                       |
+|   [network-load-balancer](modules/network-load-balancer/README.md)   | Creates an NLB, with listeners and backends alongside backendset in a given VCN                                         |
+|              [network-sg](modules/network-sg/README.md)              | Creates network security groups                                                                                         |
+|          [object-storage](modules/object-storage/README.md)          | Creates object storage buckets                                                                                          |
+|               [public-ip](modules/public-ip/README.md)               | Creates a reserved public IP that can be attached to instances or load balancers                                        |
+|           [security-list](modules/security-list/README.md)           | Creates network security lists                                                                                          |
+|                     [waf](modules/waf/README.md)                     | Creates a WAF.                                                                                                          |
+|               [dns](modules/dns-management/README.md)                | Creates a DNS management system.                                                                                        |
+|        [network-firewall](modules/network-firewall/README.md)        | Creates network firewalls and network firewall policies.                                                                |
+| [dynamic-routing-gateway](modules/dynamic-routing-gateway/README.md) | Creates a dynamic routing gateway (DRG) and DRG attachments.                                                            |
 
 # Releases
 
