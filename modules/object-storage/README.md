@@ -13,6 +13,12 @@ module "buckets" {
       name           = "my-website-images"
       compartment_id = "ocixxxxxx.xxxxxx.xxxxx"
       storage_tier   = "Standard"
+      freeform_tags  = {
+        "Key" = "Value"
+      }
+      defined_tags   = {
+        "Namespace.key" = "Value"
+      }
       is_public      = true
       lifecycle_rules = {
         "nfrequent-access-after-100-days" = {
@@ -53,6 +59,12 @@ module "buckets" {
       name           = "my-mobile-app-images"
       compartment_id = "ocixxxxxx.xxxxxx.xxxxx"
       storage_tier   = "Standard"
+      freeform_tags  = {
+        "Key" = "Value"
+      }
+      defined_tags   = {
+        "Namespace.key" = "Value"
+      }
       is_public      = true
       lifecycle_rules = {
         "rm-90-days-old" = {
