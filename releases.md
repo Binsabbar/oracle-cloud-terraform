@@ -12,8 +12,7 @@
     * `ipv6.cidr_block`
 * `object-storage` 
   * Support bucket replication.
-  * Support OCI freeform tags.
-  
+  * Support OCI freeform/defined tags.
 * `Bastion`: introduce Bastion
 * `kubernetes`
   * Added new variables to configure the cluster’s IP family, enabling single-stack IPv4, single-stack IPv6, or dual-stack (IPv4 + IPv6) networking.
