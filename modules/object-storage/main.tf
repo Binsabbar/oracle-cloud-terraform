@@ -7,7 +7,7 @@ resource "oci_objectstorage_bucket" "bucket" {
   compartment_id        = each.value.compartment_id
   name                  = each.value.name
   defined_tags          = lookup(each.value, "defined_tags", null)
-  freeform_tags        = lookup(each.value, "freeform_tags", null)
+  freeform_tags         = lookup(each.value, "freeform_tags", null)
   access_type           = each.value.is_public == true ? "ObjectReadWithoutList" : "NoPublicAccess"
   storage_tier          = each.value.storage_tier
   object_events_enabled = try(each.value.optionals.object_events_enabled, false)
