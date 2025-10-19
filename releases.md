@@ -20,6 +20,7 @@
     * `kubernetes_network_config.pods_cidr`
     * `kubernetes_network_config.services_cidr`
 * Introduce OCI defined tags for FinOps (supports cost-tracking flags).
+* Introduce OCI freeform tags for buckets.
 
 ## **Fix**
 None
