@@ -4,6 +4,7 @@ variable "buckets" {
     name           = string
     storage_tier   = string
     is_public      = bool
+    freeform_tags  = optional(map(string), null)
     defined_tags   = optional(map(string), null)
     lifecycle_rules = map(object({
       name               = string
