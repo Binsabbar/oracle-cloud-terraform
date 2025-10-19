@@ -4,6 +4,7 @@ variable "buckets" {
     name           = string
     storage_tier   = string
     is_public      = bool
+    defined_tags   = optional(map(string), null)
     lifecycle_rules = map(object({
       name               = string
       action             = string
