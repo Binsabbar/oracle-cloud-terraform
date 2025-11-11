@@ -45,8 +45,8 @@ resource "oci_core_instance" "instances" {
   display_name         = each.value.name
   preserve_boot_volume = lookup(each.value.optionals, "preserve_boot_volume", true)
   state                = each.value.state
-  freeform_tags        = merge(lookup(each.value, "freeform_tags", {}), { "CreatedBy" = "terraform" })
-  defined_tags         = merge(lookup(each.value, "defined_tags", {}), { "Oracle-Managed.CreatedBy" = "terraform" })
+  freeform_tags        = lookup(each.value, "freeform_tags", null)
+  defined_tags         = merge(each.value.defined_tags, { "Oracle-Managed.CreatedBy" = "terraform" })
   metadata = {
     ssh_authorized_keys = each.value.autherized_keys
     user_data           = lookup(each.value.optionals, "user_data", null)
