@@ -30,7 +30,7 @@ None
   * Cluster recreation: Changing `ip_families` on an existing cluster will force replacement.
   * Kubernetes version must be ≥1.29 
 * `identity` Change compartment policies property from list of string statements to accept a map of list of string statements representing policy. This allows to split statements into multiple policies for each compartment.
-* `Warning` Adding defined tags will remove default tags created by terraform and will add a new default tag to all resources: `Oracle-Tags.CreatedBy" = "terraform"`
+* `Warning` Adding defined tags will remove default tags created by terraform and will add a new default tag to all resources that has a defined tag: `Oracle-Tags.CreatedBy" = "terraform"`
 
 from:
 ```h
