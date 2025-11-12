@@ -6,7 +6,7 @@ resource "oci_objectstorage_bucket" "bucket" {
   namespace             = data.oci_objectstorage_namespace.namespace.namespace
   compartment_id        = each.value.compartment_id
   name                  = each.value.name
-  defined_tags          = merge(lookup(each.value, "defined_tags", {}),{ "Oracle-Managed.CreatedBy" = "terraform" })
+  defined_tags          = merge(lookup(each.value, "defined_tags", {}),{ "Oracle-Tags.CreatedBy" = "terraform" })
   freeform_tags         = lookup(each.value, "freeform_tags", null)
   access_type           = each.value.is_public == true ? "ObjectReadWithoutList" : "NoPublicAccess"
   storage_tier          = each.value.storage_tier
