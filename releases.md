@@ -23,7 +23,7 @@
 * Introduce OCI defined tags for FinOps (supports cost-tracking flags).
 
 ## **Fix**
-None
+* Renamed un-used parameter `cross_region_replica` to `cross_ad_replicas` in `volumes` module.
 
 ## _**Breaking Changes**_
 * `kubernetes`
