@@ -24,6 +24,7 @@
 
 ## **Fix**
 * Renamed un-used parameter `cross_region_replica` to `cross_ad_replicas` in `volumes` module.
+* Renamed un-used parameter `replica_region` to `destination_availability_domain` in `volumes` module.
 
 ## _**Breaking Changes**_
 * `kubernetes`
