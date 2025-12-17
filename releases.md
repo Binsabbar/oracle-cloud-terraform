@@ -13,7 +13,7 @@
   * Support bucket replication.
 
 ## **Fix**
-None
+* Renamed un-used parameter `cross_region_replica` to `cross_ad_replicas` in `volumes` module.
 
 ## _**Breaking Changes**_
 None
