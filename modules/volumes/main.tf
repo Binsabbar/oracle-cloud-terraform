@@ -28,9 +28,9 @@ resource "oci_core_volume" "volume" {
 
   block_volume_replicas_deletion = each.value.disable_replicas
   dynamic "block_volume_replicas" {
-    for_each = each.value.disable_replicas ? {} : each.value.cross_region_replica
+    for_each = each.value.disable_replicas ? {} : each.value.cross_ad_replicas
     content {
-      availability_domain = block_volume_replicas.value.replica_region
+      availability_domain = block_volume_replicas.value.destination_availability_domain
       display_name        = block_volume_replicas.value.replica_name
     }
   }
