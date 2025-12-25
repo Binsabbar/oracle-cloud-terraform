@@ -114,6 +114,7 @@ To create different environments (prod, uat, dev), it is assumed that they same 
 |                     [waf](modules/waf/README.md)                     | Creates a WAF.                                                                                                          |
 |               [dns](modules/dns-management/README.md)                | Creates a DNS management system.                                                                                        |
 | [dynamic-routing-gateway](modules/dynamic-routing-gateway/README.md) | Creates a dynamic routing gateway (DRG) and DRG attachments.                                                            |
+| [bastion](modules/bastion/README.md)                                  | Creates a Bastion host for secure access to private resources.                                                          |
 
 # Releases
 
