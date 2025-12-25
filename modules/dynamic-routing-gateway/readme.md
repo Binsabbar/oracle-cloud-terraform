@@ -24,7 +24,7 @@ By default Oracle creates the DRG attachment with the creation of the RPC. In th
 ```
 This will force the creation of the resource incase the RPC is destroyed
 
-To remove two peered RPCs Oralce recommends to remove both of them, because if one of them is not destroyed it will have a `REVOKED` peering_status. If another RPC resource tries to connect to this RPC resource the peering_status on the requestor will be `INVALID`.
+To remove two peered RPCs Oracle recommends to remove both of them, because if one of them is not destroyed it will have a `REVOKED` peering_status. If another RPC resource tries to connect to this RPC resource the peering_status on the requestor will be `INVALID`.
 
 ## Example
 Create a DRG with one VCN attachment
