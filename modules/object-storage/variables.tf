@@ -40,4 +40,7 @@ variable "buckets" {
   EOL
 }
 
-variable "region" { type = string }
+variable "region" {
+  type        = string
+  description = "The OCI region name where the bucket is located. Used to determine bucket replication eligibility."
+}
