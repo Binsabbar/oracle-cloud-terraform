@@ -4,6 +4,8 @@ variable "buckets" {
     name           = string
     storage_tier   = string
     is_public      = bool
+    freeform_tags  = optional(map(string), null)
+    defined_tags   = optional(map(string), null)
     lifecycle_rules = map(object({
       name               = string
       action             = string
@@ -15,10 +17,15 @@ variable "buckets" {
       time               = string
       time_unit          = string
     }))
-    optionals = map(any)
-    # The followings are the keys for the optionals with defaults in brackets
-    # object_events_enabled = bool - false
-    # versioning_enabled    = bool - false
+    optionals = optional(object({
+      object_events_enabled = optional(bool)
+      versioning_enabled    = optional(string)
+      replication_policy = optional(object({
+        destination_region_name = string
+        source_region_name      = string
+        destination_bucket_name = optional(string)
+      }))
+    }))
   }))
 
   description = <<EOL
@@ -31,4 +38,9 @@ variable "buckets" {
       # object_events_enabled: emits events for objects actions
       # versioning_enabled   : enable version of objects
   EOL
+}
+
+variable "region" {
+  type        = string
+  description = "The OCI region name where the bucket is located. Used to determine bucket replication eligibility."
 }

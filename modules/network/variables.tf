@@ -11,6 +11,25 @@ variable "cidr_block" {
   description = "The CIDR block for the VCN"
 }
 
+variable "ipv6" {
+  type = object({
+    enabled        = bool
+    oci_allocation = optional(bool, false)
+    cidr_block     = optional(list(string), [])
+  })
+  default = {
+    enabled        = false
+    oci_allocation = false
+    cidr_block     = []
+  }
+
+  description = <<EOF
+    map of object to configure IPv6
+      enabled       : set to true to enable IPv6 support for the VCN
+      oci_allocation: set to true to enable automatic allocation of IPv6 CIDR on the VCN
+      cidr_block    : The IPv6 CIDR block for the VCN
+  EOF
+}
 # Gateways
 variable "nat_gateway" {
   type = object({
@@ -86,6 +105,7 @@ variable "private_subnets" {
     name              = string
     cidr_block        = string
     security_list_ids = list(string)
+    ipv6cidr_block    = optional(string)
     optionals         = any # map(any)
     # The followings are the keys for the optionals with defaults in brackets
     # route_table_id = string # id of custom route table
@@ -105,6 +125,7 @@ variable "public_subnets" {
   type = map(object({
     name              = string
     cidr_block        = string
+    ipv6cidr_block    = optional(string)
     security_list_ids = list(string)
     optionals         = map(any)
     # The followings are the keys for the optionals with defaults in brackets

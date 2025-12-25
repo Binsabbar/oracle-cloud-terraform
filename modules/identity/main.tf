@@ -16,6 +16,15 @@ locals {
       }
     ]
   ])
+  flattened_compartment_policies = flatten([
+    for compartment_name, compartment_data in var.compartments : [
+      for policy, statements in compartment_data.policies : {
+        name        = policy
+        compartment = compartment_name
+        statements  = statements
+      } if length(statements) > 0
+    ] if length(compartment_data.policies) > 0
+  ])
 
   groups                  = [for group in keys(var.memberships) : oci_identity_group.groups[group]]
   service_accounts_groups = [for key, sa in var.service_accounts : oci_identity_group.service_accounts_groups[sa.name]]
@@ -124,12 +133,12 @@ resource "oci_identity_policy" "tenancy_policies" {
 
 # Other policies cab be applied directly to the compartment
 resource "oci_identity_policy" "policies" {
-  for_each = { for compartment, config in var.compartments : compartment => config if length(config.policies) > 0 }
+  for_each = { for val in local.flattened_compartment_policies : val.name => val }
 
-  compartment_id = oci_identity_compartment.compartments[each.key].id
-  description    = "Polciy for ${each.key}"
+  compartment_id = oci_identity_compartment.compartments[each.value.compartment].id
+  description    = "Policy for ${each.value.compartment}"
   name           = "${each.key}-policy"
-  statements     = each.value.policies
+  statements     = each.value.statements
 
   depends_on = [local.depends_on]
 }
@@ -143,3 +152,36 @@ resource "oci_identity_idp_group_mapping" "idp_group_mapping" {
   identity_provider_id = each.value.idp_ocid
   idp_group_name       = each.value.idp_group_name
 }
+
+# Cost-tracking tags
+resource "oci_identity_tag_namespace" "tag_namespace" {
+  for_each       = var.namespaces_tags
+  compartment_id = var.tenant_id
+  name           = each.key
+  description    = each.value.description
+  is_retired     = false
+}
+
+resource "oci_identity_tag" "tag" {
+  for_each = {
+    for item in flatten([
+      for ns_name, ns_value in var.namespaces_tags : [
+        for tag_name, tag_value in ns_value.tags : [
+          for key_name, key_value in tag_value.keys : {
+            key      = "${ns_name}.${tag_name}.${key_name}"
+            ns_name  = ns_name
+            tag_name = key_name
+            tag_data = key_value
+          }
+        ]
+      ]
+    ]) : item.key => item
+  }
+
+  tag_namespace_id = oci_identity_tag_namespace.tag_namespace[each.value.ns_name].id
+  name             = each.value.tag_name
+  description      = each.value.tag_data.description
+  is_cost_tracking = each.value.tag_data.is_cost_tracking
+}
+
+

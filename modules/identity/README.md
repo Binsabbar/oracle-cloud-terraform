@@ -208,16 +208,20 @@ module "top_level_compartments" {
   compartments = {
     "compartment-a" = {
       parent = local.tenant_id
-      policies = [
-        "allow group xxx to manage virtual-network-family in compartment compartment-a",
-      ]
+      policies = {
+        "policy-a" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
     }
 
     "compartment-b" = {
       parent = local.tenant_id
-      policies = [
-        "allow group xxx to manage virtual-network-family in compartment compartment-b",
-      ]
+      policies = {
+        "policy-b" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-b",
+        ]
+      }
     }
   }
 }
@@ -230,12 +234,12 @@ module "child_compartments" {
   compartments = {
     "compartment-1" = {
       parent = module.top_level_compartments.compartments["compartment-a"].id
-      policies = []
+      policies = {}
     }
 
     "compartment-2" = {
       parent = module.top_level_compartments.compartments["compartment-b"].id
-      policies = []
+      policies = {}
     }
   }
 }
@@ -316,16 +320,20 @@ module "main_iam" {
   compartments     = {
     "compartment-a" = {
       parent = local.tenant_id
-      policies = [
-        "allow group portfolio-a, terraform-cicd to manage virtual-network-family in compartment compartment-a",
-      ]
+      policies = {
+        "policy-a" = [
+          "allow group portfolio-a, terraform-cicd to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
     }
 
     "compartment-b" = {
       parent = local.tenant_id
-      policies = [
-        "allow group portfolio-b, terraform-cicd to manage virtual-network-family in compartment compartment-b",
-      ]
+      policies = {
+        "policy-b" = [
+          "allow group portfolio-b, terraform-cicd to manage virtual-network-family in compartment compartment-b",
+        ]
+      }
     }
   }
 
@@ -345,13 +353,62 @@ module "child_compartments" {
   compartments = {
     "compartment-1" = {
       parent = module.main_iam.compartments["compartment-a"].id
-      policies = []
+      policies = {}
     }
 
     "compartment-2" = {
       parent = module.main_iam.compartments["compartment-b"].id
-      policies = []
+      policies = {}
     }
   }
 }
 ```
+
+  ### Creating Cost-tracking Defined tags
+Manage OCI defined tags for FinOps (supports cost-tracking flags).
+Namespace behavior:
+- If tag_namespace doesn't have value (default is null) namespace won't be created nor the tags
+Tag keys: create under the resolved namespace from tag_keys map; each key supports:
+- description (optional)
+- is_cost_tracking (optional, default false)
+
+  ### Example usage:
+  ```h
+  namespaces_tags = {
+    "namespace1" = {
+      description = "Namespace 1 for tags"
+      tags = {
+        tag1 = {
+          description = "Cost & billing metadata"
+          keys = {
+            env1       = { description = "Environment", is_cost_tracking = true }
+            type1      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio1 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+        tag2 = {
+          description = "Cost & billing metadata 2"
+          keys = {
+            env2       = { description = "Environment", is_cost_tracking = true }
+            type2      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio2 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+      }
+    }
+
+    "namespace2" = {
+      description = "Namespace 2 for tags"
+      tags = {
+        tag1 = {
+          description = "Cost & billing metadata 3"
+          keys = {
+            env3       = { description = "Environment", is_cost_tracking = true }
+            type3      = { description = "Application/Tool", is_cost_tracking = true }
+            portfolio3 = { description = "Product/Portfolio", is_cost_tracking = true }
+          }
+        }
+      }
+    }
+  }
+  ```

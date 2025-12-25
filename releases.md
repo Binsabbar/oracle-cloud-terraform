@@ -1,3 +1,73 @@
+# v2.13.0:
+## **New**
+* `dynamic-routing-gateway`: Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
+* `instance`: Update module to accept ipv6 assignment on instances.
+* `instance`: Update module to accept freeform-tags assignment on instances.
+* `instances`: Add support for ipv6 via optional `ipv6` Boolean.
+* `instances.secondary_vnics`: Add support for ipv6 via optional `ipv6` Boolean.
+* `network`: Add support for IPv6 via optional `ipv6` variable. 
+  * Add new variables for IPv6 configuration:
+    * `ipv6.enabled`
+    * `ipv6.oci_allocation`
+    * `ipv6.cidr_block`
+* `object-storage` 
+  * Support bucket replication.
+  * Support OCI freeform/defined tags.
+* `Bastion`: introduce Bastion
+* `kubernetes`
+  * Added new variables to configure the cluster’s IP family, enabling single-stack IPv4, single-stack IPv6, or dual-stack (IPv4 + IPv6) networking.
+    * `ip_families`
+  * Add new variables that allow network CIDRs customization
+    * `kubernetes_network_config.pods_cidr`
+    * `kubernetes_network_config.services_cidr`
+* Introduce OCI defined tags for FinOps (supports cost-tracking flags).
+
+## **Fix**
+* Renamed un-used parameter `cross_region_replica` to `cross_ad_replicas` in `volumes` module.
+* Renamed un-used parameter `replica_region` to `destination_availability_domain` in `volumes` module.
+
+## _**Breaking Changes**_
+* `kubernetes`
+  * Cluster recreation: Changing `ip_families` on an existing cluster will force replacement.
+  * Kubernetes version must be ≥1.29 
+* `identity` Change compartment policies property from list of string statements to accept a map of list of string statements representing policy. This allows to split statements into multiple policies for each compartment.
+* `Warning` Adding defined tags will remove default tags created by terraform and will add a new default tag to all resources that has a defined tag: `"Oracle-Tags.CreatedBy" = "terraform"`
+
+from:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = [
+        "allow group xxx to manage virtual-network-family in compartment compartment-a",
+      ]
+    }
+  }
+}
+```
+to:
+```h
+module "compartments" {
+  source = PATH_TO_MODULE
+  tenant_id = local.tenant_id
+
+  compartments = {
+    "compartment-a" = {
+      parent = local.tenant_id
+      policies = {
+        "policy-a" = [
+          "allow group xxx to manage virtual-network-family in compartment compartment-a",
+        ]
+      }
+    }
+  }
+}
+```
+
 # v2.12.0:
 ## **New**
 * `instances`: Add option to enable/disable cloud agent plugins.

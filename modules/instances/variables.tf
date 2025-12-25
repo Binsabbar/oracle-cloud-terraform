@@ -63,6 +63,9 @@ variable "instances" {
     volume_size              = number
     state                    = string
     autherized_keys          = string
+    ipv6                     = optional(bool, false)
+    freeform_tags            = optional(map(string), null)
+    defined_tags             = optional(map(string), null)
     config = object({
       shape             = string
       flex_shape_config = map(string)
@@ -91,6 +94,7 @@ variable "instances" {
       nsg_ids                = list(string)
       skip_source_dest_check = bool
       hostname_label         = string
+      ipv6                   = optional(bool, false)
       secondary_ips = map(object({
         name       = string
         ip_address = string

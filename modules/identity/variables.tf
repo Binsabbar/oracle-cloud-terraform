@@ -6,14 +6,14 @@ variable "tenant_id" {
 variable "compartments" {
   type = map(object({
     root_compartment = string
-    policies         = set(string)
+    policies         = map(set(string))
   }))
 
   default     = {}
   description = <<EOF
     map of objects that represent compartments to create. The key name is the compartment name
       root_compartment: ID of the parent compartment
-      policies: List of string that represent policies
+      policies: map of lists of string that represent policies. Key acts as policy name, value as statements list
   EOF
 }
 
@@ -93,4 +93,18 @@ variable "tenancy_policies" {
       name: name for the policy
       policies: list of string of policies to be attached to the tenancy
   EOF
+}
+
+variable "namespaces_tags" {
+  type = map(object({
+    description = optional(string, "")
+    tags = map(object({
+      description = optional(string, "")
+      keys = map(object({
+        description      = optional(string, "")
+        is_cost_tracking = optional(bool, false)
+      }))
+    }))
+  }))
+  default = {}
 }
