@@ -4,7 +4,7 @@
 * `instance`: Update module to accept ipv6 assignment on instances.
 * `instance`: Update module to accept freeform-tags assignment on instances.
 * `instances`: Add support for ipv6 via optional `ipv6` Boolean.
-* `instances.secondery_vnics`: Add support for ipv6 via optional `ipv6` Boolean.
+* `instances.secondary_vnics`: Add support for ipv6 via optional `ipv6` Boolean.
 * `network`: Add support for IPv6 via optional `ipv6` variable. 
   * Add new variables for IPv6 configuration:
     * `ipv6.enabled`
