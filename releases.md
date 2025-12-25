@@ -17,7 +17,7 @@
 * `kubernetes`
   * Added new variables to configure the cluster’s IP family, enabling single-stack IPv4, single-stack IPv6, or dual-stack (IPv4 + IPv6) networking.
     * `ip_families`
-  * Add new variables that allow network CIDRs customiztion
+  * Add new variables that allow network CIDRs customization
     * `kubernetes_network_config.pods_cidr`
     * `kubernetes_network_config.services_cidr`
 * Introduce OCI defined tags for FinOps (supports cost-tracking flags).
