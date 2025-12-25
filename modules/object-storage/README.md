@@ -51,6 +51,7 @@ module "buckets" {
           name                    = "replicate_my_website_images_to_riyadh"
           source_region_name      = "eu-frankfurt-1"
           source_region_name      = "eu-frankfurt-1"
+          source_region_name      = "eu-frankfurt-1"
           destination_region_name = "me-riyadh-1"
           destination_bucket_name = "my-website-images"
         }
