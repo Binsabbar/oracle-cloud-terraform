@@ -50,7 +50,7 @@ variable "drg" {
         name                          : name of the VCN attachment
         drg_route_table_key           : drg route table key to be used instead of default one
         route_table_id                : route table id to be used instead of default one
-        vcn_route_type                : weather VCN CIDRs or subnet CIDRs which are imported from the attachment, only "VCN_CIDRS" or "SUBNET_CIDRS" is allowed
+        vcn_route_type                : whether VCN CIDRs or subnet CIDRs which are imported from the attachment, only "VCN_CIDRS" or "SUBNET_CIDRS" is allowed
       none_vcn_attachments_managements: map of objects to configure non-VCN DRG attachments
         name                          : name of the non-VCN attachment
         type                          : the type of DRG attachment and can be either "IPSEC_TUNNEL", "REMOTE_PEERING_CONNECTION", "VCN", or "VIRTUAL_CIRCUIT"
