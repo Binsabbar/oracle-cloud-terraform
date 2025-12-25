@@ -24,7 +24,7 @@ Leave `flex_shape_config` empty `{}` if it is not needed.
 # Assign Public IP to an instnace
 To attach public IP to any private IP created in this module, you have to do that in `public_ip` module. Refer to `public_ip` module for how to attach private IP to public IP. Using this module output, you can get the private ip OCID and use it in `public_ip` module.
 
-# Assign IPv6 to an instnace's primary and secondery VNICs
+# Assign IPv6 to an instance's primary and secondery VNICs
 To attach ipv6 to the instance, you have to enable `ipv6` for the instance, it will automatically assign an IP exported from the subnet's Prefix.
 
 
