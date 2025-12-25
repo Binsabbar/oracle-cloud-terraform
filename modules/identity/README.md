@@ -367,7 +367,7 @@ module "child_compartments" {
   ### Creating Cost-tracking Defined tags
 Manage OCI defined tags for FinOps (supports cost-tracking flags).
 Namespace behavior:
-- If tag_namespace doesn't have value (deafult is null) namespace won't be created nor the tags
+- If tag_namespace doesn't have value (default is null) namespace won't be created nor the tags
 Tag keys: create under the resolved namespace from tag_keys map; each key supports:
 - description (optional)
 - is_cost_tracking (optional, default false)
