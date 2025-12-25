@@ -33,8 +33,6 @@ module "kubernetes" {
     pods_cidr     = "10.244.0.0/16, fd00:eeee:eeee::/96"
     services_cidr = "10.96.0.0/16, fd00:eeee:ffff::/112"
   }
-  lb_subnet_ids               = ["ocixxxxxx.xxxxxx.xxxxx", "ocixxxxxx.xxxxxx.xxxxx"]
-  cluster_k8s_version         = "v1.18.10"
   endpoint_config             = {
     is_public_ip_enabled = false
     nsg_ids = ["oci.xxxxxx"]
