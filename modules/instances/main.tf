@@ -73,8 +73,8 @@ resource "oci_core_instance" "instances" {
   create_vnic_details {
     subnet_id                 = each.value.config.subnet.id
     assign_public_ip          = each.value.config.subnet.prohibit_public_ip_on_vnic == false
-    display_name              = "${each.key}Vnic"
-    hostname_label            = each.key
+    display_name              = "${each.value.hostname == "" ? each.key : each.value.hostname}Vnic"
+    hostname_label            = each.value.hostname == "" ? each.key : each.value.hostname
     nsg_ids                   = each.value.config.network_sgs_ids
     skip_source_dest_check    = lookup(each.value.optionals, "skip_source_dest_check", false)
     assign_private_dns_record = true
@@ -133,7 +133,7 @@ resource "oci_core_private_ip" "primary_vnic_additional_ips" {
 # Secondary VNICs
 resource "oci_core_vnic_attachment" "secondary_vnic_attachment" {
   for_each     = { for v in local.flattened_secondary_vnics : "${v.instance_key}:${v.vnic_key}" => v }
-  display_name = each.key
+  display_name = each.value.hostname == "" ? each.key : each.value.hostname
   create_vnic_details {
     assign_private_dns_record = true
     display_name              = each.value.vnic.name
