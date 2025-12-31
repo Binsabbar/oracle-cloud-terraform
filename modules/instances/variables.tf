@@ -66,6 +66,7 @@ variable "instances" {
     ipv6                     = optional(bool, false)
     freeform_tags            = optional(map(string), null)
     defined_tags             = optional(map(string), null)
+    hostname                 = optional(string, "")
     config = object({
       shape             = string
       flex_shape_config = map(string)
