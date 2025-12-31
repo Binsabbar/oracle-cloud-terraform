@@ -1,3 +1,8 @@
+# v2.14.0:
+## **New**
+* `Kubernetes`: Update module to accept defined tags on node pools
+* `Volumes`: Update module to accept defined tags
+* `Network`: Update module to accept defined tags on VCNs
 # v2.13.0:
 ## **New**
 * `dynamic-routing-gateway`: Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.
