@@ -24,7 +24,7 @@ resource "oci_containerengine_cluster" "cluster" {
       is_tiller_enabled               = true
     }
     service_lb_subnet_ids = var.lb_subnet_ids
-    ip_families = var.ip_families
+    ip_families           = var.ip_families
     dynamic "kubernetes_network_config" {
       for_each = var.kubernetes_network_config == null ? [] : [var.kubernetes_network_config]
       content {
@@ -52,6 +52,7 @@ resource "oci_containerengine_node_pool" "node_pool" {
   node_shape         = each.value.shape
   ssh_public_key     = each.value.ssh_public_key
   node_metadata      = each.value.node_metadata
+  defined_tags       = merge(lookup(each.value, "defined_tags", {}), { "Oracle-Tags.CreatedBy" = "terraform" })
 
   dynamic "initial_node_labels" {
     for_each = each.value.labels

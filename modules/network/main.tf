@@ -27,6 +27,7 @@ resource "oci_core_vcn" "vcn" {
   is_ipv6enabled                   = var.ipv6.enabled
   is_oracle_gua_allocation_enabled = var.ipv6.oci_allocation
   ipv6private_cidr_blocks          = var.ipv6.cidr_block
+  defined_tags                     = merge(lookup(var.tags, "defined_tags", {}), { "Oracle-Tags.CreatedBy" = "terraform" })
 }
 
 resource "oci_core_default_dhcp_options" "dhcp_options" {

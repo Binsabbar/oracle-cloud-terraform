@@ -51,6 +51,7 @@ variable "volumes" {
     availability_domain                 = string
     size_in_gbs                         = string
     disable_replicas                    = bool
+    defined_tags                        = optional(map(string), null)
     reference_to_backup_policy_key_name = string # The name of the key in var.backup_policies
     cross_ad_replicas = map(object({
       destination_availability_domain = string
