@@ -6,7 +6,10 @@ variable "name" {
 }
 
 variable "tags" {
-  type = optional(map(string), null)
+  type = object({
+    defined_tags = optional(map(string), {})
+  })
+  default = {}
 }
 
 variable "cidr_block" {
