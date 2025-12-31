@@ -64,7 +64,6 @@ variable "node_pools" {
     volume_size_in_gbs  = number
     image_id            = string
     labels              = map(string)
-    defined_tags        = optional(map(string))
     subnet_id           = string
     k8s_version         = string
     flex_shape_config   = map(string)
