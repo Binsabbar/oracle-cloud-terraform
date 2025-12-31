@@ -5,6 +5,13 @@ variable "name" {
   description = "The name of the VCN which will be used in FQDN"
 }
 
+variable "tags" {
+  type = object({
+    defined_tags = optional(map(string), {})
+  })
+  default = {}
+}
+
 variable "cidr_block" {
   type        = string
   default     = "192.168.0.0/16"

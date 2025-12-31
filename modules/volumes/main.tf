@@ -20,6 +20,7 @@ resource "oci_core_volume" "volume" {
   compartment_id      = each.value.compartment_id
   availability_domain = each.value.availability_domain
   display_name        = each.value.name
+  defined_tags        = merge(lookup(each.value, "defined_tags", {}), { "Oracle-Tags.CreatedBy" = "terraform" })
   size_in_gbs         = each.value.size_in_gbs
 
   kms_key_id           = lookup(each.value.optionals, "kms_id", "")

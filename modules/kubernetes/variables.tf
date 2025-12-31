@@ -27,10 +27,10 @@ variable "lb_subnet_ids" {
 }
 
 variable "ip_families" {
-  type    = list(string)
-  default = ["IPv4"]
+  type        = list(string)
+  default     = ["IPv4"]
   description = "IP family for the cluster, can be IPv4 or IPv6 or dual-stack"
-} 
+}
 variable "kubernetes_network_config" {
   type = object({
     pods_cidr     = optional(string)
@@ -69,6 +69,7 @@ variable "node_pools" {
     k8s_version         = string
     flex_shape_config   = map(string)
     node_metadata       = map(string)
+    defined_tags        = optional(map(string), null)
   }))
 
   description = <<EOL
