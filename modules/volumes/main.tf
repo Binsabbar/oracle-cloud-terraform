@@ -67,6 +67,7 @@ resource "oci_core_volume_backup_policy" "volume_backup_policy" {
   compartment_id     = each.value.compartment_id
   destination_region = each.value.destination_region
   display_name       = each.value.name
+  defined_tags       = merge(lookup(each.value, "defined_tags", {}), { "Oracle-Tags.CreatedBy" = "terraform" })
 
   dynamic "schedules" {
     for_each = each.value.schedules

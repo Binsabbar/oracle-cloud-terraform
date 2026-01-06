@@ -99,6 +99,10 @@ module "opensource_volumes" {
       compartment_id = "oci.xxxxxxxxxxxxxxxxxxxxx"
       name = "SLA Level 1 backup policy"
       destination_region = "me-jeddah-1"
+      defined_tags = {
+          "NAMESPACE.TAG" = "VALUE"
+          "NAMESPACE.TAG" = "VALUE"
+        }
       schedules = { 
         "daily" = {
           backup_type = "INCREMENTAL"
