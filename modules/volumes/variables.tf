@@ -3,7 +3,6 @@ variable "backup_policies" {
     compartment_id     = string
     name               = string
     destination_region = string
-    defined_tags       = optional(map(string), null)
     schedules = map(object({
       backup_type       = string
       period            = string
