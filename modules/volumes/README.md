@@ -13,6 +13,8 @@ OCI already provides its own backup policies. However, this modules DOES NOT sup
 
 When creating a policy, you need to be careful with `backup_policies[].schedules[].optionals`. Depending on the value of `backup_policies[].schedules[].backup_type` you will need to set the `backup_policies[].schedules[].optionals` values. See example below and refer to (core_volume_backup_policy)[https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_volume_backup_policy].
 
+Backup policies now supports defined_tags
+
 # Replication
 The module supports replication across another region. Just set `volumes[].cross_ad_replicas[].destination_availability_domain` and  `volumes[].cross_ad_replicas[].replica_name` as many times as you want. Ensure that you set `volumes[].disable_replicas` to `false`
 
