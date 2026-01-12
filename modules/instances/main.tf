@@ -78,7 +78,7 @@ resource "oci_core_instance" "instances" {
     hostname_label            = each.key
     nsg_ids                   = each.value.config.network_sgs_ids
     skip_source_dest_check    = lookup(each.value.optionals, "skip_source_dest_check", false)
-    assign_private_dns_record = each.value.assign_private_dns_record
+    assign_private_dns_record = each.value.config.assign_private_dns_record
     private_ip                = each.value.config.primary_vnic.primary_ip
     assign_ipv6ip             = each.value.ipv6
   }
