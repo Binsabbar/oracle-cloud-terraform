@@ -70,6 +70,7 @@ variable "instances" {
       shape             = string
       flex_shape_config = map(string)
       image_id          = string
+      assign_private_dns_record = optional(bool, true)
       network_sgs_ids   = list(string)
       subnet = object({
         id                         = string,
