@@ -4,6 +4,7 @@
 * `Volumes`: Update module to accept defined tags
 * `Network`: Update module to accept defined tags on VCNs
 * `Backup Policies`: Update Backup policies to accept defined tags for backups
+* `Instances`: Updated the `assign_private_dns_record` from hardcoded `true` to a more flexible approach where you can change it to false at the module level
 # v2.13.0:
 ## **New**
 * `dynamic-routing-gateway`: Introduce `dynamic-routing-gateway` module to manage dynamic routing gateway (DRG), DRG route tables, and DRG attachments including remote peering connections (RPCs) and VCNs.

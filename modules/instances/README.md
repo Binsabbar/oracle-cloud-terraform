@@ -60,6 +60,7 @@ locals {
           ocpus         = 8
           memory_in_gbs = 32
         }
+        assign_private_dns_record = false
         image_id = "ocixxxxxx.xxxxxx.xxxxx"
         subnet   = { 
           id = "ocixxxxxx.xxxxxx.xxxxx"
