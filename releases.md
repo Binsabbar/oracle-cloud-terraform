@@ -1,6 +1,6 @@
 # v2.14.0:
 ## **New**
-* `Kubernetes`: Update module to accept defined tags on node pools
+* `Kubernetes`: Update module to accept defined tags on node pools static/autoscaler
 * `Volumes`: Update module to accept defined tags
 * `Network`: Update module to accept defined tags on VCNs
 * `Backup Policies`: Update Backup policies to accept defined tags for backups

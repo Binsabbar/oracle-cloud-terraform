@@ -95,6 +95,7 @@ resource "oci_containerengine_node_pool" "node_pool_ignored_size" {
   node_shape         = each.value.shape
   ssh_public_key     = each.value.ssh_public_key
   node_metadata      = each.value.node_metadata
+  defined_tags       = merge(lookup(each.value, "defined_tags", {}), { "Oracle-Tags.CreatedBy" = "terraform" })
 
   dynamic "initial_node_labels" {
     for_each = each.value.labels
