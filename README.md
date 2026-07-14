@@ -1,3 +1,9 @@
+**⚠️ This repository is no longer maintained (as of July 2026). To avoid duplicated effort, please use the official [Oracle Terraform Modules](https://github.com/oracle-terraform-modules) instead. ⚠️**
+
+Thanks to everyone who contributed to this project over the years. This repo will not receive further updates, and issues/PRs will not be actively reviewed.
+
+---------------
+
 - [OCI](#oci)
   - [Prerequisites:](#prerequisites)
   - [Managing Different Environments](#managing-different-environments)
